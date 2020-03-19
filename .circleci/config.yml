@@ -22,10 +22,20 @@ jobs:
 
     steps:
       - checkout
-    
+
+      - run: dotnet restore
+      - run: dotnet add NRedisTimeSeries.Test package coverlet.collector
+
       # run tests!
-      - run: dotnet test
+
+      - run: dotnet test --collect:"XPlat Code Coverage"
       - early_return_for_forked_pull_requests
+      - run:
+          name: codecov
+          command: |
+            curl -s https://codecov.io/bash > codecov
+            chmod +x codecov
+            ./codecov -t ${CODECOV_TOKEN}
 
 
 

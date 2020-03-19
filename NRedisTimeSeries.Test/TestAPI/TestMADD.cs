@@ -9,15 +9,15 @@ namespace NRedisTimeSeries.Test.TestAPI
     {
         private RedisFixture redisFixture;
 
-        private readonly string[] keynames = { "MADD_ts1", "MADD_ts2" };
+        private readonly string[] keys = { "MADD_ts1", "MADD_ts2" };
 
         public TestMADD(RedisFixture redisFixture) => this.redisFixture = redisFixture;
 
         public void Dispose()
         {
-            foreach(string keyname in keynames)
+            foreach(string key in keys)
             {
-                redisFixture.redis.GetDatabase().KeyDelete(keyname);
+                redisFixture.redis.GetDatabase().KeyDelete(key);
             }
         }
 
@@ -27,14 +27,14 @@ namespace NRedisTimeSeries.Test.TestAPI
 
             IDatabase db = redisFixture.redis.GetDatabase();
 
-            foreach (string keyname in keynames)
+            foreach (string keyname in keys)
             {
                 db.TimeSeriesCreate(keyname);
             }
 
-            List<(string, TimeStamp, double)> sequence = new List<(string, TimeStamp, double)>(keynames.Length);
-            List<DateTime> timestamps = new List<DateTime>(keynames.Length);
-            foreach (var keyname in keynames)
+            List<(string, TimeStamp, double)> sequence = new List<(string, TimeStamp, double)>(keys.Length);
+            List<DateTime> timestamps = new List<DateTime>(keys.Length);
+            foreach (var keyname in keys)
             {
                 DateTime now = DateTime.Now;
                 timestamps.Add(now);
@@ -54,19 +54,19 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             IDatabase db = redisFixture.redis.GetDatabase();
 
-            foreach (string keyname in keynames)
+            foreach (string keyname in keys)
             {
                 db.TimeSeriesCreate(keyname);
             }
 
             List<DateTime> oldTimeStamps = new List<DateTime>();
-            foreach (var keyname in keynames)
+            foreach (var keyname in keys)
             {
                 oldTimeStamps.Add(DateTime.Now);
             }
 
-            List<(string, TimeStamp, double)> sequence = new List<(string, TimeStamp, double)>(keynames.Length);
-            foreach (var keyname in keynames)
+            List<(string, TimeStamp, double)> sequence = new List<(string, TimeStamp, double)>(keys.Length);
+            foreach (var keyname in keys)
             {
                 sequence.Add((keyname, DateTime.Now, 1.1));
             }
@@ -74,9 +74,9 @@ namespace NRedisTimeSeries.Test.TestAPI
 
             sequence.Clear();
 
-            for (int i =0; i < keynames.Length; i++)
+            for (int i =0; i < keys.Length; i++)
             {
-                sequence.Add((keynames[i], oldTimeStamps[i], 1.1));
+                sequence.Add((keys[i], oldTimeStamps[i], 1.1));
             }
 
             var ex = Assert.Throws<RedisServerException>(()=>db.TimeSeriesMAdd(sequence));
