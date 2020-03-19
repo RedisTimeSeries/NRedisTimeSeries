@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using StackExchange.Redis;
 using Xunit;
 
@@ -9,7 +10,7 @@ namespace NRedisTimeSeries.Test.TestAPI
 
         private RedisFixture redisFixture;
 
-        private readonly string keyname = "ts1";
+        private readonly string keyname = "ADD_GET_ts1";
 
         public TestAddGet(RedisFixture redisFixture) => this.redisFixture = redisFixture;
 
@@ -23,8 +24,8 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             IDatabase db = redisFixture.redis.GetDatabase();
             DateTime now = DateTime.Now;
-            Assert.Equal(now, (DateTime)db.TimeSeriesAdd("ts2", now, 1.1));
-            db.KeyDelete("ts2");
+            Assert.Equal(now, (DateTime)db.TimeSeriesAdd("ADD_GET_ts2", now, 1.1));
+            db.KeyDelete("ADD_GET_ts2");
         }
 
         [Fact]
@@ -41,6 +42,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             IDatabase db = redisFixture.redis.GetDatabase();
             db.TimeSeriesCreate(keyname);
             Assert.Null(db.TimeSeriesGet(keyname));
+            db.KeyDelete(keyname);
         }
 
         [Fact]
@@ -53,6 +55,22 @@ namespace NRedisTimeSeries.Test.TestAPI
             db.TimeSeriesAdd(keyname, now, 1.1);
             Value actual = db.TimeSeriesGet(keyname);
             Assert.Equal(expected, actual);
+            db.KeyDelete(keyname);
+
+        }
+
+        [Fact]
+        public void TestOldAdd()
+        {
+            DateTime old_dt = DateTime.Now;
+            Thread.Sleep(1000);
+            DateTime new_dt = DateTime.Now;
+            IDatabase db = redisFixture.redis.GetDatabase();
+            db.TimeSeriesCreate(keyname);
+            db.TimeSeriesAdd(keyname, new_dt, 1.1);
+            var ex = Assert.Throws<RedisServerException>(() => db.TimeSeriesAdd(keyname, old_dt, 1.2));
+            Assert.Equal("TSDB: Timestamp cannot be older than the latest timestamp in the time series", ex.Message);
+            db.KeyDelete(keyname);
         }
     }
 }

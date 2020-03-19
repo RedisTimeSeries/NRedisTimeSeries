@@ -21,6 +21,7 @@ namespace NRedisTimeSeries.DataTypes
         public static Aggregation VARS { get { return new Aggregation("var.s"); } }
 
         public static implicit operator string(Aggregation aggregation) => aggregation.value;
+        public static implicit operator Aggregation(string s) => new Aggregation(s);
 
     }
 }

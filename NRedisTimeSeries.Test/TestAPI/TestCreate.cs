@@ -9,7 +9,7 @@ namespace NRedisTimeSeries.Test.TestAPI
     {
         private RedisFixture redisFixture;
 
-        private readonly string keyname = "ts1";
+        private readonly string keyname = "CREATE_ts1";
 
         public TestCreate(RedisFixture redisFixture) => this.redisFixture = redisFixture;
 
@@ -23,6 +23,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             IDatabase db = redisFixture.redis.GetDatabase();
             Assert.True(db.TimeSeriesCreate(keyname));
+            db.KeyDelete(keyname);
         }
 
         [Fact]
@@ -30,6 +31,8 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             IDatabase db = redisFixture.redis.GetDatabase();
             Assert.True(db.TimeSeriesCreate(keyname, retentionTime: 5000));
+            db.KeyDelete(keyname);
+
         }
     }
 }

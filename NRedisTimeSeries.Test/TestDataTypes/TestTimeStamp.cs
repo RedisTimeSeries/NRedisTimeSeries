@@ -13,7 +13,7 @@ namespace NRedisTimeSeries.Test
         public void TestTimeStampImplicitCast()
         {
             TimeStamp ts = ImplicitCast(1);
-            Assert.Equal((long)1, (long) ts);
+            Assert.Equal<long>(1, ts);
 
             ts = ImplicitCast("+");
             Assert.Equal("+", ts);
@@ -29,7 +29,7 @@ namespace NRedisTimeSeries.Test
 
             DateTime now = DateTime.Now;
             ts = ImplicitCast(now);
-            Assert.Equal(now, (DateTime)ts);
+            Assert.Equal<DateTime>(now, ts);
 
         }
     }
