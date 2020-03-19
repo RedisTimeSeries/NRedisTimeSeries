@@ -9,7 +9,7 @@ namespace NRedisTimeSeries.Test.TestDataTypes
         [Fact]
         public void TestLabelConstructor()
         {
-            Label label = new Label("a", "b");
+            TimeSeriesLabel label = new TimeSeriesLabel("a", "b");
             Assert.Equal("a", label.Key);
             Assert.Equal("b", label.Value);
         }
@@ -18,10 +18,10 @@ namespace NRedisTimeSeries.Test.TestDataTypes
         [Fact]
         public void TestLbaelEquals()
         {
-            Label label_ab = new Label("a", "b");
-            Label label1 = new Label("a", "b");
-            Label label2 = new Label("a", "c");
-            Label label3 = new Label("c", "b");
+            TimeSeriesLabel label_ab = new TimeSeriesLabel("a", "b");
+            TimeSeriesLabel label1 = new TimeSeriesLabel("a", "b");
+            TimeSeriesLabel label2 = new TimeSeriesLabel("a", "c");
+            TimeSeriesLabel label3 = new TimeSeriesLabel("c", "b");
 
             Assert.Equal(label_ab, label1);
             Assert.NotEqual(label_ab, label2);

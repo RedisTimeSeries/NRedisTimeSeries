@@ -3,19 +3,19 @@ using System.Collections.Generic;
 
 namespace NRedisTimeSeries.DataTypes
 {
-    public class Label : IEquatable<Label>
+    public class TimeSeriesLabel : IEquatable<TimeSeriesLabel>
     {
         public string Key { get; }
         public string Value { get; }
 
-        public Label(string key, string value) => (Key ,Value) = (key, value);
+        public TimeSeriesLabel(string key, string value) => (Key ,Value) = (key, value);
 
         public override bool Equals(object obj)
         {
-            return Equals(obj as Label);
+            return Equals(obj as TimeSeriesLabel);
         }
 
-        public bool Equals(Label other)
+        public bool Equals(TimeSeriesLabel other)
         {
             return other != null &&
                    Key == other.Key &&

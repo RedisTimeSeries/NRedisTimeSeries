@@ -4,20 +4,6 @@ using System.Collections.Generic;
 namespace NRedisTimeSeries.DataTypes
 {
 
-    public class TimeSeriesRule
-    {
-        public string DestKey { get; private set; }
-        public long TimeBucket { get; private set; }
-        public Aggregation Aggregation { get; private set; }
-
-        public TimeSeriesRule(string destKey, long timeBucket, Aggregation aggregation)
-        {
-            DestKey = destKey;
-            TimeBucket = timeBucket;
-            Aggregation = aggregation;
-        }
-    }
-
     public class TimeSeriesInformation
     {
         public long TotalSamples { get; private set; }

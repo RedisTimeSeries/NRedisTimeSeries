@@ -49,11 +49,11 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestAddAndGet()
         {
             DateTime now = DateTime.Now;
-            Value expected = new Value(now, 1.1);
+            TimeSeriesTuple expected = new TimeSeriesTuple(now, 1.1);
             IDatabase db = redisFixture.redis.GetDatabase();
             db.TimeSeriesCreate(keyname);
             db.TimeSeriesAdd(keyname, now, 1.1);
-            Value actual = db.TimeSeriesGet(keyname);
+            TimeSeriesTuple actual = db.TimeSeriesGet(keyname);
             Assert.Equal(expected, actual);
             db.KeyDelete(keyname);
 

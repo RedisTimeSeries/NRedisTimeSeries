@@ -6,7 +6,7 @@ namespace NRedisTimeSeries
     /// <summary>
     /// 
     /// </summary>
-    public class Value : IEquatable<Value>
+    public class TimeSeriesTuple : IEquatable<TimeSeriesTuple>
     {
         public TimeStamp Time { get; }
 
@@ -17,14 +17,14 @@ namespace NRedisTimeSeries
         /// </summary>
         /// <param name="time"></param>
         /// <param name="val"></param>
-        public Value(TimeStamp time, double val) => (Time, Val) = (time, val);
+        public TimeSeriesTuple(TimeStamp time, double val) => (Time, Val) = (time, val);
 
         public override bool Equals(object obj)
         {
-            return Equals(obj as Value);
+            return Equals(obj as TimeSeriesTuple);
         }
 
-        public bool Equals(Value other)
+        public bool Equals(TimeSeriesTuple other)
         {
             return other != null &&
                    EqualityComparer<TimeStamp>.Default.Equals(Time, other.Time) &&

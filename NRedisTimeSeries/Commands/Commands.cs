@@ -18,14 +18,4 @@ namespace NRedisTimeSeries
         public static string INFO => "TS.INFO";
         public static string QUERYINDEX => "TS.QUERYINDEX";
     }
-
-    public class CommandArgs
-    {
-        public static string RETENTION = "RETENTION";
-        public static string LABELS = "LABELS";
-        public static string UNCOMPRESSED = "UNCOMPRESSED";
-        public static string COUNT = "COUNT";
-        public static string AGGREGATION = "AGGREGARION";
-        public static string FILTER = "FILTER";
-    }
 }
