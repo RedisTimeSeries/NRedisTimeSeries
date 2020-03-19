@@ -257,6 +257,12 @@ namespace NRedisTimeSeries
         }
 
 
+        public static IReadOnlyList<string> TimeSeriesQueryIndex(this IDatabase db, IReadOnlyCollection<string> filter)
+        {
+            var args = new List<object>(filter);
+            return ParseStringArray(db.Execute(TS.QUERYINDEX, args));
+        }
+
 
         #endregion
 

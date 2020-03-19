@@ -47,11 +47,6 @@ namespace NRedisTimeSeries.Test.TestAPI
             {
                 Assert.Equal<DateTime>(timestamps[i], response[i]);
             }
-
-            foreach (string keyname in keynames)
-            {
-                db.KeyDelete(keyname);
-            }
         }
 
         [Fact]
@@ -86,12 +81,6 @@ namespace NRedisTimeSeries.Test.TestAPI
 
             var ex = Assert.Throws<RedisServerException>(()=>db.TimeSeriesMAdd(sequence));
             Assert.Equal("TSDB: Timestamp cannot be older than the latest timestamp in the time series", ex.Message);
-
-            foreach (string keyname in keynames)
-            {
-                db.KeyDelete(keyname);
-            }
-
         }
     }
 }

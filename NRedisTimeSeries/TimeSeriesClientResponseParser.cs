@@ -105,5 +105,14 @@ namespace NRedisTimeSeries
             IReadOnlyList <TimeSeriesRule> rules = ParseRuleArray(redisResults[19]);
             return new TimeSeriesInformation(totalSamples, memoryUsage, firstTimeStamp, lastTimeStamp, retentionTime, chunkCount, maxSamplesPerChunk, labels, destKey, rules);
         }
+
+        private static IReadOnlyList<string> ParseStringArray(RedisResult result)
+        {
+            RedisResult[] redisResults = (RedisResult[])result;
+            var list = new List<string>();
+            if (redisResults.Length == 0) return list;
+            Array.ForEach(redisResults, str => list.Add((string)str));
+            return list;
+        }
     }
 }

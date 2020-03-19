@@ -23,7 +23,6 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             IDatabase db = redisFixture.redis.GetDatabase();
             Assert.True(db.TimeSeriesCreate(keyname));
-            db.KeyDelete(keyname);
         }
 
         [Fact]
@@ -31,8 +30,6 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             IDatabase db = redisFixture.redis.GetDatabase();
             Assert.True(db.TimeSeriesCreate(keyname, retentionTime: 5000));
-            db.KeyDelete(keyname);
-
         }
     }
 }

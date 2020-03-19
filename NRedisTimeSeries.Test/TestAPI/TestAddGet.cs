@@ -33,7 +33,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             IDatabase db = redisFixture.redis.GetDatabase();
             var ex = Assert.Throws<RedisServerException>(()=>db.TimeSeriesGet(keyname));
-            Assert.Equal("TSDB: key does not exist", ex.Message);
+            Assert.Equal("TSDB: the key does not exist", ex.Message);
         }
 
         [Fact]
@@ -42,7 +42,6 @@ namespace NRedisTimeSeries.Test.TestAPI
             IDatabase db = redisFixture.redis.GetDatabase();
             db.TimeSeriesCreate(keyname);
             Assert.Null(db.TimeSeriesGet(keyname));
-            db.KeyDelete(keyname);
         }
 
         [Fact]
@@ -55,8 +54,6 @@ namespace NRedisTimeSeries.Test.TestAPI
             db.TimeSeriesAdd(keyname, now, 1.1);
             TimeSeriesTuple actual = db.TimeSeriesGet(keyname);
             Assert.Equal(expected, actual);
-            db.KeyDelete(keyname);
-
         }
 
         [Fact]
@@ -70,7 +67,6 @@ namespace NRedisTimeSeries.Test.TestAPI
             db.TimeSeriesAdd(keyname, new_dt, 1.1);
             var ex = Assert.Throws<RedisServerException>(() => db.TimeSeriesAdd(keyname, old_dt, 1.2));
             Assert.Equal("TSDB: Timestamp cannot be older than the latest timestamp in the time series", ex.Message);
-            db.KeyDelete(keyname);
         }
     }
 }
