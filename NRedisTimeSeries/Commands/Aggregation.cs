@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace NRedisTimeSeries.DataTypes
 {
-    public class Aggregation
+    public class Aggregation : IEquatable<Aggregation>
     {
-        private Aggregation(string value) => this.value = value;
+        private Aggregation(string name) => this.Name = name;
 
-        private readonly string value;
+        public string Name { get; private set; }
 
         public static Aggregation AVG { get { return new Aggregation("avg"); } }
         public static Aggregation SUM { get { return new Aggregation("sum"); } }
@@ -20,8 +22,23 @@ namespace NRedisTimeSeries.DataTypes
         public static Aggregation VARP { get { return new Aggregation("var.p"); } }
         public static Aggregation VARS { get { return new Aggregation("var.s"); } }
 
-        public static implicit operator string(Aggregation aggregation) => aggregation.value;
+        public static implicit operator string(Aggregation aggregation) => aggregation.Name;
         public static implicit operator Aggregation(string s) => new Aggregation(s);
 
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Aggregation);
+        }
+
+        public bool Equals(Aggregation other)
+        {
+            return other != null &&
+                   Name == other.Name;
+        }
+
+        public override int GetHashCode()
+        {
+            return 539060726 + EqualityComparer<string>.Default.GetHashCode(Name);
+        }
     }
 }

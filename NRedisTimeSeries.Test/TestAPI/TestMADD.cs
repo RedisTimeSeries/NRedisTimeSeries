@@ -5,13 +5,12 @@ using Xunit;
 
 namespace NRedisTimeSeries.Test.TestAPI
 {
-    public class TestMADD : IDisposable, IClassFixture<RedisFixture>
+    public class TestMADD : AbstractTimeSeriesTest, IDisposable
     {
-        private RedisFixture redisFixture;
 
-        private readonly string[] keys = { "MADD_ts1", "MADD_ts2" };
+        private readonly string[] keys = { "MADD_TESTS_1", "MADD_TESTS_2" };
 
-        public TestMADD(RedisFixture redisFixture) => this.redisFixture = redisFixture;
+        public TestMADD(RedisFixture redisFixture) : base(redisFixture) { }
 
         public void Dispose()
         {

@@ -4,31 +4,27 @@ namespace NRedisTimeSeries.Test
 {
     public class TestTimeStamp
     {
-        private TimeStamp ImplicitCast(TimeStamp ts)
-        {
-            return ts;
-        }
 
         [Fact]
         public void TestTimeStampImplicitCast()
         {
-            TimeStamp ts = ImplicitCast(1);
+            TimeStamp ts = 1;
             Assert.Equal<long>(1, ts);
 
-            ts = ImplicitCast("+");
+            ts = "+";
             Assert.Equal("+", ts);
 
-            ts = ImplicitCast("*");
+            ts = "*";
             Assert.Equal("*", ts);
 
-            ts = ImplicitCast("-");
+            ts = "-";
             Assert.Equal("-", ts);
 
-            var ex = Assert.Throws<NotSupportedException>(()=>ImplicitCast("hi"));
+            var ex = Assert.Throws<NotSupportedException>(() => ts = "hi");
             Assert.Equal("The string hi cannot be used", ex.Message);
 
             DateTime now = DateTime.Now;
-            ts = ImplicitCast(now);
+            ts = now;
             Assert.Equal<DateTime>(now, ts);
 
         }

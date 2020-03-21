@@ -51,7 +51,7 @@ namespace NRedisTimeSeries
             if(aggregation != null)
             {
                 args.Add(CommandArgs.AGGREGATION);
-                args.Add(aggregation);
+                args.Add(aggregation.Name);
                 if (!timeBucket.HasValue)
                 {
                     throw new ArgumentNullException("RAGNE Aggregation should have timeBucket value");

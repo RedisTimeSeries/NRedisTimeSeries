@@ -62,7 +62,7 @@ namespace NRedisTimeSeries
         /// <returns></returns>
         public static TimeStamp TimeSeriesAdd(this IDatabase db, string key, TimeStamp timestamp, double value, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null)
         {
-            var args = new List<object> { key, (long)timestamp, value };
+            var args = new List<object> { key, timestamp.Value, value };
             AddRetentionTime(args, retentionTime);
             AddLabels(args, labels);
             AddUncompressed(args, uncompressed);
