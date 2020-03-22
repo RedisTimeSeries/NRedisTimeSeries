@@ -27,6 +27,18 @@ namespace NRedisTimeSeries.Test.TestDataTypes
             Assert.NotEqual(label_ab, label2);
             Assert.NotEqual(label_ab, label3);
         }
-       
+
+        [Fact]
+        public void TestLabelHashCode()
+        {
+            TimeSeriesLabel label_ab = new TimeSeriesLabel("a", "b");
+            TimeSeriesLabel label1 = new TimeSeriesLabel("a", "b");
+            TimeSeriesLabel label2 = new TimeSeriesLabel("a", "c");
+            TimeSeriesLabel label3 = new TimeSeriesLabel("c", "b");
+
+            Assert.Equal(label_ab.GetHashCode(), label1.GetHashCode());
+            Assert.NotEqual(label_ab.GetHashCode(), label2.GetHashCode());
+            Assert.NotEqual(label_ab.GetHashCode(), label3.GetHashCode());
+        }
     }
 }

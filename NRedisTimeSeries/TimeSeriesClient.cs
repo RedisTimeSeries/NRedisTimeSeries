@@ -187,12 +187,12 @@ namespace NRedisTimeSeries
         /// <param name="filter"></param>
         /// <param name="withLabels"></param>
         /// <returns></returns>
-        public static IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)> TimeSeriesMGet(this IDatabase db, IReadOnlyCollection<string> filter, bool? withLabels)
+        public static IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, TimeSeriesTuple value)> TimeSeriesMGet(this IDatabase db, IReadOnlyCollection<string> filter, bool? withLabels = null)
         {
             var args = new List<object>();
-            AddFilters(args, filter);
             args.AddWithLabels(withLabels);
-            return ParseMResponse(db.Execute(TS.MGET, args));
+            AddFilters(args, filter);
+            return ParseMGetesponse(db.Execute(TS.MGET, args));
         }
 
 
@@ -237,7 +237,7 @@ namespace NRedisTimeSeries
             args.AddWithLabels(withLabels);
             args.AddFilters(filter);
 
-            return ParseMResponse(db.Execute(TS.MRANGE, args));
+            return ParseMRangeResponse(db.Execute(TS.MRANGE, args));
         }
 
         #endregion
