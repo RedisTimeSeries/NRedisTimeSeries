@@ -56,7 +56,23 @@ namespace NRedisTimeSeries
             return list;
         }
 
-        private static IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)> ParseMResponse(RedisResult result)
+        private static IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, TimeSeriesTuple value)> ParseMGetesponse(RedisResult result)
+        {
+            RedisResult[] redisResults = (RedisResult[])result;
+            var list = new List<(string key, IReadOnlyList<TimeSeriesLabel> labels, TimeSeriesTuple values)>(redisResults.Length);
+            if (redisResults.Length == 0) return list;
+            Array.ForEach(redisResults, MRangeValue =>
+            {
+                RedisResult[] MRangeTuple = (RedisResult[])MRangeValue;
+                string key = (string)MRangeTuple[0];
+                IReadOnlyList<TimeSeriesLabel> labels = ParseLabelArray(MRangeTuple[1]);
+                TimeSeriesTuple value = ParseTimeSeriesTuple(MRangeTuple[2]);
+                list.Add((key, labels, value));
+            });
+            return list;
+        }
+
+        private static IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)> ParseMRangeResponse(RedisResult result)
         {
             RedisResult[] redisResults = (RedisResult[])result;
             var list = new List<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)>(redisResults.Length);

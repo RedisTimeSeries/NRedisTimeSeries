@@ -94,8 +94,8 @@ namespace NRedisTimeSeries
         {
             args.Add(rule.DestKey);
             args.Add(CommandArgs.AGGREGATION);
-            args.Add(rule.Aggregation);
-            args.Add(rule.BucketTime);
+            args.Add(rule.Aggregation.Name);
+            args.Add(rule.TimeBucket);
         }
     }
 }

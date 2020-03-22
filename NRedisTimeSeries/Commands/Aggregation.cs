@@ -33,7 +33,7 @@ namespace NRedisTimeSeries.DataTypes
         public bool Equals(Aggregation other)
         {
             return other != null &&
-                   Name == other.Name;
+                   Name.Equals(other.Name, StringComparison.OrdinalIgnoreCase);
         }
 
         public override int GetHashCode()
