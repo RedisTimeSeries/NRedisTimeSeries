@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NRedisTimeSeries.DataTypes
 {
-    public class TimeSeriesLabel : IEquatable<TimeSeriesLabel>
+    public class TimeSeriesLabel
     {
         public string Key { get; }
         public string Value { get; }
@@ -12,14 +12,9 @@ namespace NRedisTimeSeries.DataTypes
 
         public override bool Equals(object obj)
         {
-            return Equals(obj as TimeSeriesLabel);
-        }
-
-        public bool Equals(TimeSeriesLabel other)
-        {
-            return other != null &&
-                   Key == other.Key &&
-                   Value == other.Value;
+            return obj is TimeSeriesLabel label &&
+                   Key == label.Key &&
+                   Value == label.Value;
         }
 
         public override int GetHashCode()

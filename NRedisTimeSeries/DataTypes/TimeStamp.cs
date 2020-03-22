@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NRedisTimeSeries
 {
-    public class TimeStamp : IEquatable<TimeStamp>
+    public class TimeStamp
     {
         private static readonly string[] constants = { "-", "+", "*" };
 
@@ -22,22 +22,6 @@ namespace NRedisTimeSeries
             Value = timestamp;
         }
 
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as TimeStamp);
-        }
-
-        public bool Equals(TimeStamp other)
-        {
-            return other != null &&
-                   EqualityComparer<object>.Default.Equals(Value, other.Value);
-        }
-
-        public override int GetHashCode()
-        {
-            return -1584136870 + EqualityComparer<object>.Default.GetHashCode(Value);
-        }
-
         public static implicit operator TimeStamp(long l) => new TimeStamp(l);
         public static implicit operator long(TimeStamp ts) => ts.Value is long ? (long)ts.Value :
             throw new InvalidCastException("Cannot convert string timestamp to long");
@@ -46,7 +30,15 @@ namespace NRedisTimeSeries
         public static implicit operator TimeStamp(DateTime dateTime) => new TimeStamp(dateTime);
         public static implicit operator DateTime(TimeStamp timeStamp) => new DateTime(timeStamp);
 
+        public override bool Equals(object obj)
+        {
+            return obj is TimeStamp stamp &&
+                   EqualityComparer<object>.Default.Equals(Value, stamp.Value);
+        }
 
-
+        public override int GetHashCode()
+        {
+            return -1937169414 + EqualityComparer<object>.Default.GetHashCode(Value);
+        }
     }
 }

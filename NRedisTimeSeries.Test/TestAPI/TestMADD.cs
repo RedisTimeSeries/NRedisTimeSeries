@@ -16,7 +16,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             foreach(string key in keys)
             {
-                redisFixture.redis.GetDatabase().KeyDelete(key);
+                redisFixture.Redis.GetDatabase().KeyDelete(key);
             }
         }
 
@@ -24,11 +24,11 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestSuccessfulMADD()
         {
 
-            IDatabase db = redisFixture.redis.GetDatabase();
+            IDatabase db = redisFixture.Redis.GetDatabase();
 
-            foreach (string keyname in keys)
+            foreach (string key in keys)
             {
-                db.TimeSeriesCreate(keyname);
+                db.TimeSeriesCreate(key);
             }
 
             List<(string, TimeStamp, double)> sequence = new List<(string, TimeStamp, double)>(keys.Length);
@@ -51,11 +51,11 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public void TestFailedMADD()
         {
-            IDatabase db = redisFixture.redis.GetDatabase();
+            IDatabase db = redisFixture.Redis.GetDatabase();
 
-            foreach (string keyname in keys)
+            foreach (string key in keys)
             {
-                db.TimeSeriesCreate(keyname);
+                db.TimeSeriesCreate(key);
             }
 
             List<DateTime> oldTimeStamps = new List<DateTime>();

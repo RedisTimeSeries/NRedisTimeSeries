@@ -15,13 +15,13 @@ namespace NRedisTimeSeries.Test.TestAPI
 
         public void Dispose()
         {
-            redisFixture.redis.GetDatabase().KeyDelete(key);
+            redisFixture.Redis.GetDatabase().KeyDelete(key);
         }
 
         [Fact]
         public void TestCreateOK()
         {
-            IDatabase db = redisFixture.redis.GetDatabase();
+            IDatabase db = redisFixture.Redis.GetDatabase();
             Assert.True(db.TimeSeriesCreate(key));
             TimeSeriesInformation info = db.TimeSeriesInfo(key);
         }
@@ -30,7 +30,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestCreateRetentionTime()
         {
             long retentionTime = 5000;
-            IDatabase db = redisFixture.redis.GetDatabase();
+            IDatabase db = redisFixture.Redis.GetDatabase();
             Assert.True(db.TimeSeriesCreate(key, retentionTime: retentionTime));
             TimeSeriesInformation info = db.TimeSeriesInfo(key);
             Assert.Equal(retentionTime, info.RetentionTime);
@@ -41,7 +41,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             TimeSeriesLabel label = new TimeSeriesLabel("key", "value");
             var labels = new List<TimeSeriesLabel> { label };
-            IDatabase db = redisFixture.redis.GetDatabase();
+            IDatabase db = redisFixture.Redis.GetDatabase();
             Assert.True(db.TimeSeriesCreate(key, labels: labels));
             TimeSeriesInformation info = db.TimeSeriesInfo(key);
             Assert.Equal(labels, info.Labels);
@@ -51,7 +51,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestCreateEmptyLabels()
         {
             var labels = new List<TimeSeriesLabel>();
-            IDatabase db = redisFixture.redis.GetDatabase();
+            IDatabase db = redisFixture.Redis.GetDatabase();
             Assert.True(db.TimeSeriesCreate(key, labels: labels));
             TimeSeriesInformation info = db.TimeSeriesInfo(key);
             Assert.Equal(labels, info.Labels);
@@ -60,7 +60,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public void TestCreateUncompressed()
         {
-            IDatabase db = redisFixture.redis.GetDatabase();
+            IDatabase db = redisFixture.Redis.GetDatabase();
             Assert.True(db.TimeSeriesCreate(key, uncompressed: true));
         }
     }

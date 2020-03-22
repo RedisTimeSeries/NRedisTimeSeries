@@ -99,14 +99,14 @@ namespace NRedisTimeSeries
         /// <param name="labels"></param>
         /// <param name="uncompressed"></param>
         /// <returns></returns>
-        public static bool TimeSeriesIncerBy(this IDatabase db, string key, double value, TimeStamp timestamp = null, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null)
+        public static TimeStamp TimeSeriesIncerBy(this IDatabase db, string key, double value, TimeStamp timestamp = null, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null)
         {
             var args = new List<object> { key, value };
             args.AddTimeStamp(timestamp);
             args.AddRetentionTime(retentionTime);
             args.AddLabels(labels);
             args.AddUncompressed(uncompressed);
-            return ParseBoolean(db.Execute(TS.INCRBY, args));
+            return ParseTimeStamp(db.Execute(TS.INCRBY, args));
         }
 
 
@@ -121,14 +121,14 @@ namespace NRedisTimeSeries
         /// <param name="labels"></param>
         /// <param name="uncompressed"></param>
         /// <returns></returns>
-        public static bool TimeSeriesDecrBy(this IDatabase db, string key, double value, TimeStamp timestamp = null, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null)
+        public static TimeStamp TimeSeriesDecrBy(this IDatabase db, string key, double value, TimeStamp timestamp = null, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null)
         {
             var args = new List<object> { key, value };
             args.AddTimeStamp(timestamp);
             args.AddRetentionTime(retentionTime);
             args.AddLabels(labels);
             args.AddUncompressed(uncompressed);
-            return ParseBoolean(db.Execute(TS.DECRBY, args));
+            return ParseTimeStamp(db.Execute(TS.DECRBY, args));
         }
 
         #endregion
@@ -232,10 +232,10 @@ namespace NRedisTimeSeries
         public static IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)> TimeSeriesMRange(this IDatabase db, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, IReadOnlyCollection<string> filter, long? count = null, Aggregation aggregation = null, long? timeBucket = null, bool? withLabels = null)
         {
             var args = new List<object>() { fromTimeStamp.Value, toTimeStamp.Value };
-            args.AddFilters(filter);
             args.AddCount(count);
             args.AddAggregation(aggregation, timeBucket);
             args.AddWithLabels(withLabels);
+            args.AddFilters(filter);
 
             return ParseMResponse(db.Execute(TS.MRANGE, args));
         }
