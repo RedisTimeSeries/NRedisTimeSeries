@@ -14,13 +14,13 @@ namespace NRedisTimeSeries.Test.TestAPI
 
         public void Dispose()
         {
-            redisFixture.redis.GetDatabase().KeyDelete(key);
+            redisFixture.Redis.GetDatabase().KeyDelete(key);
         }
 
         [Fact]
         public void TestGetNotExists()
         {
-            IDatabase db = redisFixture.redis.GetDatabase();
+            IDatabase db = redisFixture.Redis.GetDatabase();
             var ex = Assert.Throws<RedisServerException>(()=>db.TimeSeriesGet(key));
             Assert.Equal("TSDB: the key does not exist", ex.Message);
         }
@@ -28,7 +28,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public void TestEmptyGet()
         {
-            IDatabase db = redisFixture.redis.GetDatabase();
+            IDatabase db = redisFixture.Redis.GetDatabase();
             db.TimeSeriesCreate(key);
             Assert.Null(db.TimeSeriesGet(key));
         }
@@ -38,7 +38,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             DateTime now = DateTime.Now;
             TimeSeriesTuple expected = new TimeSeriesTuple(now, 1.1);
-            IDatabase db = redisFixture.redis.GetDatabase();
+            IDatabase db = redisFixture.Redis.GetDatabase();
             db.TimeSeriesCreate(key);
             db.TimeSeriesAdd(key, now, 1.1);
             TimeSeriesTuple actual = db.TimeSeriesGet(key);

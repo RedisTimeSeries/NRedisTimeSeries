@@ -14,14 +14,14 @@ namespace NRedisTimeSeries.Test.TestAPI
 
         public void Dispose()
         {
-            redisFixture.redis.GetDatabase().KeyDelete(key);
+            redisFixture.Redis.GetDatabase().KeyDelete(key);
         }
 
         [Fact]
         public void TestAlterRetentionTime()
         {
             long retentionTime = 5000;
-            IDatabase db = redisFixture.redis.GetDatabase();
+            IDatabase db = redisFixture.Redis.GetDatabase();
             db.TimeSeriesCreate(key);
             Assert.True(db.TimeSeriesAlter(key, retentionTime: retentionTime));
             TimeSeriesInformation info = db.TimeSeriesInfo(key);
@@ -33,7 +33,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             TimeSeriesLabel label = new TimeSeriesLabel("key", "value");
             var labels = new List<TimeSeriesLabel> { label };
-            IDatabase db = redisFixture.redis.GetDatabase();
+            IDatabase db = redisFixture.Redis.GetDatabase();
             db.TimeSeriesCreate(key);
             Assert.True(db.TimeSeriesAlter(key, labels: labels));
             TimeSeriesInformation info = db.TimeSeriesInfo(key);

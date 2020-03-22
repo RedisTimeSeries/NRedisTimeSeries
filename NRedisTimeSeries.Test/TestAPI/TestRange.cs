@@ -15,54 +15,55 @@ namespace NRedisTimeSeries.Test.TestAPI
 
         public void Dispose()
         {
-            redisFixture.redis.GetDatabase().KeyDelete(key);
+            redisFixture.Redis.GetDatabase().KeyDelete(key);
         }
 
-        [Fact]
-        public void TestSimpleRange()
+        private List<TimeSeriesTuple> CreateData(IDatabase db, int sleepTime)
         {
-            IDatabase db = redisFixture.redis.GetDatabase();
             var tuples = new List<TimeSeriesTuple>();
             for (int i = 0; i < 10; i++)
             {
                 TimeStamp ts = DateTime.Now;
                 db.TimeSeriesAdd(key, ts, i);
                 tuples.Add(new TimeSeriesTuple(ts, i));
-                Thread.Sleep(50);
+                Thread.Sleep(sleepTime);
             }
+            return tuples;
+        }
+
+        [Fact]
+        public void TestSimpleRange()
+        {
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            var tuples = CreateData(db, 50);
             Assert.Equal(tuples, db.TimeSeriesRange(key, "-", "+"));
         }
 
         [Fact]
         public void TestRangeCount()
         {
-            IDatabase db = redisFixture.redis.GetDatabase();
-            var tuples = new List<TimeSeriesTuple>();
-            for (int i = 0; i < 10; i++)
-            {
-                TimeStamp ts = DateTime.Now;
-                db.TimeSeriesAdd(key, ts, i);
-                tuples.Add(new TimeSeriesTuple(ts, i));
-                Thread.Sleep(50);
-            }
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            var tuples = CreateData(db, 50);
             Assert.Equal(tuples.GetRange(0, 5), db.TimeSeriesRange(key, "-", "+", count: 5));
         }
 
         [Fact]
         public void TestRangeAggregation()
         {
-            IDatabase db = redisFixture.redis.GetDatabase();
-            var tuples = new List<TimeSeriesTuple>();
-            for (int i = 0; i < 10; i++)
-            {
-                TimeStamp ts = DateTime.Now;
-                db.TimeSeriesAdd(key, ts, i);
-                tuples.Add(new TimeSeriesTuple(ts, i));
-                Thread.Sleep(50);
-            }
-
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            var tuples = CreateData(db, 50);
             Aggregation[] aggregarions = { Aggregation.AVG, Aggregation.COUNT, Aggregation.FIRST, Aggregation.LAST, Aggregation.MAX, Aggregation.MIN, Aggregation.RANGE, Aggregation.STDP, Aggregation.STDS, Aggregation.SUM, Aggregation.VARP, Aggregation.VARS };
             Array.ForEach(aggregarions, aggregation => Assert.Equal(tuples, db.TimeSeriesRange(key, "-", "+", aggregation: aggregation, timeBucket: 50)));
+        }
+
+        [Fact]
+        public void TestMissingTimeBucket()
+        {
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            var tuples = CreateData(db, 50);
+            var ex = Assert.Throws<ArgumentException>(() => db.TimeSeriesRange(key, "-", "+", aggregation: Aggregation.AVG));
+            Assert.Equal("RAGNE Aggregation should have timeBucket value", ex.Message);
+
         }
     }
 }

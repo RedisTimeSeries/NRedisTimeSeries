@@ -6,7 +6,7 @@ namespace NRedisTimeSeries
     /// <summary>
     /// 
     /// </summary>
-    public class TimeSeriesTuple : IEquatable<TimeSeriesTuple>
+    public class TimeSeriesTuple
     {
         public TimeStamp Time { get; }
 
@@ -21,14 +21,9 @@ namespace NRedisTimeSeries
 
         public override bool Equals(object obj)
         {
-            return Equals(obj as TimeSeriesTuple);
-        }
-
-        public bool Equals(TimeSeriesTuple other)
-        {
-            return other != null &&
-                   EqualityComparer<TimeStamp>.Default.Equals(Time, other.Time) &&
-                   Val == other.Val;
+            return obj is TimeSeriesTuple tuple &&
+                   EqualityComparer<TimeStamp>.Default.Equals(Time, tuple.Time) &&
+                   Val == tuple.Val;
         }
 
         public override int GetHashCode()

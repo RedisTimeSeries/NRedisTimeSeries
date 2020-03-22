@@ -54,7 +54,7 @@ namespace NRedisTimeSeries
                 args.Add(aggregation.Name);
                 if (!timeBucket.HasValue)
                 {
-                    throw new ArgumentNullException("RAGNE Aggregation should have timeBucket value");
+                    throw new ArgumentException("RAGNE Aggregation should have timeBucket value");
                 }
                 args.Add(timeBucket.Value);
             }
@@ -64,7 +64,7 @@ namespace NRedisTimeSeries
         {
             if(filter == null || filter.Count == 0)
             {
-                throw new ArgumentNullException("There should be at least one filter on MRANGE");
+                throw new ArgumentException("There should be at least one filter on MRANGE");
             }
             args.Add(CommandArgs.FILTER);
             foreach(string f in filter)

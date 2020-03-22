@@ -15,13 +15,13 @@ namespace NRedisTimeSeries.Test.TestAPI
 
         public void Dispose()
         {
-            redisFixture.redis.GetDatabase().KeyDelete(key);
+            redisFixture.Redis.GetDatabase().KeyDelete(key);
         }
 
         [Fact]
         public void TestAddNotExistingTimeSeries()
         {
-            IDatabase db = redisFixture.redis.GetDatabase();
+            IDatabase db = redisFixture.Redis.GetDatabase();
             TimeStamp now = DateTime.Now;
             Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1));
             TimeSeriesInformation info = db.TimeSeriesInfo(key);
@@ -32,7 +32,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public void TestAddExistingTimeSeries()
         {
-            IDatabase db = redisFixture.redis.GetDatabase();
+            IDatabase db = redisFixture.Redis.GetDatabase();
             db.TimeSeriesCreate(key);
             TimeStamp now = DateTime.Now;
             Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1));
@@ -44,7 +44,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public void TestAddStar()
         {
-            IDatabase db = redisFixture.redis.GetDatabase();
+            IDatabase db = redisFixture.Redis.GetDatabase();
             db.TimeSeriesAdd(key, "*", 1.1);
             TimeSeriesInformation info = db.TimeSeriesInfo(key);
             Assert.True(info.FirstTimeStamp > 0);
@@ -52,9 +52,9 @@ namespace NRedisTimeSeries.Test.TestAPI
         }
 
         [Fact]
-        public void TestAddRetentionTime()
+        public void TestAddWithRetentionTime()
         {
-            IDatabase db = redisFixture.redis.GetDatabase();
+            IDatabase db = redisFixture.Redis.GetDatabase();
             TimeStamp now = DateTime.Now;
             long retentionTime = 5000;
             Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1, retentionTime: retentionTime));
@@ -65,9 +65,9 @@ namespace NRedisTimeSeries.Test.TestAPI
         }
 
         [Fact]
-        public void TestAddLabels()
+        public void TestAddWithLabels()
         {
-            IDatabase db = redisFixture.redis.GetDatabase();
+            IDatabase db = redisFixture.Redis.GetDatabase();
             TimeStamp now = DateTime.Now;
             TimeSeriesLabel label = new TimeSeriesLabel("key", "value");
             var labels = new List<TimeSeriesLabel> { label };
@@ -78,6 +78,18 @@ namespace NRedisTimeSeries.Test.TestAPI
             Assert.Equal(labels, info.Labels);
         }
 
+        [Fact]
+        public void TestAddWithUncompressed()
+        {
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            db.TimeSeriesCreate(key);
+            TimeStamp now = DateTime.Now;
+            Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1, uncompressed: true));
+            TimeSeriesInformation info = db.TimeSeriesInfo(key);
+            Assert.Equal(now, info.FirstTimeStamp);
+            Assert.Equal(now, info.LastTimeStap);
+        }
+
 
         [Fact]
         public void TestOldAdd()
@@ -85,11 +97,22 @@ namespace NRedisTimeSeries.Test.TestAPI
             TimeStamp old_dt = DateTime.Now;
             Thread.Sleep(1000);
             TimeStamp new_dt = DateTime.Now;
-            IDatabase db = redisFixture.redis.GetDatabase();
+            IDatabase db = redisFixture.Redis.GetDatabase();
             db.TimeSeriesCreate(key);
             db.TimeSeriesAdd(key, new_dt, 1.1);
-            var ex = Assert.Throws<RedisServerException>(() => db.TimeSeriesAdd(key, old_dt, 1.2));
+            var ex = Assert.Throws<RedisServerException>(() => db.TimeSeriesAdd(key, old_dt, 1.1));
             Assert.Equal("TSDB: Timestamp cannot be older than the latest timestamp in the time series", ex.Message);
+        }
+
+        [Fact]
+        public void TestWrongParameters()
+        {
+            double value = 1.1;
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            var ex = Assert.Throws<RedisServerException>(() => db.TimeSeriesAdd(key, "+", value));
+            Assert.Equal("TSDB: invalid timestamp", ex.Message);
+            ex = Assert.Throws<RedisServerException>(() => db.TimeSeriesAdd(key, "-", value));
+            Assert.Equal("TSDB: invalid timestamp", ex.Message);
         }
     }
 }
