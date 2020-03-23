@@ -1,7 +1,7 @@
 ﻿using System;
 namespace NRedisTimeSeries.Commands
 {
-    public class CommandArgs
+    internal class CommandArgs
     {
         public static string RETENTION => "RETENTION";
         public static string LABELS => "LABELS";

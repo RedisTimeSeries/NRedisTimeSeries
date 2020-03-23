@@ -3,19 +3,39 @@ using System.Collections.Generic;
 
 namespace NRedisTimeSeries.DataTypes
 {
+    /// <summary>
+    /// A class that represents time-series aggregation rule.
+    /// </summary>
     public class TimeSeriesRule
     {
+        /// <summary>
+        /// Rule's destination key.
+        /// </summary>
         public string DestKey { get; private set; }
+
+        /// <summary>
+        /// Rule's aggregation time bucket.
+        /// </summary>
         public long TimeBucket { get; private set; }
+
+        /// <summary>
+        /// Rule's aggregation type.
+        /// </summary>
         public Aggregation Aggregation { get; private set; }
 
-        public TimeSeriesRule(string destKey, long timeBucket, Aggregation aggregation)
-        {
-            DestKey = destKey;
-            TimeBucket = timeBucket;
-            Aggregation = aggregation;
-        }
+        /// <summary>
+        /// Builds a time-series aggregation rule
+        /// </summary>
+        /// <param name="destKey">Rule's destination key.</param>
+        /// <param name="timeBucket">Rule's aggregation time bucket.</param>
+        /// <param name="aggregation">Rule's aggregation type.</param>
+        public TimeSeriesRule(string destKey, long timeBucket, Aggregation aggregation) => (DestKey, TimeBucket, Aggregation) = (destKey, timeBucket, aggregation);
 
+        /// <summary>
+        /// Equality of TimeSeriesRule objects
+        /// </summary>
+        /// <param name="obj">Object to compare</param>
+        /// <returns>If two TimeSeriesRule objects are equal</returns>
         public override bool Equals(object obj)
         {
             return obj is TimeSeriesRule rule &&
@@ -24,6 +44,10 @@ namespace NRedisTimeSeries.DataTypes
                    EqualityComparer<Aggregation>.Default.Equals(Aggregation, rule.Aggregation);
         }
 
+        /// <summary>
+        /// TimeSeriesRule object hash code.
+        /// </summary>
+        /// <returns>TimeSeriesRule object hash code.</returns>
         public override int GetHashCode()
         {
             var hashCode = 1554951643;

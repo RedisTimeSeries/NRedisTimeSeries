@@ -21,20 +21,19 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
         }
 
-        private List<TimeSeriesTuple> CreateData(IDatabase db, int sleeptime)
+        private List<TimeSeriesTuple> CreateData(IDatabase db, int timeBuket)
         {
             var tuples = new List<TimeSeriesTuple>();
 
             for (int i = 0; i < 10; i++)
             {
-                TimeStamp ts = DateTime.Now;
+                TimeStamp ts = new TimeStamp(i*timeBuket);
                 foreach (var key in keys)
                 {
                     db.TimeSeriesAdd(key, ts, i);
 
                 }
                 tuples.Add(new TimeSeriesTuple(ts, i));
-                Thread.Sleep(sleeptime);
             }
             return tuples;
         }
@@ -139,7 +138,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             {
                 Assert.Equal(keys[i], results[i].key);
                 Assert.Equal(0, results[i].labels.Count);
-                //Assert.Equal(tuples, results[i].values);
+                Assert.Equal(tuples, results[i].values);
             }
         }
 
