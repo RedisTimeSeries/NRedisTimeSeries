@@ -18,14 +18,13 @@ namespace NRedisTimeSeries.Test.TestAPI
             redisFixture.Redis.GetDatabase().KeyDelete(key);
         }
 
-        private List<TimeSeriesTuple> CreateData(IDatabase db, int sleepTime)
+        private List<TimeSeriesTuple> CreateData(IDatabase db, int timeBucket)
         {
             var tuples = new List<TimeSeriesTuple>();
             for (int i = 0; i < 10; i++)
             {
-                TimeStamp ts = db.TimeSeriesAdd(key, "*", i);
+                TimeStamp ts = db.TimeSeriesAdd(key, i*timeBucket, i);
                 tuples.Add(new TimeSeriesTuple(ts, i));
-                Thread.Sleep(sleepTime);
             }
             return tuples;
         }
@@ -50,8 +49,8 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestRangeAggregation()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            CreateData(db, 50);
-            db.TimeSeriesRange(key, "-", "+", aggregation: Aggregation.MIN, timeBucket: 50);
+            var tuples = CreateData(db, 50);
+            Assert.Equal(tuples, db.TimeSeriesRange(key, "-", "+", aggregation: Aggregation.MIN, timeBucket: 50));
         }
 
         [Fact]

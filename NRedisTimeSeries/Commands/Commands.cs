@@ -1,7 +1,7 @@
 ﻿using System;
 namespace NRedisTimeSeries
 {
-    public class TS
+    internal class TS
     {
         public static string CREATE => "TS.CREATE";
         public static string ALTER => "TS.ALTER";
