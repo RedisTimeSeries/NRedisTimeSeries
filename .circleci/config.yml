@@ -38,8 +38,8 @@ jobs:
             ./codecov -t ${CODECOV_TOKEN}
   docs:
     docker:
-        - image: mcr.microsoft.com/dotnet/core/sdk:3.1
         - image: circleci/node:10.15
+        - image: mcr.microsoft.com/dotnet/core/sdk:3.1
   
     working_directory: ~/repo
 
@@ -52,7 +52,7 @@ jobs:
           name: Install and configure dependencies
           command: |
             dotnet add NRedisTimeSeries package Vsxmd
-            npm install -g --silent gh-pages@2.0.1
+            sudo npm install -g --silent gh-pages@2.0.1
             git config user.email "ci-build@redisgraph.io"
             git config user.name "ci-build"
       - run:
