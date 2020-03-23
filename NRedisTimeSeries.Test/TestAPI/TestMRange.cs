@@ -42,7 +42,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestSimpleMRange()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeSeriesLabel labal = new TimeSeriesLabel("key", "value");
+            TimeSeriesLabel labal = new TimeSeriesLabel("MRANGEkey", "MRANGEvalue");
             var labels = new List<TimeSeriesLabel> { labal };
             foreach (string key in keys)
             {
@@ -50,7 +50,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = CreateData(db, 50);
-            var results = db.TimeSeriesMRange("-", "+", new List<string>{ "key=value"});
+            var results = db.TimeSeriesMRange("-", "+", new List<string>{ "MRANGEkey=MRANGEvalue" });
             Assert.Equal(keys.Length, results.Count);
             for(int i =0; i < results.Count; i++)
             {

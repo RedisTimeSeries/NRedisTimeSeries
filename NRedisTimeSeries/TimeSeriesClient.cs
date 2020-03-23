@@ -260,7 +260,7 @@ namespace NRedisTimeSeries
         /// Get all the keys matching the filter list.
         /// </summary>
         /// <param name="db">StackExchange.Redis IDatabase instance</param>
-        /// <param name="filter"A sequence of filters</param>
+        /// <param name="filter">A sequence of filters</param>
         /// <returns>A list of keys with labels matching the filters.</returns>
         public static IReadOnlyList<string> TimeSeriesQueryIndex(this IDatabase db, IReadOnlyCollection<string> filter)
         {
