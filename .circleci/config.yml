@@ -38,8 +38,8 @@ jobs:
             ./codecov -t ${CODECOV_TOKEN}
   docs:
     docker:
-        - image: node
-        - image: mcr.microsoft.com/dotnet/core/sdk:3.1
+      - image: circleci/node:10.15
+      - image: mcr.microsoft.com/dotnet/core/sdk:3.1
   
     working_directory: ~/repo
 
