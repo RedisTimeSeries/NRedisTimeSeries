@@ -36,44 +36,12 @@ jobs:
             curl -s https://codecov.io/bash > codecov
             chmod +x codecov
             ./codecov -t ${CODECOV_TOKEN}
-  docs:
-    docker:
-      - image: circleci/node:10.15
-      - image: mcr.microsoft.com/dotnet/core/sdk:3.1
-  
-    working_directory: ~/repo
-
-    steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "76:ad:7c:fa:32:41:29:d0:cc:f6:63:06:62:b6:54:9c"
-      - run:
-          name: Install and configure dependencies
-          command: |
-            dotnet add NRedisTimeSeries package Vsxmd
-            sudo npm install -g --silent gh-pages@2.0.1
-            git config user.email "ci-build@redisgraph.io"
-            git config user.name "ci-build"
-      - run:
-          name: Build and create docs
-          command: dotnet build
-      - run:
-          name: Deploy docs to gh-pages branch
-          command: gh-pages --message "[skip ci] Updates"  --dist ./docs --branch master --dest ./docs
-
 
 workflows:
   version: 2
   commit:
     jobs:
       - build
-      - docs:
-          requires:
-            - build
-          filters:
-            branches:
-              only: master
 
   nightly:
     triggers:
