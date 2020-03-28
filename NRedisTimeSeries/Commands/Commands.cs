@@ -1,5 +1,5 @@
 ﻿using System;
-namespace NRedisTimeSeries
+namespace NRedisTimeSeries.Commands
 {
     internal class TS
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NRedisTimeSeries
+namespace NRedisTimeSeries.DataTypes
 {
     /// <summary>
     /// A class represents timestamp.

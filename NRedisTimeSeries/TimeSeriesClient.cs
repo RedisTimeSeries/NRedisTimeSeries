@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
 
@@ -102,7 +103,7 @@ namespace NRedisTimeSeries
         /// <param name="labels">Optional: Collaction of label-value pairs that represent metadata labels of the key</param>
         /// <param name="uncompressed">Optional: Adding this flag will keep data in an uncompressed form</param>
         /// <returns>The latests sample timestamp (updated sample)</returns>
-        public static TimeStamp TimeSeriesIncerBy(this IDatabase db, string key, double value, TimeStamp timestamp = null, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null)
+        public static TimeStamp TimeSeriesIncrBy(this IDatabase db, string key, double value, TimeStamp timestamp = null, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null)
         {
             var args = new List<object> { key, value };
             args.AddTimeStamp(timestamp);

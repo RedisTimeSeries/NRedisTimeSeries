@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
 using Xunit;
 

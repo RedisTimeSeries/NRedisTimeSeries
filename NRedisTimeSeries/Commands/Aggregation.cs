@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NRedisTimeSeries.DataTypes
+namespace NRedisTimeSeries.Commands
 {
     /// <summary>
     /// A wrapper class around aggregation name. Each static member of the class is a wrapper around RedisTimerSeries aggregation.
