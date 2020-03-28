@@ -51,7 +51,7 @@ jobs:
           command: |
             cd NRedisTimeSeries
             dotnet pack --configuration release --output .
-            dotnet nuget push *.nupkg -k $NugetKey -s https://api.nuget.org/v3/index.json
+            dotnet nuget push *.nupkg -k $NugetKey -s https://api.nuget.org/v3/index.json --skip-duplicate
 
 workflows:
   version: 2
