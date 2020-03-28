@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
 
