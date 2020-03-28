@@ -9,3 +9,5 @@
 [![Gitter](https://badges.gitter.im/RedisLabs/RedisTimeSeries.svg)](https://gitter.im/RedisLabs/RedisTimeSeries?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 .Net Client for RedisTimeSeries
+
+See the [Example project](NRedisTimeSeries.Example) for commands reference
