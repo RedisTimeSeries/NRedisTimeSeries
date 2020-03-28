@@ -59,4 +59,7 @@ Global
 		{CCA3729A-3834-4A65-B56A-EA36882B33EC}.Release|x86.ActiveCfg = Release|Any CPU
 		{CCA3729A-3834-4A65-B56A-EA36882B33EC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		version = 1.0.0
+	EndGlobalSection
 EndGlobal
