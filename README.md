@@ -3,6 +3,7 @@
 [![GitHub issues](https://img.shields.io/github/release/RedisTimeSeries/NRedisTimeSeries.svg)](https://github.com/RedisTimeSeries/NRedisTimeSeries/releases/latest)
 [![Codecov](https://codecov.io/gh/RedisTimeSeries/NRedisTimeSeries/branch/master/graph/badge.svg)](https://codecov.io/gh/RedisTimeSeries/NRedisTimeSeries)
 [![Known Vulnerabilities](https://snyk.io/test/github/RedisTimeSeries/NRedisTimeSeries/badge.svg?targetFile=NRedisTimeSeries/NRedisTimeSeries.csproj)](https://snyk.io/test/github/RedisTimeSeries/NRedisTimeSeries?targetFile=NRedisTimeSeries/NRedisTimeSeries.csproj)
+[![StackExchange.Redis](https://img.shields.io/nuget/v/NRedisTimeSeries.svg)](https://www.nuget.org/packages/NRedisTimeSeries/)
 
 # NRedisTimeSeries
 [![Mailing List](https://img.shields.io/badge/Mailing%20List-RedisTimeSeries-blue)](https://groups.google.com/forum/#!forum/redistimeseries)
