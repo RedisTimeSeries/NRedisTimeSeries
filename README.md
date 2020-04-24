@@ -6,7 +6,7 @@
 [![StackExchange.Redis](https://img.shields.io/nuget/v/NRedisTimeSeries.svg)](https://www.nuget.org/packages/NRedisTimeSeries/)
 
 # NRedisTimeSeries
-[![Mailing List](https://img.shields.io/badge/Mailing%20List-RedisTimeSeries-blue)](https://groups.google.com/forum/#!forum/redistimeseries)
+[![Forum](https://img.shields.io/badge/Forum-RedisTimeSeries-blue)](https://forum.redislabs.com/c/modules/redistimeseries)
 [![Gitter](https://badges.gitter.im/RedisLabs/RedisTimeSeries.svg)](https://gitter.im/RedisLabs/RedisTimeSeries?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 .Net Client for RedisTimeSeries
