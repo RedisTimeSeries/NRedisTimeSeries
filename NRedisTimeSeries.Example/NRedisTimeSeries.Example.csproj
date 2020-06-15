@@ -8,4 +8,5 @@
   <ItemGroup>
     <ProjectReference Include="..\NRedisTimeSeries\NRedisTimeSeries.csproj" />
   </ItemGroup>
+  
 </Project>
