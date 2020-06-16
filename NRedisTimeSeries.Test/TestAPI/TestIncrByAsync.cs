@@ -41,7 +41,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var key = CreateKeyName();
             var value = 5.5;
             var db = redisFixture.Redis.GetDatabase();
-            var timeStamp = new TimeStamp(DateTime.UtcNow);
+            TimeStamp timeStamp = DateTime.UtcNow;
             Assert.Equal(timeStamp, await db.TimeSeriesIncrByAsync(key, value, timestamp: timeStamp));
             Assert.Equal(new TimeSeriesTuple(timeStamp, value), await db.TimeSeriesGetAsync(key));
         }
@@ -74,6 +74,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             
             var result = await db.TimeSeriesGetAsync(key);
             Assert.Equal(value, result.Val);
+
             var info = await db.TimeSeriesInfoAsync(key);
             Assert.Equal(labels, info.Labels);
         }
