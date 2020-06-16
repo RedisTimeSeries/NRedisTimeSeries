@@ -1,6 +1,4 @@
 ﻿using NRedisTimeSeries.DataTypes;
-using NuGet.Frameworks;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;

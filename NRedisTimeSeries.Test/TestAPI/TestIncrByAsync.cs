@@ -1,8 +1,8 @@
-﻿using System;
+﻿using NRedisTimeSeries.DataTypes;
+using StackExchange.Redis;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NRedisTimeSeries.DataTypes;
-using StackExchange.Redis;
 using Xunit;
 
 namespace NRedisTimeSeries.Test.TestAPI
@@ -18,7 +18,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var value = 5.5;
             var db = redisFixture.Redis.GetDatabase();
             Assert.True(await db.TimeSeriesIncrByAsync(key, value) > 0);
-            
+
             var result = await db.TimeSeriesGetAsync(key);
             Assert.Equal(value, result.Val);
         }
@@ -30,7 +30,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var value = 5.5;
             var db = redisFixture.Redis.GetDatabase();
             Assert.True(await db.TimeSeriesIncrByAsync(key, value, timestamp: "*") > 0);
-            
+
             var result = await db.TimeSeriesGetAsync(key);
             Assert.Equal(value, result.Val);
         }
@@ -54,7 +54,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             long retentionTime = 5000;
             var db = redisFixture.Redis.GetDatabase();
             Assert.True(await db.TimeSeriesIncrByAsync(key, value, retentionTime: retentionTime) > 0);
-            
+
             var result = await db.TimeSeriesGetAsync(key);
             Assert.Equal(value, result.Val);
 
@@ -71,7 +71,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var db = redisFixture.Redis.GetDatabase();
             var labels = new List<TimeSeriesLabel> { label };
             Assert.True(await db.TimeSeriesIncrByAsync(key, value, labels: labels) > 0);
-            
+
             var result = await db.TimeSeriesGetAsync(key);
             Assert.Equal(value, result.Val);
 
@@ -85,8 +85,8 @@ namespace NRedisTimeSeries.Test.TestAPI
             var key = CreateKeyName();
             var value = 5.5;
             var db = redisFixture.Redis.GetDatabase();
-            Assert.True(await db.TimeSeriesIncrByAsync(key, value, uncompressed:true) > 0);
-            
+            Assert.True(await db.TimeSeriesIncrByAsync(key, value, uncompressed: true) > 0);
+
             var result = await db.TimeSeriesGetAsync(key);
             Assert.Equal(value, result.Val);
         }
@@ -99,7 +99,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var db = redisFixture.Redis.GetDatabase();
             var ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesIncrByAsync(key, value, timestamp: "+"));
             Assert.Equal("TSDB: invalid timestamp", ex.Message);
-            
+
             ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesIncrByAsync(key, value, timestamp: "-"));
             Assert.Equal("TSDB: invalid timestamp", ex.Message);
         }

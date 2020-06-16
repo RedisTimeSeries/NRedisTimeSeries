@@ -171,7 +171,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var ex = await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
                 await db.TimeSeriesMRangeAsync("-", "+",
-                    filter: new List<string>() { $"key=value" }, 
+                    filter: new List<string>() { $"key=value" },
                     aggregation: Aggregation.AVG);
             });
             Assert.Equal("RAGNE Aggregation should have timeBucket value", ex.Message);
