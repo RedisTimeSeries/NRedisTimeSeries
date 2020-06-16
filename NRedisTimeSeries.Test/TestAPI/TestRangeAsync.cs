@@ -26,7 +26,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestSimpleRange()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             var tuples = await CreateData(db, key, 50);
             Assert.Equal(tuples, await db.TimeSeriesRangeAsync(key, "-", "+"));
@@ -35,7 +35,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestRangeCount()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             var tuples = await CreateData(db, key, 50);
             Assert.Equal(tuples.GetRange(0, 5), await db.TimeSeriesRangeAsync(key, "-", "+", count: 5));
@@ -44,7 +44,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestRangeAggregation()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             var tuples = await CreateData(db, key, 50);
             Assert.Equal(tuples, await db.TimeSeriesRangeAsync(key, "-", "+", aggregation: Aggregation.MIN, timeBucket: 50));
@@ -53,7 +53,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestMissingTimeBucket()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             var tuples = await CreateData(db, key, 50);
             var ex = await Assert.ThrowsAsync<ArgumentException>(async () => await db.TimeSeriesRangeAsync(key, "-", "+", aggregation: Aggregation.AVG));

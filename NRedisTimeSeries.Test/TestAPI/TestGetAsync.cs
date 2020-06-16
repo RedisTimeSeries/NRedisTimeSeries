@@ -13,7 +13,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestGetNotExists()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             var ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesGetAsync(key));
             Assert.Equal("TSDB: the key does not exist", ex.Message);
@@ -22,7 +22,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestEmptyGet()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             await db.TimeSeriesCreateAsync(key);
             Assert.Null(await db.TimeSeriesGetAsync(key));
@@ -31,7 +31,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestAddAndGet()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var now = DateTime.UtcNow;
             var expected = new TimeSeriesTuple(now, 1.1);
             var db = redisFixture.Redis.GetDatabase();

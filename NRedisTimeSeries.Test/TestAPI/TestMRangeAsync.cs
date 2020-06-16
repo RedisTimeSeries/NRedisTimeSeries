@@ -32,7 +32,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestSimpleMRange()
         {
-            var keys = CreateKeys(2);
+            var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
             var label = new TimeSeriesLabel(keys[0], "value");
             var labels = new List<TimeSeriesLabel> { label };
@@ -55,7 +55,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestMRangeWithLabels()
         {
-            var keys = CreateKeys(2);
+            var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
             var label = new TimeSeriesLabel(keys[0], "value");
             var labels = new List<TimeSeriesLabel> { label };
@@ -78,7 +78,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestMRangeFilter()
         {
-            var keys = CreateKeys(2);
+            var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
             var label = new TimeSeriesLabel(keys[0], "value");
             var labels = new List<TimeSeriesLabel> { label };
@@ -94,7 +94,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestMRangeCount()
         {
-            var keys = CreateKeys(2);
+            var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
             var label = new TimeSeriesLabel(keys[0], "value");
             var labels = new List<TimeSeriesLabel> { label };
@@ -118,7 +118,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestMRangeAggregation()
         {
-            var keys = CreateKeys(2);
+            var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
             var label = new TimeSeriesLabel(keys[0], "value");
             var labels = new List<TimeSeriesLabel> { label };
@@ -141,7 +141,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestMissingFilter()
         {
-            var keys = CreateKeys(2);
+            var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
             var label = new TimeSeriesLabel(keys[0], "value");
             var labels = new List<TimeSeriesLabel> { label };
@@ -158,7 +158,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestMissingTimeBucket()
         {
-            var keys = CreateKeys(2);
+            var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
             var label = new TimeSeriesLabel(keys[0], "value");
             var labels = new List<TimeSeriesLabel> { label };

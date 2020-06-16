@@ -78,6 +78,26 @@ namespace NRedisTimeSeries.Commands
         public static implicit operator Aggregation(string s) => new Aggregation(s);
 
         /// <summary>
+        /// Iterator of all possible Aggregation values
+        /// </summary>
+        /// <returns>All Aggregations. i.e. AVG, SUM, MIN etc...</returns>
+        public static IEnumerable<Aggregation> All()
+        {
+            yield return AVG;
+            yield return SUM;
+            yield return MIN;
+            yield return MAX;
+            yield return RANGE;
+            yield return COUNT;
+            yield return FIRST;
+            yield return LAST;
+            yield return STDP;
+            yield return STDS;
+            yield return VARP;
+            yield return VARS;
+        }
+
+        /// <summary>
         /// Equality of Aggregation objects. Case Insensitive for the Name property string.
         /// </summary>
         /// <param name="obj">Object to compare</param>

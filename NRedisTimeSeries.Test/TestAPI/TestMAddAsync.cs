@@ -14,7 +14,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestSuccessfulMAdd()
         {
-            var keys = CreateKeys(2);
+            var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
 
             foreach (var key in keys)
@@ -42,7 +42,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestFailedMAdd()
         {
-            var keys = CreateKeys(2);
+            var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
 
             foreach (var key in keys)

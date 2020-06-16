@@ -13,7 +13,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestTSQueryIndex()
         {
-            var keys = CreateKeys(2);
+            var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
             var label1 = new TimeSeriesLabel(keys[0], "value");
             var label2 = new TimeSeriesLabel(keys[1], "value2");

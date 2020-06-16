@@ -12,7 +12,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestMGetQuery()
         {
-            var keys = CreateKeys(2);
+            var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
 
             var label1 = new TimeSeriesLabel(keys[0], "value");
@@ -38,7 +38,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestMGetQueryWithLabels()
         {
-            var keys = CreateKeys(2);
+            var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
 
             var label1 = new TimeSeriesLabel(keys[0], "value");

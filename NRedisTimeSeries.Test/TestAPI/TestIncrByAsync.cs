@@ -14,7 +14,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestDefualtIncrBy()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var value = 5.5;
             var db = redisFixture.Redis.GetDatabase();
             Assert.True(await db.TimeSeriesIncrByAsync(key, value) > 0);
@@ -26,7 +26,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestStarIncrBy()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var value = 5.5;
             var db = redisFixture.Redis.GetDatabase();
             Assert.True(await db.TimeSeriesIncrByAsync(key, value, timestamp: "*") > 0);
@@ -38,7 +38,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestIncrByTimeStamp()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var value = 5.5;
             var db = redisFixture.Redis.GetDatabase();
             var timeStamp = new TimeStamp(DateTime.UtcNow);
@@ -49,7 +49,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestDefualtIncrByWithRetentionTime()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var value = 5.5;
             long retentionTime = 5000;
             var db = redisFixture.Redis.GetDatabase();
@@ -65,7 +65,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestDefaultIncrByWithLabels()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var value = 5.5;
             var label = new TimeSeriesLabel("key", "value");
             var db = redisFixture.Redis.GetDatabase();
@@ -81,7 +81,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestDefualtIncrByWithUncompressed()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var value = 5.5;
             var db = redisFixture.Redis.GetDatabase();
             Assert.True(await db.TimeSeriesIncrByAsync(key, value, uncompressed:true) > 0);
@@ -93,7 +93,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestWrongParameters()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var value = 5.5;
             var db = redisFixture.Redis.GetDatabase();
             var ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesIncrByAsync(key, value, timestamp: "+"));

@@ -14,7 +14,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestAddNotExistingTimeSeries()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             var now = new TimeStamp(DateTime.UtcNow);
             Assert.Equal(now, await db.TimeSeriesAddAsync(key, now, 1.1));
@@ -27,7 +27,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestAddExistingTimeSeries()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             await db.TimeSeriesCreateAsync(key);
             var now = new TimeStamp(DateTime.UtcNow);
@@ -41,7 +41,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestAddStar()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             await db.TimeSeriesAddAsync(key, "*", 1.1);
             var info = await db.TimeSeriesInfoAsync(key);
@@ -52,7 +52,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestAddWithRetentionTime()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             var now = new TimeStamp(DateTime.UtcNow);
             long retentionTime = 5000;
@@ -67,7 +67,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestAddWithLabels()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             var now = new TimeStamp(DateTime.UtcNow);
             var label = new TimeSeriesLabel("key", "value");
@@ -83,7 +83,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestAddWithUncompressed()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             await db.TimeSeriesCreateAsync(key);
             var now = new TimeStamp(DateTime.UtcNow);
@@ -98,7 +98,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestOldAdd()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             var dateTime = DateTime.UtcNow;
             var old_dt = new TimeStamp(dateTime.AddSeconds(-1));
@@ -112,7 +112,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestWrongParameters()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var value = 1.1;
             var db = redisFixture.Redis.GetDatabase();
             var ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesAddAsync(key, "+", value));

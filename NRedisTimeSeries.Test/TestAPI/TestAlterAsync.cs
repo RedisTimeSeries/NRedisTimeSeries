@@ -13,7 +13,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestAlterRetentionTime()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             long retentionTime = 5000;
             var db = redisFixture.Redis.GetDatabase();
             await db.TimeSeriesCreateAsync(key);
@@ -26,7 +26,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestAlterLabels()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             var label = new TimeSeriesLabel("key", "value");
             var labels = new List<TimeSeriesLabel> { label };

@@ -14,7 +14,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestCreateOK()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             Assert.True(await db.TimeSeriesCreateAsync(key));
         }
@@ -22,7 +22,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestCreateRetentionTime()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             long retentionTime = 5000;
             var db = redisFixture.Redis.GetDatabase();
             Assert.True(await db.TimeSeriesCreateAsync(key, retentionTime: retentionTime));
@@ -34,7 +34,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestCreateLabels()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var label = new TimeSeriesLabel("key", "value");
             var labels = new List<TimeSeriesLabel> { label };
             var db = redisFixture.Redis.GetDatabase();
@@ -47,7 +47,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestCreateEmptyLabels()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var labels = new List<TimeSeriesLabel>();
             var db = redisFixture.Redis.GetDatabase();
             Assert.True(await db.TimeSeriesCreateAsync(key, labels: labels));
@@ -59,7 +59,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public async Task TestCreateUncompressed()
         {
-            var key = CreateKey();
+            var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             Assert.True(await db.TimeSeriesCreateAsync(key, uncompressed: true));
         }
