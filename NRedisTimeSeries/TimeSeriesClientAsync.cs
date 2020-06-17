@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using NRedisTimeSeries.Commands;
+﻿using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NRedisTimeSeries
 {
-
     /// <summary>
     /// RedisTimeSeries async client API
     /// </summary>
@@ -153,7 +151,7 @@ namespace NRedisTimeSeries
         }
 
         /// <summary>
-        /// 
+        /// Deletes a compaction rule.
         /// </summary>
         /// <param name="db">StackExchange.Redis IDatabase instance</param>
         /// <param name="sourceKey">Key name for source time series</param>
@@ -196,7 +194,7 @@ namespace NRedisTimeSeries
         }
 
         /// <summary>
-        /// 
+        /// Query a range.
         /// </summary>
         /// <param name="db">StackExchange.Redis IDatabase instance</param>
         /// <param name="key">Key name for timeseries</param>
@@ -216,7 +214,7 @@ namespace NRedisTimeSeries
         }
 
         /// <summary>
-        /// 
+        /// Query a timestamp range across multiple time-series by filters.
         /// </summary>
         /// <param name="db">StackExchange.Redis IDatabase instance</param>
         /// <param name="fromTimeStamp"> Start timestamp for the range query. - can be used to express the minimum possible timestamp.</param>
@@ -226,7 +224,7 @@ namespace NRedisTimeSeries
         /// <param name="aggregation">Optional: Aggregation type</param>
         /// <param name="timeBucket">Optional: Time bucket for aggregation in milliseconds</param>
         /// <param name="withLabels">Optional: Include in the reply the label-value pairs that represent metadata labels of the time-series</param>
-        /// <returns></returns>
+        /// <returns>A list of <(key, labels, values)> tuples. Each tuple contains the key name, its labels and the values which satisfies the given range and filters.</returns>
         public static async Task<IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)>> TimeSeriesMRangeAsync(this IDatabase db, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, IReadOnlyCollection<string> filter, long? count = null, Aggregation aggregation = null, long? timeBucket = null, bool? withLabels = null)
         {
             var args = new List<object>() { fromTimeStamp.Value, toTimeStamp.Value };
