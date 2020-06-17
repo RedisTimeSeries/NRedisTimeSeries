@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace NRedisTimeSeries.DataTypes
 {
@@ -30,12 +29,10 @@ namespace NRedisTimeSeries.DataTypes
         /// </summary>
         /// <param name="obj">Object to compare</param>
         /// <returns>If two TimeSeriesTuple objects are equal</returns>
-        public override bool Equals(object obj)
-        {
-            return obj is TimeSeriesTuple tuple &&
-                   EqualityComparer<TimeStamp>.Default.Equals(Time, tuple.Time) &&
-                   Val == tuple.Val;
-        }
+        public override bool Equals(object obj) => 
+            obj is TimeSeriesTuple tuple && 
+            EqualityComparer<TimeStamp>.Default.Equals(Time, tuple.Time) && 
+            Val == tuple.Val;
 
         /// <summary>
         /// TimeSeriesTuple object hash code.
@@ -44,8 +41,8 @@ namespace NRedisTimeSeries.DataTypes
         public override int GetHashCode()
         {
             var hashCode = 459537088;
-            hashCode = hashCode * -1521134295 + EqualityComparer<TimeStamp>.Default.GetHashCode(Time);
-            hashCode = hashCode * -1521134295 + Val.GetHashCode();
+            hashCode = (hashCode * -1521134295) + EqualityComparer<TimeStamp>.Default.GetHashCode(Time);
+            hashCode = (hashCode * -1521134295) + Val.GetHashCode();
             return hashCode;
         }
     }

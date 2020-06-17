@@ -17,7 +17,7 @@ namespace NRedisTimeSeries.Example
         /// In this case, the strings are implicitly casted into TimeStamp objects.
         /// The TimeSeriesRange command returns an IReadOnlyList<TimeSeriesTuple> collection.
         /// </summary>
-        public static void DefualtRangeExample()
+        public static void DefaultRangeExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();

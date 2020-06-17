@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using NRedisTimeSeries.DataTypes;
+﻿using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
+using System.Collections.Generic;
 
 namespace NRedisTimeSeries.Example
 {

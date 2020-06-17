@@ -18,7 +18,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         }
 
         [Fact]
-        public void TestDefualtIncrBy()
+        public void TestDefaultIncrBy()
         {
             double value = 5.5;
             IDatabase db = redisFixture.Redis.GetDatabase();
@@ -46,7 +46,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         }
 
         [Fact]
-        public void TestDefualtIncrByWithRetentionTime()
+        public void TestDefaultIncrByWithRetentionTime()
         {
             double value = 5.5;
             long retentionTime = 5000;
@@ -71,7 +71,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         }
 
         [Fact]
-        public void TestDefualtIncrByWithUncompressed()
+        public void TestDefaultIncrByWithUncompressed()
         {
             double value = 5.5;
             IDatabase db = redisFixture.Redis.GetDatabase();

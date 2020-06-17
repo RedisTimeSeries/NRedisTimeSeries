@@ -57,7 +57,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var db = redisFixture.Redis.GetDatabase();
             var tuples = await CreateData(db, key, 50);
             var ex = await Assert.ThrowsAsync<ArgumentException>(async () => await db.TimeSeriesRangeAsync(key, "-", "+", aggregation: Aggregation.AVG));
-            Assert.Equal("RAGNE Aggregation should have timeBucket value", ex.Message);
+            Assert.Equal("RANGE Aggregation should have timeBucket value", ex.Message);
         }
     }
 }

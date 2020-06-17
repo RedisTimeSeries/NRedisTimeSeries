@@ -21,7 +21,7 @@ namespace NRedisTimeSeries.Test.TestAPI
 
             var info = await db.TimeSeriesInfoAsync(key);
             Assert.Equal(timeStamp, info.FirstTimeStamp);
-            Assert.Equal(timeStamp, info.LastTimeStap);
+            Assert.Equal(timeStamp, info.LastTimeStamp);
         }
 
         [Fact]
@@ -35,7 +35,7 @@ namespace NRedisTimeSeries.Test.TestAPI
 
             var info = await db.TimeSeriesInfoAsync(key);
             Assert.Equal(timeStamp, info.FirstTimeStamp);
-            Assert.Equal(timeStamp, info.LastTimeStap);
+            Assert.Equal(timeStamp, info.LastTimeStamp);
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             await db.TimeSeriesAddAsync(key, "*", 1.1);
             var info = await db.TimeSeriesInfoAsync(key);
             Assert.True(info.FirstTimeStamp > 0);
-            Assert.Equal(info.FirstTimeStamp, info.LastTimeStap);
+            Assert.Equal(info.FirstTimeStamp, info.LastTimeStamp);
         }
 
         [Fact]
@@ -60,7 +60,7 @@ namespace NRedisTimeSeries.Test.TestAPI
 
             var info = await db.TimeSeriesInfoAsync(key);
             Assert.Equal(timeStamp, info.FirstTimeStamp);
-            Assert.Equal(timeStamp, info.LastTimeStap);
+            Assert.Equal(timeStamp, info.LastTimeStamp);
             Assert.Equal(retentionTime, info.RetentionTime);
         }
 
@@ -76,7 +76,7 @@ namespace NRedisTimeSeries.Test.TestAPI
 
             var info = await db.TimeSeriesInfoAsync(key);
             Assert.Equal(timeStamp, info.FirstTimeStamp);
-            Assert.Equal(timeStamp, info.LastTimeStap);
+            Assert.Equal(timeStamp, info.LastTimeStamp);
             Assert.Equal(labels, info.Labels);
         }
 
@@ -91,7 +91,7 @@ namespace NRedisTimeSeries.Test.TestAPI
 
             var info = await db.TimeSeriesInfoAsync(key);
             Assert.Equal(timeStamp, info.FirstTimeStamp);
-            Assert.Equal(timeStamp, info.LastTimeStap);
+            Assert.Equal(timeStamp, info.LastTimeStamp);
         }
 
 

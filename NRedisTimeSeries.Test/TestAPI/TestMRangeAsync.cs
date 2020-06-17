@@ -174,7 +174,7 @@ namespace NRedisTimeSeries.Test.TestAPI
                     filter: new List<string>() { $"key=value" },
                     aggregation: Aggregation.AVG);
             });
-            Assert.Equal("RAGNE Aggregation should have timeBucket value", ex.Message);
+            Assert.Equal("RANGE Aggregation should have timeBucket value", ex.Message);
         }
     }
 }

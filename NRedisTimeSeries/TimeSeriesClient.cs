@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using NRedisTimeSeries.Commands;
+﻿using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
+using System.Collections.Generic;
 
 namespace NRedisTimeSeries
 {
-
     /// <summary>
     /// RedisTimeSeries client API
     /// </summary>
     public static partial class TimeSeriesClient
     {
-
         #region Create
 
         /// <summary>
@@ -34,7 +31,6 @@ namespace NRedisTimeSeries
         }
 
         #endregion
-
 
         #region Update
 
@@ -136,7 +132,6 @@ namespace NRedisTimeSeries
 
         #endregion
 
-
         #region Aggregation, Compaction, Downsampling
 
         /// <summary>
@@ -168,7 +163,6 @@ namespace NRedisTimeSeries
         }
 
         #endregion
-
 
         #region Query
 
@@ -243,7 +237,6 @@ namespace NRedisTimeSeries
 
         #endregion
 
-
         #region General
 
         /// <summary>
@@ -269,8 +262,6 @@ namespace NRedisTimeSeries
             return ParseStringArray(db.Execute(TS.QUERYINDEX, args));
         }
 
-
         #endregion
-
     }
 }

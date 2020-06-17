@@ -12,7 +12,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         public TestDecrByAsync(RedisFixture redisFixture) : base(redisFixture) { }
 
         [Fact]
-        public async Task TestDefualtDecrBy()
+        public async Task TestDefaultDecrBy()
         {
             var key = CreateKeyName();
             var value = 5.5;
@@ -47,7 +47,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         }
 
         [Fact]
-        public async Task TestDefualtDecrByWithRetentionTime()
+        public async Task TestDefaultDecrByWithRetentionTime()
         {
             var key = CreateKeyName();
             var value = 5.5;
@@ -80,7 +80,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         }
 
         [Fact]
-        public async Task TestDefualtDecrByWithUncompressed()
+        public async Task TestDefaultDecrByWithUncompressed()
         {
             var key = CreateKeyName();
             var value = 5.5;

@@ -11,11 +11,11 @@ namespace NRedisTimeSeries.Example
     internal class AddExample
     {
         /// <summary>
-        /// Example for using RedisTimeSeries defualt "*" charecter for system time.
+        /// Example for using RedisTimeSeries default "*" charecter for system time.
         /// The TimeSeriesAdd method gets a TimeStamp type parameter, which in this case the string "*"
         /// is implicitly casted into a new TimeStamp object.
         /// </summary>
-        public static void DefualtAdd()
+        public static void DefaultAdd()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();

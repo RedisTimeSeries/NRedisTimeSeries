@@ -20,46 +20,57 @@ namespace NRedisTimeSeries.Commands
         /// AVG Aggregation
         /// </summary>
         public static Aggregation AVG { get { return new Aggregation("avg"); } }
+
         /// <summary>
         /// SUM Aggregation
         /// </summary>
         public static Aggregation SUM { get { return new Aggregation("sum"); } }
+
         /// <summary>
         /// MIN Aggregation
         /// </summary>
         public static Aggregation MIN { get { return new Aggregation("min"); } }
+
         /// <summary>
         /// MAX Aggregation
         /// </summary>
         public static Aggregation MAX { get { return new Aggregation("max"); } }
+
         /// <summary>
         /// RANGE Aggregation
         /// </summary>
         public static Aggregation RANGE { get { return new Aggregation("range"); } }
+
         /// <summary>
         /// COUNT Aggregation
         /// </summary>
         public static Aggregation COUNT { get { return new Aggregation("count"); } }
+
         /// <summary>
         /// FIRST Aggregarion
         /// </summary>
         public static Aggregation FIRST { get { return new Aggregation("first"); } }
+
         /// <summary>
         /// LAST Aggregation
         /// </summary>
         public static Aggregation LAST { get { return new Aggregation("last"); } }
+
         /// <summary>
         /// STD.P Aggregation
         /// </summary>
         public static Aggregation STDP { get { return new Aggregation("std.p"); } }
+
         /// <summary>
         /// STD.S Aggregation
         /// </summary>
         public static Aggregation STDS { get { return new Aggregation("std.s"); } }
+
         /// <summary>
         /// VAR.P Aggregation
         /// </summary>
         public static Aggregation VARP { get { return new Aggregation("var.p"); } }
+
         /// <summary>
         /// VAR.S Aggregation
         /// </summary>
