@@ -40,14 +40,14 @@ namespace NRedisTimeSeries.Example
 
         /// <summary>
         /// Example for using TimeStamp as DateTime value.
-        /// The TimeSeriesAdd method gets a TimeStamp type parameter, which in this case the value DateTime.Now
+        /// The TimeSeriesAdd method gets a TimeStamp type parameter, which in this case the value DateTime.UtcNow
         /// is implicitly casted into a new TimeStamp object.
         /// </summary>
         public static void DateTimeAdd()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            TimeStamp timestamp = DateTime.Now;
+            TimeStamp timestamp = DateTime.UtcNow;
             db.TimeSeriesAdd("my_ts", timestamp, 0.0);
             redis.Close();
         }

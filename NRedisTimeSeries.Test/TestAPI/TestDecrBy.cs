@@ -40,7 +40,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             double value = 5.5;
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeStamp timeStamp = DateTime.Now;
+            TimeStamp timeStamp = DateTime.UtcNow;
             Assert.Equal(timeStamp, db.TimeSeriesDecrBy(key, -value, timestamp: timeStamp));
             Assert.Equal(new TimeSeriesTuple(timeStamp, value), db.TimeSeriesGet(key));
         }

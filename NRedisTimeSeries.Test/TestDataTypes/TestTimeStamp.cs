@@ -24,7 +24,7 @@ namespace NRedisTimeSeries.Test
             var ex = Assert.Throws<NotSupportedException>(() => ts = "hi");
             Assert.Equal("The string hi cannot be used", ex.Message);
 
-            DateTime now = DateTime.Now;
+            DateTime now = DateTime.UtcNow;
             ts = now;
             Assert.Equal<DateTime>(now, ts);
 

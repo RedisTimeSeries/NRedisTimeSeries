@@ -33,13 +33,13 @@ namespace NRedisTimeSeries.Example
         }
 
         /// <summary>
-        /// Example for setting the last sample timestamp to DateTime.Now and its value to -5, with DECRBY. 
+        /// Example for setting the last sample timestamp to DateTime.UtcNow and its value to -5, with DECRBY. 
         /// </summary>
         public static void DateTimeIncrByExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            db.TimeSeriesDecrBy("my_ts", 5, timestamp: DateTime.Now);
+            db.TimeSeriesDecrBy("my_ts", 5, timestamp: DateTime.UtcNow);
             redis.Close();
         }
 

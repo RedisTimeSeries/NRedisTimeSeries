@@ -36,7 +36,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             List<DateTime> timestamps = new List<DateTime>(keys.Length);
             foreach (var keyname in keys)
             {
-                DateTime now = DateTime.Now;
+                DateTime now = DateTime.UtcNow;
                 timestamps.Add(now);
                 sequence.Add((keyname, now, 1.1));
             }
@@ -62,13 +62,13 @@ namespace NRedisTimeSeries.Test.TestAPI
             List<DateTime> oldTimeStamps = new List<DateTime>();
             foreach (var keyname in keys)
             {
-                oldTimeStamps.Add(DateTime.Now);
+                oldTimeStamps.Add(DateTime.UtcNow);
             }
 
             List<(string, TimeStamp, double)> sequence = new List<(string, TimeStamp, double)>(keys.Length);
             foreach (var keyname in keys)
             {
-                sequence.Add((keyname, DateTime.Now, 1.1));
+                sequence.Add((keyname, DateTime.UtcNow, 1.1));
             }
             db.TimeSeriesMAdd(sequence);
 
