@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace NRedisTimeSeries.Example
 {
     /// <summary>
-    /// Example for create and delete RedisTimeSeries rules.
+    /// Examples for NRedisTimeSeries async API creating and deleting rules.
     /// </summary>
     internal class RulesAsyncExample
     {

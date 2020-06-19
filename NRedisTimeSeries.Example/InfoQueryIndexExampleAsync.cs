@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace NRedisTimeSeries.Example
 {
     /// <summary>
-    /// Examples for NRedisTimeSeries API for INFO and QUERYINDEX commands.
+    /// Examples for NRedisTimeSeries async API for INFO and QUERYINDEX commands.
     /// </summary>
     internal class InfoQueryIndexAsyncExample
     {

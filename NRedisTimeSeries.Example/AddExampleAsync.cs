@@ -7,7 +7,7 @@ using StackExchange.Redis;
 namespace NRedisTimeSeries.Example
 {
     /// <summary>
-    /// Examples for NRedisTimeSeries API for adding new sample to time series.
+    /// Examples for NRedisTimeSeries async API for adding new sample to time series.
     /// </summary>
     internal class AddAsyncExample
     {

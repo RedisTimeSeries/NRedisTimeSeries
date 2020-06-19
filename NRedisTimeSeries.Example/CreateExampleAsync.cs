@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace NRedisTimeSeries.Example
 {
     /// <summary>
-    /// Examples for NRedisTimeSeries API for creating new time series.
+    /// Examples for NRedisTimeSeries async API for creating new time series.
     /// </summary>
     internal class CreateAsyncExample
     {

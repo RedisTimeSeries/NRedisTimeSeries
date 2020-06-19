@@ -7,7 +7,7 @@ using StackExchange.Redis;
 namespace NRedisTimeSeries.Example
 {
     /// <summary>
-    /// Examples for NRedisTimeSeries API for DECRBY.
+    /// Examples for NRedisTimeSeries async API for DECRBY.
     /// </summary>
     internal class DecrByAsyncExample
     {

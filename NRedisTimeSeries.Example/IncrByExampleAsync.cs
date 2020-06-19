@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace NRedisTimeSeries.Example
 {
     /// <summary>
-    /// Examples for NRedisTimeSeries API for INCRBY.
+    /// Examples for NRedisTimeSeries async API for INCRBY.
     /// </summary>
     internal class IncrByAsyncExample
     {

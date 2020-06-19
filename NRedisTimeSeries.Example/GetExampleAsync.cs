@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace NRedisTimeSeries.Example
 {
     /// <summary>
-    /// Examples for NRedisTimeSeries API for GET queries.
+    /// Examples for NRedisTimeSeries async API for GET queries.
     /// </summary>
     internal class GetAsyncExample
     {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace NRedisTimeSeries.Example
 {
     /// <summary>
-    /// Examples for NRedisTimeSeries API for RANGE queries.
+    /// Examples for NRedisTimeSeries async API for RANGE queries.
     /// </summary>
     public class RangeAsyncExample
     {

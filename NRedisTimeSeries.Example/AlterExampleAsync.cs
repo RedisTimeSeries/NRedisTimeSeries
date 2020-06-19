@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace NRedisTimeSeries.Example
 {
     /// <summary>
-    /// Examples for NRedisTimeSeries API for altering time series properties.
+    /// Examples for NRedisTimeSeries async API for altering time series properties.
     /// </summary>
     internal class AlterAsyncExample
     {
