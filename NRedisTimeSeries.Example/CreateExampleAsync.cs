@@ -8,7 +8,7 @@ namespace NRedisTimeSeries.Example
     /// <summary>
     /// Examples for NRedisTimeSeries API for creating new time series.
     /// </summary>
-    internal class CreateExampleAsync
+    internal class CreateAsyncExample
     {
         /// <summary>
         /// Simple time-series creation.

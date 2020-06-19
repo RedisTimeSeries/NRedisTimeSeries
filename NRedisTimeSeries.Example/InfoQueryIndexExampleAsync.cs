@@ -1,20 +1,19 @@
-﻿using System;
+﻿using NRedisTimeSeries.DataTypes;
+using StackExchange.Redis;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NRedisTimeSeries.DataTypes;
-using StackExchange.Redis;
 
 namespace NRedisTimeSeries.Example
 {
     /// <summary>
     /// Examples for NRedisTimeSeries API for INFO and QUERYINDEX commands.
     /// </summary>
-    internal class InfoQueryIndexExampleAsync
+    internal class InfoQueryIndexAsyncExample
     {
         /// <summary>
         /// Example for getting the information of a timeseries key with INFO command.
         /// </summary>
-        public static async Task InfoExampleAsync()
+        public static async Task InfoAsyncExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
@@ -25,7 +24,7 @@ namespace NRedisTimeSeries.Example
         /// <summary>
         /// Example for using QUERYINDEX.
         /// </summary>
-        public static async Task QueryIndexExampleAsync()
+        public static async Task QueryIndexAsyncExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();

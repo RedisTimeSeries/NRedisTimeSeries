@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using NRedisTimeSeries.Commands;
+﻿using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NRedisTimeSeries.Example
 {
     /// <summary>
     /// Examples for NRedisTimeSeries API for MRANGE queries.
     /// </summary>
-    internal class MRangeExampleAsync
+    internal class MRangeAsyncExample
     {
         /// <summary>
         /// Example for basic usage of RedisTimeSeries RANGE command with "-" and "+" as range boundreis and a filter.
@@ -18,7 +17,7 @@ namespace NRedisTimeSeries.Example
         /// In this case, the strings are implicitly casted into TimeStamp objects.
         /// The TimeSeriesMRange command returns an IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)>collection.
         /// </summary>
-        public static async Task BasicMRangeExampleAsync()
+        public static async Task BasicMRangeAsyncExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
@@ -39,12 +38,12 @@ namespace NRedisTimeSeries.Example
         /// In this case, the strings are implicitly casted into TimeStamp objects.
         /// The TimeSeriesMRange command returns an IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)>collection.
         /// </summary>
-        public static async Task CountMRangeExampleAsync()
+        public static async Task CountMRangeAsyncExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
             var filter = new List<string> { "MRANGEkey=MRANGEvalue" };
-            var results = await db.TimeSeriesMRangeAsync("-", "+", filter, count:50);
+            var results = await db.TimeSeriesMRangeAsync("-", "+", filter, count: 50);
             // Values extraction example. No lables in this case.
             foreach (var result in results)
             {
@@ -60,12 +59,12 @@ namespace NRedisTimeSeries.Example
         /// In this case, the strings are implicitly casted into TimeStamp objects.
         /// The TimeSeriesMRange command returns an IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)>collection.
         /// </summary>
-        public static async Task MRangeAggregationExampleAsync()
+        public static async Task MRangeAggregationAsyncExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
             var filter = new List<string> { "MRANGEkey=MRANGEvalue" };
-            var results = await db.TimeSeriesMRangeAsync("-", "+", filter, aggregation:Aggregation.MIN, timeBucket:50);
+            var results = await db.TimeSeriesMRangeAsync("-", "+", filter, aggregation: Aggregation.MIN, timeBucket: 50);
             // Values extraction example. No lables in this case.
             foreach (var result in results)
             {
@@ -81,12 +80,12 @@ namespace NRedisTimeSeries.Example
         /// In this case, the strings are implicitly casted into TimeStamp objects.
         /// The TimeSeriesMRange command returns an IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)>collection.
         /// </summary>
-        public static async Task MRangeWithLabelsExampleAsync()
+        public static async Task MRangeWithLabelsAsyncExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
             var filter = new List<string> { "MRANGEkey=MRANGEvalue" };
-            var results = await db.TimeSeriesMRangeAsync("-", "+", filter,withLabels:true);
+            var results = await db.TimeSeriesMRangeAsync("-", "+", filter, withLabels: true);
             // Values extraction example.
             foreach (var result in results)
             {

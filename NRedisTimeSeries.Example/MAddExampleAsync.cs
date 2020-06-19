@@ -9,13 +9,13 @@ namespace NRedisTimeSeries.Example
     /// <summary>
     /// Examples for NRedisTimeSeries API for adding multiple samples to multiple time series.
     /// </summary>
-    internal class MAddExampleAsync
+    internal class MAddAsyncExample
     {
         /// <summary>
         /// Example for mutiple sample addtion. One is using RedisTimeSeris default system time in one time series,
         /// the second is using DateTime in the second time series and the third is using long in the third time series.
         /// </summary>
-        public static async Task MAddFlowExampleAsync()
+        public static async Task MAddFlowAsyncExample()
         {
             string[] keys = { "system_time_ts", "datetime_ts", "long_ts" };
             var sequence = new List<(string, TimeStamp, double)>(keys.Length);

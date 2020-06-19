@@ -9,7 +9,7 @@ namespace NRedisTimeSeries.Example
     /// <summary>
     /// Examples for NRedisTimeSeries API for RANGE queries.
     /// </summary>
-    public class RangeExampleAsync
+    public class RangeAsyncExample
     {
         /// <summary>
         /// Example for basic usage of RedisTimeSeries RANGE command with "-" and "+" as range boundreis.
@@ -17,7 +17,7 @@ namespace NRedisTimeSeries.Example
         /// In this case, the strings are implicitly casted into TimeStamp objects.
         /// The TimeSeriesRange command returns an IReadOnlyList<TimeSeriesTuple> collection.
         /// </summary>
-        public static async Task DefaultRangeExampleAsync()
+        public static async Task DefaultRangeAsyncExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
@@ -31,7 +31,7 @@ namespace NRedisTimeSeries.Example
         /// In this case, the strings are implicitly casted into TimeStamp objects.
         /// The TimeSeriesRange command returns an IReadOnlyList<TimeSeriesTuple> collection.
         /// </summary>
-        public static async Task CountRangeExampleAsync()
+        public static async Task CountRangeAsyncExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
@@ -45,7 +45,7 @@ namespace NRedisTimeSeries.Example
         /// In this case, the strings are implicitly casted into TimeStamp objects.
         /// The TimeSeriesRange command returns an IReadOnlyList<TimeSeriesTuple> collection.
         /// </summary>
-        public static async Task RangeAggregationExampleAsync()
+        public static async Task RangeAggregationAsyncExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();

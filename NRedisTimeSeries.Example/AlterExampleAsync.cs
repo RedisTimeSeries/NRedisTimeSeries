@@ -1,15 +1,14 @@
-﻿using System;
+﻿using NRedisTimeSeries.DataTypes;
+using StackExchange.Redis;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NRedisTimeSeries.DataTypes;
-using StackExchange.Redis;
 
 namespace NRedisTimeSeries.Example
 {
     /// <summary>
     /// Examples for NRedisTimeSeries API for altering time series properties.
     /// </summary>
-    internal class AlterExampleAsync
+    internal class AlterAsyncExample
     {
         /// <summary>
         /// Examples for altering time-series.

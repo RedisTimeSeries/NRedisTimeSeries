@@ -9,12 +9,12 @@ namespace NRedisTimeSeries.Example
     /// <summary>
     /// Examples for NRedisTimeSeries API for INCRBY.
     /// </summary>
-    internal class IncrByExampleAsync
+    internal class IncrByAsyncExample
     {
         /// <summary>
         /// Example for increasing the value of the last sample by 5. 
         /// </summary>
-        public static async Task DefaultIncrByExampleAsync()
+        public static async Task DefaultIncrByAsyncExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
@@ -25,7 +25,7 @@ namespace NRedisTimeSeries.Example
         /// <summary>
         /// Example for setting the last sample timestamp to system time and its value to 5, with INCRBY. 
         /// </summary>
-        public static async Task SystemTimeIncrByExampleAsync()
+        public static async Task SystemTimeIncrByAsyncExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
@@ -34,20 +34,20 @@ namespace NRedisTimeSeries.Example
         }
 
         /// <summary>
-        /// Example for setting the last sample timestamp to DateTime.Now and its value to 5, with INCRBY. 
+        /// Example for setting the last sample timestamp to DateTime.UtcNow and its value to 5, with INCRBY. 
         /// </summary>
-        public static async Task DateTimeIncrByExampleAsync()
+        public static async Task DateTimeIncrByAsyncExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            await db.TimeSeriesIncrByAsync("my_ts", 5, timestamp: DateTime.Now);
+            await db.TimeSeriesIncrByAsync("my_ts", 5, timestamp: DateTime.UtcNow);
             redis.Close();
         }
 
         /// <summary>
         /// Example for setting the last sample timestamp to long value and its value to 5, with INCRBY. 
         /// </summary>
-        public static async Task LongIncrByExampleAsync()
+        public static async Task LongIncrByAsyncExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
@@ -59,7 +59,7 @@ namespace NRedisTimeSeries.Example
         /// Example for setting the last sample timestamp to system time and its value to 5, with INCRBY.
         /// The parameters retentionTime, uncompressed and labels are optional and can be set in any order when used as named argument.
         /// </summary>
-        public static async Task ParameterizedIncrByExampleAsync()
+        public static async Task ParameterizedIncrByAsyncExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();

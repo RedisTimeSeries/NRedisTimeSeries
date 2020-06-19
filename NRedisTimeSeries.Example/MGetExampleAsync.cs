@@ -1,21 +1,20 @@
-﻿using System;
+﻿using NRedisTimeSeries.DataTypes;
+using StackExchange.Redis;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NRedisTimeSeries.DataTypes;
-using StackExchange.Redis;
 
 namespace NRedisTimeSeries.Example
 {
     /// <summary>
     /// Examples for NRedisTimeSeries API for MGET queries.
     /// </summary>
-    internal class MGetExampleAsync
+    internal class MGetAsyncExample
     {
         /// <summary>
         /// Example for basic usage of RedisTimeSeries MGET command with a filter.
         /// The NRedisTimeSeries SimpleMGetExample returns and IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, TimeSeriesTuple value)> collection.
         /// </summary>
-        public static async Task SimpleMGetExampleAsync()
+        public static async Task SimpleMGetAsyncExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
@@ -34,7 +33,7 @@ namespace NRedisTimeSeries.Example
         /// Example for basic usage of RedisTimeSeries MGET command with a filter and WITHLABELS flag.
         /// The NRedisTimeSeries SimpleMGetExample returns and IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, TimeSeriesTuple value)> collection.
         /// </summary>
-        public static async Task MGetWithLabelsExampleAsync()
+        public static async Task MGetWithLabelsAsyncExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
