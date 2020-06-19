@@ -30,7 +30,7 @@ namespace NRedisTimeSeries.DataTypes
 
         /// <summary>
         /// Build a TimeStamp from one of the strings "-", "+", "*".
-        /// If the string is none of the abobe a NotSupportedException is thrown.
+        /// If the string is none of the above a NotSupportedException is thrown.
         /// </summary>
         /// <param name="timestamp">String value</param>
         public TimeStamp(string timestamp)
@@ -53,8 +53,8 @@ namespace NRedisTimeSeries.DataTypes
         /// If the underlying timestamp value is not long or DateTime, an InvalidCastException is thrown.
         /// </summary>
         /// <param name="ts">TimeStamp</param>
-        public static implicit operator long(TimeStamp ts) => ts.Value is long ? (long)ts.Value :
-            throw new InvalidCastException("Cannot convert string timestamp to long");
+        public static implicit operator long(TimeStamp ts) => 
+            ts.Value is long value ? value : throw new InvalidCastException("Cannot convert string timestamp to long");
 
         /// <summary>
         /// Implicit cast from string to TimeStamp.
@@ -81,25 +81,19 @@ namespace NRedisTimeSeries.DataTypes
         /// <param name="timeStamp">TimeStamp</param>
         public static implicit operator DateTime(TimeStamp timeStamp) => new DateTime(timeStamp);
 
-
         /// <summary>
         /// Equality of TimeSeriesTuple objects
         /// </summary>
         /// <param name="obj">Object to compare</param>
         /// <returns>If two TimeStamp objects are equal</returns>
-        public override bool Equals(object obj)
-        {
-            return obj is TimeStamp stamp &&
-                   EqualityComparer<object>.Default.Equals(Value, stamp.Value);
-        }
+        public override bool Equals(object obj) => 
+            obj is TimeStamp stamp && EqualityComparer<object>.Default.Equals(Value, stamp.Value);
 
         /// <summary>
         /// TimeStamp object hash code.
         /// </summary>
         /// <returns>TimeStamp object hash code.</returns>
-        public override int GetHashCode()
-        {
-            return -1937169414 + EqualityComparer<object>.Default.GetHashCode(Value);
-        }
+        public override int GetHashCode() => 
+            -1937169414 + EqualityComparer<object>.Default.GetHashCode(Value);
     }
 }

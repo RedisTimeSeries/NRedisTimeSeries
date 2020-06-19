@@ -22,11 +22,11 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestAddNotExistingTimeSeries()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeStamp now = DateTime.Now;
+            TimeStamp now = DateTime.UtcNow;
             Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1));
             TimeSeriesInformation info = db.TimeSeriesInfo(key);
             Assert.Equal(now, info.FirstTimeStamp);
-            Assert.Equal(now, info.LastTimeStap);
+            Assert.Equal(now, info.LastTimeStamp);
         }
 
         [Fact]
@@ -34,11 +34,11 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
             db.TimeSeriesCreate(key);
-            TimeStamp now = DateTime.Now;
+            TimeStamp now = DateTime.UtcNow;
             Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1));
             TimeSeriesInformation info = db.TimeSeriesInfo(key);
             Assert.Equal(now, info.FirstTimeStamp);
-            Assert.Equal(now, info.LastTimeStap);
+            Assert.Equal(now, info.LastTimeStamp);
         }
 
         [Fact]
@@ -48,19 +48,19 @@ namespace NRedisTimeSeries.Test.TestAPI
             db.TimeSeriesAdd(key, "*", 1.1);
             TimeSeriesInformation info = db.TimeSeriesInfo(key);
             Assert.True(info.FirstTimeStamp > 0);
-            Assert.Equal(info.FirstTimeStamp, info.LastTimeStap);
+            Assert.Equal(info.FirstTimeStamp, info.LastTimeStamp);
         }
 
         [Fact]
         public void TestAddWithRetentionTime()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeStamp now = DateTime.Now;
+            TimeStamp now = DateTime.UtcNow;
             long retentionTime = 5000;
             Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1, retentionTime: retentionTime));
             TimeSeriesInformation info = db.TimeSeriesInfo(key);
             Assert.Equal(now, info.FirstTimeStamp);
-            Assert.Equal(now, info.LastTimeStap);
+            Assert.Equal(now, info.LastTimeStamp);
             Assert.Equal(retentionTime, info.RetentionTime);
         }
 
@@ -68,13 +68,13 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestAddWithLabels()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeStamp now = DateTime.Now;
+            TimeStamp now = DateTime.UtcNow;
             TimeSeriesLabel label = new TimeSeriesLabel("key", "value");
             var labels = new List<TimeSeriesLabel> { label };
             Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1, labels: labels));
             TimeSeriesInformation info = db.TimeSeriesInfo(key);
             Assert.Equal(now, info.FirstTimeStamp);
-            Assert.Equal(now, info.LastTimeStap);
+            Assert.Equal(now, info.LastTimeStamp);
             Assert.Equal(labels, info.Labels);
         }
 
@@ -83,20 +83,20 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
             db.TimeSeriesCreate(key);
-            TimeStamp now = DateTime.Now;
+            TimeStamp now = DateTime.UtcNow;
             Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1, uncompressed: true));
             TimeSeriesInformation info = db.TimeSeriesInfo(key);
             Assert.Equal(now, info.FirstTimeStamp);
-            Assert.Equal(now, info.LastTimeStap);
+            Assert.Equal(now, info.LastTimeStamp);
         }
 
 
         [Fact]
         public void TestOldAdd()
         {
-            TimeStamp old_dt = DateTime.Now;
+            TimeStamp old_dt = DateTime.UtcNow;
             Thread.Sleep(1000);
-            TimeStamp new_dt = DateTime.Now;
+            TimeStamp new_dt = DateTime.UtcNow;
             IDatabase db = redisFixture.Redis.GetDatabase();
             db.TimeSeriesCreate(key);
             db.TimeSeriesAdd(key, new_dt, 1.1);

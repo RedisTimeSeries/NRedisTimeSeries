@@ -3,14 +3,12 @@ using System.Collections.Generic;
 
 namespace NRedisTimeSeries.DataTypes
 {
-
     /// <summary>
     /// This class represents the response for TS.INFO command.
     /// This object has Read-only properties and cannot be generated outside a TS.INFO response.
     /// </summary>
     public class TimeSeriesInformation
     {
-
         /// <summary>
         /// Total samples in the time-series.
         /// </summary>
@@ -29,7 +27,7 @@ namespace NRedisTimeSeries.DataTypes
         /// <summary>
         /// Last timestamp present in the time-series.
         /// </summary>
-        public TimeStamp LastTimeStap { get; private set; }
+        public TimeStamp LastTimeStamp { get; private set; }
 
         /// <summary>
         /// Retention time, in milliseconds, for the time-series.
@@ -61,12 +59,12 @@ namespace NRedisTimeSeries.DataTypes
         /// </summary>
         public IReadOnlyList<TimeSeriesRule> Rules { get; private set; }
 
-        internal TimeSeriesInformation(long totalSamples, long memoryUsage, TimeStamp firstTimeStamp, TimeStamp lastTimeStap, long retentionTime, long chunkCount, long maxSamplesPerChunk, IReadOnlyList<TimeSeriesLabel> labels, string sourceKey, IReadOnlyList<TimeSeriesRule> rules)
+        internal TimeSeriesInformation(long totalSamples, long memoryUsage, TimeStamp firstTimeStamp, TimeStamp lastTimeStamp, long retentionTime, long chunkCount, long maxSamplesPerChunk, IReadOnlyList<TimeSeriesLabel> labels, string sourceKey, IReadOnlyList<TimeSeriesRule> rules)
         {
             TotalSamples = totalSamples;
             MemoryUsage = memoryUsage;
             FirstTimeStamp = firstTimeStamp;
-            LastTimeStap = lastTimeStap;
+            LastTimeStamp = lastTimeStamp;
             RetentionTime = retentionTime;
             ChunkCount = chunkCount;
             MaxSamplesPerChunk = maxSamplesPerChunk;

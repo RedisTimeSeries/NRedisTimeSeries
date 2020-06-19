@@ -18,7 +18,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         }
 
         [Fact]
-        public void TestDefualtDecrBy()
+        public void TestDefaultDecrBy()
         {
             double value = 5.5;
             IDatabase db = redisFixture.Redis.GetDatabase();
@@ -40,13 +40,13 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             double value = 5.5;
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeStamp timeStamp = DateTime.Now;
+            TimeStamp timeStamp = DateTime.UtcNow;
             Assert.Equal(timeStamp, db.TimeSeriesDecrBy(key, -value, timestamp: timeStamp));
             Assert.Equal(new TimeSeriesTuple(timeStamp, value), db.TimeSeriesGet(key));
         }
 
         [Fact]
-        public void TestDefualtDecrByWithRetentionTime()
+        public void TestDefaultDecrByWithRetentionTime()
         {
             double value = 5.5;
             long retentionTime = 5000;
@@ -71,7 +71,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         }
 
         [Fact]
-        public void TestDefualtDecrByWithUncompressed()
+        public void TestDefaultDecrByWithUncompressed()
         {
             double value = 5.5;
             IDatabase db = redisFixture.Redis.GetDatabase();

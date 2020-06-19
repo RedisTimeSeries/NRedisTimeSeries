@@ -1,7 +1,6 @@
-﻿using System;
-using System.Threading;
-using NRedisTimeSeries.DataTypes;
+﻿using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
+using System;
 using Xunit;
 
 namespace NRedisTimeSeries.Test.TestAPI
@@ -37,7 +36,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public void TestAddAndGet()
         {
-            DateTime now = DateTime.Now;
+            DateTime now = DateTime.UtcNow;
             TimeSeriesTuple expected = new TimeSeriesTuple(now, 1.1);
             IDatabase db = redisFixture.Redis.GetDatabase();
             db.TimeSeriesCreate(key);

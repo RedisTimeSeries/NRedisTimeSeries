@@ -1,26 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
 
 namespace NRedisTimeSeries.Example
 {
     /// <summary>
-    /// Examples for NRedisTimeSeries API for adding new sample to time series.
+    /// Examples for NRedisTimeSeries async API for adding new sample to time series.
     /// </summary>
-    internal class AddExample
+    internal class AddAsyncExample
     {
         /// <summary>
         /// Example for using RedisTimeSeries default "*" charecter for system time.
         /// The TimeSeriesAdd method gets a TimeStamp type parameter, which in this case the string "*"
         /// is implicitly casted into a new TimeStamp object.
         /// </summary>
-        public static void DefaultAdd()
+        public static async Task DefaultAddAsync()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
             TimeStamp timestamp = "*";
-            db.TimeSeriesAdd("my_ts", timestamp, 0.0);
+            await db.TimeSeriesAddAsync("my_ts", timestamp, 0.0);
             redis.Close();
         }
 
@@ -29,12 +30,12 @@ namespace NRedisTimeSeries.Example
         /// The TimeSeriesAdd method gets a TimeStamp type parameter, which in this case the value 1
         /// is implicitly casted into a new TimeStamp object.
         /// </summary>
-        public static void LongAdd()
+        public static async Task LongAddAsync()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
             TimeStamp timestamp = 1;
-            db.TimeSeriesAdd("my_ts", timestamp, 0.0);
+            await db.TimeSeriesAddAsync("my_ts", timestamp, 0.0);
             redis.Close();
         }
 
@@ -43,12 +44,12 @@ namespace NRedisTimeSeries.Example
         /// The TimeSeriesAdd method gets a TimeStamp type parameter, which in this case the value DateTime.UtcNow
         /// is implicitly casted into a new TimeStamp object.
         /// </summary>
-        public static void DateTimeAdd()
+        public static async Task DateTimeAddAsync()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
             TimeStamp timestamp = DateTime.UtcNow;
-            db.TimeSeriesAdd("my_ts", timestamp, 0.0);
+            await db.TimeSeriesAddAsync("my_ts", timestamp, 0.0);
             redis.Close();
         }
 
@@ -56,14 +57,14 @@ namespace NRedisTimeSeries.Example
         /// Example for time-series creation parameters with ADD.
         /// Named arguments are used in the same manner of TimeSeriesCreate
         /// </summary>
-        public static void ParameterizedAdd()
+        public static async Task ParameterizedAddAsync()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
             TimeStamp timestamp = "*";
             var label = new TimeSeriesLabel("key", "value");
             var labels = new List<TimeSeriesLabel> { label };
-            db.TimeSeriesAdd("my_ts", timestamp, 0.0, retentionTime:5000, labels:labels, uncompressed:true);
+            await db.TimeSeriesAddAsync("my_ts", timestamp, 0.0, retentionTime:5000, labels:labels, uncompressed:true);
             redis.Close();
         }
     }

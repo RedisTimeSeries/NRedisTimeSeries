@@ -1,5 +1,4 @@
-﻿using System;
-namespace NRedisTimeSeries.Commands
+﻿namespace NRedisTimeSeries.Commands
 {
     internal class CommandArgs
     {

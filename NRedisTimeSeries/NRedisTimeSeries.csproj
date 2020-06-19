@@ -14,17 +14,10 @@
     <DebugType></DebugType>
     <DocumentationFile>../Docs/NRedisTimeSeries.xml</DocumentationFile>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="StackExchange.Redis" Version="2.1.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DataTypes\" />
-    <Folder Include="Commands\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Interfaces\IValue.cs" />
-    <Compile Remove="Interfaces\ILabel.cs" />
-  </ItemGroup>
 </Project>

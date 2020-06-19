@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using NRedisTimeSeries.Commands;
+﻿using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NRedisTimeSeries.Example
 {
     /// <summary>
-    /// Examples for NRedisTimeSeries API for RANGE queries.
+    /// Examples for NRedisTimeSeries async API for RANGE queries.
     /// </summary>
-    public class RangeExample
+    public class RangeAsyncExample
     {
         /// <summary>
         /// Example for basic usage of RedisTimeSeries RANGE command with "-" and "+" as range boundreis.
@@ -17,11 +17,11 @@ namespace NRedisTimeSeries.Example
         /// In this case, the strings are implicitly casted into TimeStamp objects.
         /// The TimeSeriesRange command returns an IReadOnlyList<TimeSeriesTuple> collection.
         /// </summary>
-        public static void DefaultRangeExample()
+        public static async Task DefaultRangeAsyncExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            IReadOnlyList<TimeSeriesTuple> results = db.TimeSeriesRange("my_ts", "-", "+");
+            IReadOnlyList<TimeSeriesTuple> results = await db.TimeSeriesRangeAsync("my_ts", "-", "+");
             redis.Close();
         }
 
@@ -31,11 +31,11 @@ namespace NRedisTimeSeries.Example
         /// In this case, the strings are implicitly casted into TimeStamp objects.
         /// The TimeSeriesRange command returns an IReadOnlyList<TimeSeriesTuple> collection.
         /// </summary>
-        public static void CountRangeExample()
+        public static async Task CountRangeAsyncExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            IReadOnlyList<TimeSeriesTuple> results = db.TimeSeriesRange("my_ts", "-", "+", count:50);
+            IReadOnlyList<TimeSeriesTuple> results = await db.TimeSeriesRangeAsync("my_ts", "-", "+", count:50);
             redis.Close();
         }
 
@@ -45,11 +45,11 @@ namespace NRedisTimeSeries.Example
         /// In this case, the strings are implicitly casted into TimeStamp objects.
         /// The TimeSeriesRange command returns an IReadOnlyList<TimeSeriesTuple> collection.
         /// </summary>
-        public static void RangeAggregationExample()
+        public static async Task RangeAggregationAsyncExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            db.TimeSeriesRange("my_ts", "-", "+", aggregation: Aggregation.MIN, timeBucket: 50);
+            await db.TimeSeriesRangeAsync("my_ts", "-", "+", aggregation: Aggregation.MIN, timeBucket: 50);
             redis.Close();
         }
     }

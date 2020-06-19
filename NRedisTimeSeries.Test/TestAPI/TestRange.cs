@@ -60,7 +60,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             IDatabase db = redisFixture.Redis.GetDatabase();
             var tuples = CreateData(db, 50);
             var ex = Assert.Throws<ArgumentException>(() => db.TimeSeriesRange(key, "-", "+", aggregation: Aggregation.AVG));
-            Assert.Equal("RAGNE Aggregation should have timeBucket value", ex.Message);
+            Assert.Equal("RANGE Aggregation should have timeBucket value", ex.Message);
 
         }
     }

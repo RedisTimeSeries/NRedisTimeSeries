@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace NRedisTimeSeries.DataTypes
 {
@@ -23,20 +22,17 @@ namespace NRedisTimeSeries.DataTypes
         /// </summary>
         /// <param name="key">Key string</param>
         /// <param name="value">Value string</param>
-        public TimeSeriesLabel(string key, string value) => (Key ,Value) = (key, value);
-
+        public TimeSeriesLabel(string key, string value) => (Key, Value) = (key, value);
 
         /// <summary>
         /// Equality of TimeSeriesLabel objects
         /// </summary>
         /// <param name="obj">Object to compare</param>
         /// <returns>If two TimeSeriesLabel objects are equal</returns>
-        public override bool Equals(object obj)
-        {
-            return obj is TimeSeriesLabel label &&
-                   Key == label.Key &&
-                   Value == label.Value;
-        }
+        public override bool Equals(object obj) =>
+            obj is TimeSeriesLabel label &&
+            Key == label.Key &&
+            Value == label.Value;
 
         /// <summary>
         /// TimeSeriesLabel object hash code.
@@ -45,8 +41,8 @@ namespace NRedisTimeSeries.DataTypes
         public override int GetHashCode()
         {
             var hashCode = 206514262;
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Key);
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Value);
+            hashCode = (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(Key);
+            hashCode = (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(Value);
             return hashCode;
         }
     }

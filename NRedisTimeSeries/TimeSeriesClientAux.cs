@@ -54,7 +54,7 @@ namespace NRedisTimeSeries
                 args.Add(aggregation.Name);
                 if (!timeBucket.HasValue)
                 {
-                    throw new ArgumentException("RAGNE Aggregation should have timeBucket value");
+                    throw new ArgumentException("RANGE Aggregation should have timeBucket value");
                 }
                 args.Add(timeBucket.Value);
             }
