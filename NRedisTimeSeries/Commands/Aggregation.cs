@@ -89,10 +89,10 @@ namespace NRedisTimeSeries.Commands
         public static implicit operator Aggregation(string s) => new Aggregation(s);
 
         /// <summary>
-        /// Iterator of all possible Aggregation values
+        /// Enumerator of all possible Aggregation types
         /// </summary>
-        /// <returns>All Aggregations. i.e. AVG, SUM, MIN etc...</returns>
-        public static IEnumerable<Aggregation> All()
+        /// <returns>An Enumerator of all Aggregation types. i.e. AVG, SUM, MIN etc...</returns>
+        public static IEnumerable<Aggregation> GetEnumerator()
         {
             yield return AVG;
             yield return SUM;

@@ -19,7 +19,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var db = redisFixture.Redis.GetDatabase();
             await db.TimeSeriesCreateAsync(key);
 
-            foreach (var aggregation in Aggregation.All())
+            foreach (var aggregation in Aggregation.GetEnumerator())
             {
                 await db.TimeSeriesCreateAsync($"{key}:{aggregation.Name}");
             }
@@ -27,7 +27,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var timeBucket = 50L;
             var rules = new List<TimeSeriesRule>();
             var rulesMap = new Dictionary<Aggregation, TimeSeriesRule>();
-            foreach (var aggregation in Aggregation.All())
+            foreach (var aggregation in Aggregation.GetEnumerator())
             {
                 var rule = new TimeSeriesRule($"{key}:{aggregation.Name}", timeBucket, aggregation);
                 rules.Add(rule);
@@ -38,7 +38,7 @@ namespace NRedisTimeSeries.Test.TestAPI
                 Assert.Equal(rules, info.Rules);
             }
 
-            foreach (var aggregation in Aggregation.All())
+            foreach (var aggregation in Aggregation.GetEnumerator())
             {
                 var rule = rulesMap[aggregation];
                 rules.Remove(rule);
@@ -48,7 +48,7 @@ namespace NRedisTimeSeries.Test.TestAPI
                 Assert.Equal(rules, info.Rules);
             }
 
-            await db.KeyDeleteAsync(Aggregation.All().Select(i => (RedisKey)$"{key}:{i.Name}").ToArray());
+            await db.KeyDeleteAsync(Aggregation.GetEnumerator().Select(i => (RedisKey)$"{key}:{i.Name}").ToArray());
         }
 
         [Fact]
