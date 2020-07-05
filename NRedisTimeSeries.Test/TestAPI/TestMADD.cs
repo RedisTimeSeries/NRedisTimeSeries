@@ -50,7 +50,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         }
 
         [Fact]
-        public void TestFailedMADD()
+        public void TestOverrideMADD()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
 
@@ -74,13 +74,12 @@ namespace NRedisTimeSeries.Test.TestAPI
 
             sequence.Clear();
 
+            // Override the same events should not throw an error
             for (int i =0; i < keys.Length; i++)
             {
                 sequence.Add((keys[i], oldTimeStamps[i], 1.1));
             }
-
-            var ex = Assert.Throws<RedisServerException>(()=>db.TimeSeriesMAdd(sequence));
-            Assert.Equal("TSDB: Timestamp cannot be older than the latest timestamp in the time series", ex.Message);
+            db.TimeSeriesMAdd(sequence);
         }
     }
 }
