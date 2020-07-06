@@ -100,8 +100,8 @@ namespace NRedisTimeSeries.Test.TestAPI
             IDatabase db = redisFixture.Redis.GetDatabase();
             db.TimeSeriesCreate(key);
             db.TimeSeriesAdd(key, new_dt, 1.1);
-            var ex = Assert.Throws<RedisServerException>(() => db.TimeSeriesAdd(key, old_dt, 1.1));
-            Assert.Equal("TSDB: Timestamp cannot be older than the latest timestamp in the time series", ex.Message);
+            // Adding old event
+            Assert.Equal( old_dt, db.TimeSeriesAdd(key, old_dt, 1.1));
         }
 
         [Fact]
