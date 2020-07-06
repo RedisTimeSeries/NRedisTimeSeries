@@ -65,7 +65,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestMRangeWithLabels()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeSeriesLabel label = new TimeSeriesLabel("key", "value");
+            TimeSeriesLabel label = new TimeSeriesLabel("key", "MRangeWithLabels");
             var labels = new List<TimeSeriesLabel> { label };
             foreach (string key in keys)
             {
@@ -73,7 +73,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = CreateData(db, 50);
-            var results = db.TimeSeriesMRange("-", "+", new List<string> { "key=value" }, withLabels: true);
+            var results = db.TimeSeriesMRange("-", "+", new List<string> { "key=MRangeWithLabels" }, withLabels: true);
             Assert.Equal(keys.Length, results.Count);
             for (int i = 0; i < results.Count; i++)
             {
@@ -87,11 +87,11 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestMRangeFilter()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeSeriesLabel label = new TimeSeriesLabel("key", "value");
+            TimeSeriesLabel label = new TimeSeriesLabel("key", "MRangeFilter");
             var labels = new List<TimeSeriesLabel> { label };
             db.TimeSeriesCreate(keys[0], labels: labels);
             var tuples = CreateData(db, 50);
-            var results = db.TimeSeriesMRange("-", "+", new List<string> { "key=value" });
+            var results = db.TimeSeriesMRange("-", "+", new List<string> { "key=MRangeFilter" });
             Assert.Equal(1, results.Count);
             Assert.Equal(keys[0], results[0].key);
             Assert.Equal(0, results[0].labels.Count);
@@ -102,7 +102,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestMRangeCount()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeSeriesLabel label = new TimeSeriesLabel("key", "value");
+            TimeSeriesLabel label = new TimeSeriesLabel("key", "MRangeCount");
             var labels = new List<TimeSeriesLabel> { label };
             foreach (string key in keys)
             {
@@ -111,7 +111,7 @@ namespace NRedisTimeSeries.Test.TestAPI
 
             var tuples = CreateData(db, 50);
             long count = 5;
-            var results = db.TimeSeriesMRange("-", "+", new List<string> { "key=value" }, count:count);
+            var results = db.TimeSeriesMRange("-", "+", new List<string> { "key=MRangeCount" }, count:count);
             Assert.Equal(keys.Length, results.Count);
             for (int i = 0; i < results.Count; i++)
             {
@@ -125,7 +125,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestMRangeAggregation()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeSeriesLabel label = new TimeSeriesLabel("key", "value");
+            TimeSeriesLabel label = new TimeSeriesLabel("key", "MRangeAggregation");
             var labels = new List<TimeSeriesLabel> { label };
             foreach (string key in keys)
             {
@@ -133,7 +133,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = CreateData(db, 50);
-            var results = db.TimeSeriesMRange("-", "+", new List<string> { "key=value" }, aggregation: Aggregation.MIN, timeBucket: 50);
+            var results = db.TimeSeriesMRange("-", "+", new List<string> { "key=MRangeAggregation" }, aggregation: Aggregation.MIN, timeBucket: 50);
             Assert.Equal(keys.Length, results.Count);
             for (int i = 0; i < results.Count; i++)
             {
@@ -147,7 +147,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestMissingFilter()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeSeriesLabel label = new TimeSeriesLabel("key", "value");
+            TimeSeriesLabel label = new TimeSeriesLabel("key", "MissingFilter");
             var labels = new List<TimeSeriesLabel> { label };
             foreach (string key in keys)
             {
@@ -163,7 +163,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestMissingTimeBucket()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeSeriesLabel label = new TimeSeriesLabel("key", "value");
+            TimeSeriesLabel label = new TimeSeriesLabel("key", "MissingTimeBucket");
             var labels = new List<TimeSeriesLabel> { label };
             foreach (string key in keys)
             {
@@ -171,7 +171,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = CreateData(db, 50);
-            var ex = Assert.Throws<ArgumentException>(() => db.TimeSeriesMRange("-", "+", new List<string> { "key=value" }, aggregation: Aggregation.AVG));
+            var ex = Assert.Throws<ArgumentException>(() => db.TimeSeriesMRange("-", "+", new List<string> { "key=MissingTimeBucket" }, aggregation: Aggregation.AVG));
             Assert.Equal("RANGE Aggregation should have timeBucket value", ex.Message);
 
         }
