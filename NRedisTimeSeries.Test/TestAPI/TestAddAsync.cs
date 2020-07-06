@@ -106,7 +106,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             await db.TimeSeriesCreateAsync(key);
             await db.TimeSeriesAddAsync(key, newTimeStamp, 1.1);
             // Adding old event
-            await db.TimeSeriesAddAsync(key, oldTimeStamp, 1.1);
+            Assert.Equal( oldTimeStamp, await db.TimeSeriesAddAsync(key, oldTimeStamp, 1.1));
         }
 
         [Fact]

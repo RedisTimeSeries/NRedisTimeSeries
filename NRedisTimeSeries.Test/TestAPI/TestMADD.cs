@@ -79,7 +79,13 @@ namespace NRedisTimeSeries.Test.TestAPI
             {
                 sequence.Add((keys[i], oldTimeStamps[i], 1.1));
             }
-            db.TimeSeriesMAdd(sequence);
+            var response = db.TimeSeriesMAdd(sequence);
+
+            Assert.Equal(oldTimeStamps.Count, response.Count);
+            for(int i = 0; i < response.Count; i++)
+            {
+                Assert.Equal<DateTime>(oldTimeStamps[i], response[i]);
+            }
         }
     }
 }

@@ -101,7 +101,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             db.TimeSeriesCreate(key);
             db.TimeSeriesAdd(key, new_dt, 1.1);
             // Adding old event
-            db.TimeSeriesAdd(key, old_dt, 1.1);
+            Assert.Equal( old_dt, db.TimeSeriesAdd(key, old_dt, 1.1));
         }
 
         [Fact]
