@@ -22,6 +22,33 @@ namespace NRedisTimeSeries.Test.TestAPI
         }
 
         [Fact]
+        public void TestStarMADD()
+        {
+
+            IDatabase db = redisFixture.Redis.GetDatabase();
+
+            foreach (string key in keys)
+            {
+                db.TimeSeriesCreate(key);
+            }
+            List<(string, TimeStamp, double)> sequence = new List<(string, TimeStamp, double)>(keys.Length);
+            foreach (var keyname in keys)
+            {
+                sequence.Add((keyname, "*", 1.1));
+            }
+            var response = db.TimeSeriesMAdd(sequence);
+
+            Assert.Equal(keys.Length, response.Count);
+
+            foreach (var key in keys)
+            {
+                TimeSeriesInformation info = db.TimeSeriesInfo(key);
+                Assert.True(info.FirstTimeStamp > 0);
+                Assert.Equal(info.FirstTimeStamp, info.LastTimeStamp);
+            }
+        }
+
+        [Fact]
         public void TestSuccessfulMADD()
         {
 
@@ -50,7 +77,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         }
 
         [Fact]
-        public void TestFailedMADD()
+        public void TestOverrideMADD()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
 
@@ -74,13 +101,18 @@ namespace NRedisTimeSeries.Test.TestAPI
 
             sequence.Clear();
 
+            // Override the same events should not throw an error
             for (int i =0; i < keys.Length; i++)
             {
                 sequence.Add((keys[i], oldTimeStamps[i], 1.1));
             }
+            var response = db.TimeSeriesMAdd(sequence);
 
-            var ex = Assert.Throws<RedisServerException>(()=>db.TimeSeriesMAdd(sequence));
-            Assert.Equal("TSDB: Timestamp cannot be older than the latest timestamp in the time series", ex.Message);
+            Assert.Equal(oldTimeStamps.Count, response.Count);
+            for(int i = 0; i < response.Count; i++)
+            {
+                Assert.Equal<DateTime>(oldTimeStamps[i], response[i]);
+            }
         }
     }
 }

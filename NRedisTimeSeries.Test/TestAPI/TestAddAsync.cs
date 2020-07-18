@@ -105,8 +105,8 @@ namespace NRedisTimeSeries.Test.TestAPI
             TimeStamp newTimeStamp = dateTime;
             await db.TimeSeriesCreateAsync(key);
             await db.TimeSeriesAddAsync(key, newTimeStamp, 1.1);
-            var ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesAddAsync(key, oldTimeStamp, 1.1));
-            Assert.Equal("TSDB: Timestamp cannot be older than the latest timestamp in the time series", ex.Message);
+            // Adding old event
+            Assert.Equal( oldTimeStamp, await db.TimeSeriesAddAsync(key, oldTimeStamp, 1.1));
         }
 
         [Fact]

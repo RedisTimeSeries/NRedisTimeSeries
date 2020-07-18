@@ -11,6 +11,37 @@ namespace NRedisTimeSeries.Test.TestAPI
     {
         public TestMAddAsync(RedisFixture redisFixture) : base(redisFixture) { }
 
+
+        [Fact]
+        public async Task TestStarMADD()
+        {
+            var keys = CreateKeyNames(2);
+
+            IDatabase db = redisFixture.Redis.GetDatabase();
+
+            foreach (string key in keys)
+            {
+                await db.TimeSeriesCreateAsync(key);
+            }
+
+            List<(string, TimeStamp, double)> sequence = new List<(string, TimeStamp, double)>(keys.Length);
+            foreach (var keyname in keys)
+            {
+                sequence.Add((keyname, "*", 1.1));
+            }
+            var response = await db.TimeSeriesMAddAsync(sequence);
+
+            Assert.Equal(keys.Length, response.Count);
+
+            foreach (var key in keys)
+            {
+                TimeSeriesInformation info = await db.TimeSeriesInfoAsync(key);
+                Assert.True(info.FirstTimeStamp > 0);
+                Assert.Equal(info.FirstTimeStamp, info.LastTimeStamp);
+            }
+        }
+
+
         [Fact]
         public async Task TestSuccessfulMAdd()
         {
@@ -40,7 +71,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         }
 
         [Fact]
-        public async Task TestFailedMAdd()
+        public async Task TestOverrideMAdd()
         {
             var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
@@ -65,13 +96,19 @@ namespace NRedisTimeSeries.Test.TestAPI
             await db.TimeSeriesMAddAsync(sequence);
             sequence.Clear();
 
+            // Override the same events should not throw an error
             for (var i = 0; i < keys.Length; i++)
             {
                 sequence.Add((keys[i], oldTimeStamps[i], 1.1));
             }
+            
+            var response = await db.TimeSeriesMAddAsync(sequence);
 
-            var ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesMAddAsync(sequence));
-            Assert.Equal("TSDB: Timestamp cannot be older than the latest timestamp in the time series", ex.Message);
+            Assert.Equal(oldTimeStamps.Count, response.Count);
+            for(int i = 0; i < response.Count; i++)
+            {
+                Assert.Equal<DateTime>(oldTimeStamps[i], response[i]);
+            }
         }
     }
 }

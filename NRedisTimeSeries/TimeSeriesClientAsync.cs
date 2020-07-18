@@ -83,7 +83,7 @@ namespace NRedisTimeSeries
             foreach (var tuple in sequence)
             {
                 args.Add(tuple.key);
-                args.Add((long)tuple.timestamp);
+                args.Add(tuple.timestamp.Value);
                 args.Add(tuple.value);
             }
             return ParseTimeStampArray(await db.ExecuteAsync(TS.MADD, args));
