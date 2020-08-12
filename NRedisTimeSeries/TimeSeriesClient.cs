@@ -213,6 +213,26 @@ namespace NRedisTimeSeries
         }
 
         /// <summary>
+        /// Query a range in reverse order.
+        /// </summary>
+        /// <param name="db">StackExchange.Redis IDatabase instance</param>
+        /// <param name="key">Key name for timeseries</param>
+        /// <param name="fromTimeStamp">Start timestamp for the range query. "-" can be used to express the minimum possible timestamp.</param>
+        /// <param name="toTimeStamp">End timestamp for range query, + can be used to express the maximum possible timestamp.</param>
+        /// <param name="count">Optional: Returned list size.</param>
+        /// <param name="aggregation">Optional: Aggregation type</param>
+        /// <param name="timeBucket">Optional: Time bucket for aggregation in milliseconds</param>
+        /// <returns>A list of TimeSeriesTuple</returns>
+        public static IReadOnlyList<TimeSeriesTuple> TimeSeriesRevRange(this IDatabase db, string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, long? count = null, Aggregation aggregation = null, long? timeBucket = null)
+        {
+            var args = new List<object>()
+                { key, fromTimeStamp.Value, toTimeStamp.Value };
+            args.AddCount(count);
+            args.AddAggregation(aggregation, timeBucket);
+            return ParseTimeSeriesTupleArray(db.Execute(TS.REVRANGE, args));
+        }
+
+        /// <summary>
         /// Query a timestamp range across multiple time-series by filters.
         /// </summary>
         /// <param name="db">StackExchange.Redis IDatabase instance</param>
@@ -233,6 +253,29 @@ namespace NRedisTimeSeries
             args.AddFilters(filter);
 
             return ParseMRangeResponse(db.Execute(TS.MRANGE, args));
+        }
+
+        /// <summary>
+        /// Query a timestamp range in reverse order across multiple time-series by filters.
+        /// </summary>
+        /// <param name="db">StackExchange.Redis IDatabase instance</param>
+        /// <param name="fromTimeStamp"> Start timestamp for the range query. - can be used to express the minimum possible timestamp.</param>
+        /// <param name="toTimeStamp">End timestamp for range query, + can be used to express the maximum possible timestamp.</param>
+        /// <param name="filter">A sequence of filters</param>
+        /// <param name="count">Optional: Maximum number of returned results per time-series.</param>
+        /// <param name="aggregation">Optional: Aggregation type</param>
+        /// <param name="timeBucket">Optional: Time bucket for aggregation in milliseconds</param>
+        /// <param name="withLabels">Optional: Include in the reply the label-value pairs that represent metadata labels of the time-series</param>
+        /// <returns>A list of <(key, labels, values)> tuples. Each tuple contains the key name, its labels and the values which satisfies the given range and filters.</returns>
+        public static IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)> TimeSeriesMRevRange(this IDatabase db, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, IReadOnlyCollection<string> filter, long? count = null, Aggregation aggregation = null, long? timeBucket = null, bool? withLabels = null)
+        {
+            var args = new List<object>() { fromTimeStamp.Value, toTimeStamp.Value };
+            args.AddCount(count);
+            args.AddAggregation(aggregation, timeBucket);
+            args.AddWithLabels(withLabels);
+            args.AddFilters(filter);
+
+            return ParseMRangeResponse(db.Execute(TS.MREVRANGE, args));
         }
 
         #endregion
