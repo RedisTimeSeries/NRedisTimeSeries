@@ -11,7 +11,9 @@
         public static string CREATERULE => "TS.CREATERULE";
         public static string DELETERULE => "TS.DELETERULE";
         public static string RANGE => "TS.RANGE";
+        public static string REVRANGE => "TS.REVRANGE";
         public static string MRANGE => "TS.MRANGE";
+        public static string MREVRANGE => "TS.MREVRANGE";
         public static string GET => "TS.GET";
         public static string MGET => "TS.MGET";
         public static string INFO => "TS.INFO";

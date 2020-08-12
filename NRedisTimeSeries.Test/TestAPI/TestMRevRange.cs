@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.DataTypes;
@@ -8,11 +9,11 @@ using Xunit;
 
 namespace NRedisTimeSeries.Test.TestAPI
 {
-    public class TestMRange : AbstractTimeSeriesTest, IDisposable
+    public class TestMRevRange : AbstractTimeSeriesTest, IDisposable
     {
-        private readonly string[] keys = { "MRANGE_TESTS_1", "MRANGE_TESTS_2" };
+        private readonly string[] keys = { "MREVRANGE_TESTS_1", "MREVRANGE_TESTS_2" };
 
-        public TestMRange(RedisFixture redisFixture) : base(redisFixture) { }
+        public TestMRevRange(RedisFixture redisFixture) : base(redisFixture) { }
 
         public void Dispose()
         {
@@ -39,11 +40,22 @@ namespace NRedisTimeSeries.Test.TestAPI
             return tuples;
         }
 
+        private List<TimeSeriesTuple> ReverseData(List<TimeSeriesTuple> data)
+        {
+            var tuples = new List<TimeSeriesTuple>();
+
+            for (int i = data.Count - 1; i >= 0; i--)
+            {
+                tuples.Add(data[i]);
+            }
+            return tuples;
+        }
+
         [Fact]
-        public void TestSimpleMRange()
+        public void TestSimpleMRevRange()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeSeriesLabel label = new TimeSeriesLabel("MRANGEkey", "MRANGEvalue");
+            TimeSeriesLabel label = new TimeSeriesLabel("MREVRANGEkey", "MREVRANGEvalue");
             var labels = new List<TimeSeriesLabel> { label };
             foreach (string key in keys)
             {
@@ -51,21 +63,21 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = CreateData(db, 50);
-            var results = db.TimeSeriesMRange("-", "+", new List<string>{ "MRANGEkey=MRANGEvalue" });
+            var results = db.TimeSeriesMRevRange("-", "+", new List<string>{ "MREVRANGEkey=MREVRANGEvalue" });
             Assert.Equal(keys.Length, results.Count);
-            for(int i =0; i < results.Count; i++)
+            for(int i = 0; i < results.Count; i++)
             {
                 Assert.Equal(keys[i], results[i].key);
                 Assert.Equal(0, results[i].labels.Count);
-                Assert.Equal(tuples, results[i].values);
+                Assert.Equal(ReverseData(tuples), results[i].values);
             }
         }
 
         [Fact]
-        public void TestMRangeWithLabels()
+        public void TestMRevRangeWithLabels()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeSeriesLabel label = new TimeSeriesLabel("key", "MRangeWithLabels");
+            TimeSeriesLabel label = new TimeSeriesLabel("key", "MRevRangeWithLabels");
             var labels = new List<TimeSeriesLabel> { label };
             foreach (string key in keys)
             {
@@ -73,36 +85,36 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = CreateData(db, 50);
-            var results = db.TimeSeriesMRange("-", "+", new List<string> { "key=MRangeWithLabels" }, withLabels: true);
+            var results = db.TimeSeriesMRevRange("-", "+", new List<string> { "key=MRevRangeWithLabels" }, withLabels: true);
             Assert.Equal(keys.Length, results.Count);
             for (int i = 0; i < results.Count; i++)
             {
                 Assert.Equal(keys[i], results[i].key);
                 Assert.Equal(labels, results[i].labels);
-                Assert.Equal(tuples, results[i].values);
+                Assert.Equal(ReverseData(tuples), results[i].values);
             }
         }
 
         [Fact]
-        public void TestMRangeFilter()
+        public void TestMRevRangeFilter()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeSeriesLabel label = new TimeSeriesLabel("key", "MRangeFilter");
+            TimeSeriesLabel label = new TimeSeriesLabel("key", "MRevRangeFilter");
             var labels = new List<TimeSeriesLabel> { label };
             db.TimeSeriesCreate(keys[0], labels: labels);
             var tuples = CreateData(db, 50);
-            var results = db.TimeSeriesMRange("-", "+", new List<string> { "key=MRangeFilter" });
+            var results = db.TimeSeriesMRevRange("-", "+", new List<string> { "key=MRevRangeFilter" });
             Assert.Equal(1, results.Count);
             Assert.Equal(keys[0], results[0].key);
             Assert.Equal(0, results[0].labels.Count);
-            Assert.Equal(tuples, results[0].values);
+            Assert.Equal(ReverseData(tuples), results[0].values);
         }
 
         [Fact]
-        public void TestMRangeCount()
+        public void TestMRevRangeCount()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeSeriesLabel label = new TimeSeriesLabel("key", "MRangeCount");
+            TimeSeriesLabel label = new TimeSeriesLabel("key", "MRevRangeCount");
             var labels = new List<TimeSeriesLabel> { label };
             foreach (string key in keys)
             {
@@ -111,21 +123,21 @@ namespace NRedisTimeSeries.Test.TestAPI
 
             var tuples = CreateData(db, 50);
             long count = 5;
-            var results = db.TimeSeriesMRange("-", "+", new List<string> { "key=MRangeCount" }, count:count);
+            var results = db.TimeSeriesMRevRange("-", "+", new List<string> { "key=MRevRangeCount" }, count:count);
             Assert.Equal(keys.Length, results.Count);
             for (int i = 0; i < results.Count; i++)
             {
                 Assert.Equal(keys[i], results[i].key);
                 Assert.Equal(0, results[i].labels.Count);
-                Assert.Equal(tuples.GetRange(0,(int)count), results[i].values);
+                Assert.Equal(ReverseData(tuples).GetRange(0, (int)count), results[i].values);
             }
         }
 
         [Fact]
-        public void TestMRangeAggregation()
+        public void TestMRevRangeAggregation()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeSeriesLabel label = new TimeSeriesLabel("key", "MRangeAggregation");
+            TimeSeriesLabel label = new TimeSeriesLabel("key", "MRevRangeAggregation");
             var labels = new List<TimeSeriesLabel> { label };
             foreach (string key in keys)
             {
@@ -133,13 +145,13 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = CreateData(db, 50);
-            var results = db.TimeSeriesMRange("-", "+", new List<string> { "key=MRangeAggregation" }, aggregation: Aggregation.MIN, timeBucket: 50);
+            var results = db.TimeSeriesMRevRange("-", "+", new List<string> { "key=MRevRangeAggregation" }, aggregation: Aggregation.MIN, timeBucket: 50);
             Assert.Equal(keys.Length, results.Count);
             for (int i = 0; i < results.Count; i++)
             {
                 Assert.Equal(keys[i], results[i].key);
                 Assert.Equal(0, results[i].labels.Count);
-                Assert.Equal(tuples, results[i].values);
+                Assert.Equal(ReverseData(tuples), results[i].values);
             }
         }
 
@@ -155,7 +167,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = CreateData(db, 50);
-            var ex = Assert.Throws<ArgumentException>(() => db.TimeSeriesMRange("-", "+", new List<string>()));
+            var ex = Assert.Throws<ArgumentException>(() => db.TimeSeriesMRevRange("-", "+", new List<string>()));
             Assert.Equal("There should be at least one filter on MRANGE/MREVRANGE", ex.Message);
         }
 
@@ -171,7 +183,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = CreateData(db, 50);
-            var ex = Assert.Throws<ArgumentException>(() => db.TimeSeriesMRange("-", "+", new List<string> { "key=MissingTimeBucket" }, aggregation: Aggregation.AVG));
+            var ex = Assert.Throws<ArgumentException>(() => db.TimeSeriesMRevRange("-", "+", new List<string> { "key=MissingTimeBucket" }, aggregation: Aggregation.AVG));
             Assert.Equal("RANGE Aggregation should have timeBucket value", ex.Message);
 
         }
