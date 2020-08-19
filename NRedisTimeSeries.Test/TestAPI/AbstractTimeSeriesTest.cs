@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using NRedisTimeSeries.DataTypes;
 using Xunit;
 
 namespace NRedisTimeSeries.Test.TestAPI
@@ -31,6 +32,17 @@ namespace NRedisTimeSeries.Test.TestAPI
             keyNames.AddRange(newKeys);
 
             return newKeys;
+        }
+
+        protected internal static List<TimeSeriesTuple> ReverseData(List<TimeSeriesTuple> data)
+        {
+            var tuples = new List<TimeSeriesTuple>(data.Count);
+            for (var i = data.Count - 1; i >= 0; i--)
+            {
+                tuples.Add(data[i]);
+            }
+
+            return tuples;
         }
 
         public Task InitializeAsync() => Task.CompletedTask;

@@ -29,17 +29,6 @@ namespace NRedisTimeSeries.Test.TestAPI
             return tuples;
         }
 
-        private List<TimeSeriesTuple> ReverseData(List<TimeSeriesTuple> data)
-        {
-            var tuples = new List<TimeSeriesTuple>();
-
-            for (int i = data.Count - 1; i >= 0; i--)
-            {
-                tuples.Add(data[i]);
-            }
-            return tuples;
-        }
-
         [Fact]
         public async Task TestSimpleMRevRange()
         {
@@ -53,7 +42,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = await CreateData(db, keys, 50);
-            var results = db.TimeSeriesMRevRange("-", "+", new List<string> { $"{keys[0]}=value" });
+            var results = await db.TimeSeriesMRevRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" });
             Assert.Equal(keys.Length, results.Count);
             for (var i = 0; i < results.Count; i++)
             {
