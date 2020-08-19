@@ -23,17 +23,6 @@ namespace NRedisTimeSeries.Test.TestAPI
             return tuples;
         }
 
-        private List<TimeSeriesTuple> ReverseData(List<TimeSeriesTuple> data)
-        {
-            var tuples = new List<TimeSeriesTuple>();
-
-            for (int i = data.Count - 1; i >= 0; i--)
-            {
-                tuples.Add(data[i]);
-            }
-            return tuples;
-        }
-
         [Fact]
         public async Task TestSimpleRevRange()
         {

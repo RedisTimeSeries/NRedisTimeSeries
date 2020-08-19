@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using NRedisTimeSeries.DataTypes;
-using StackExchange.Redis;
 using Xunit;
 
 namespace NRedisTimeSeries.Test.TestAPI
@@ -14,7 +13,7 @@ namespace NRedisTimeSeries.Test.TestAPI
 
         public void Dispose()
         {
-            foreach (string key in keys)
+            foreach (var key in keys)
             {
                 redisFixture.Redis.GetDatabase().KeyDelete(key);
             }
@@ -23,7 +22,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         [Fact]
         public void TestTSQueryIndex()
         {
-            IDatabase db = redisFixture.Redis.GetDatabase();
+            var db = redisFixture.Redis.GetDatabase();
             var label1 = new TimeSeriesLabel("QUERYINDEX_TESTS_1", "value");
             var label2 = new TimeSeriesLabel("QUERYINDEX_TESTS_2", "value2");
             var labels1 = new List<TimeSeriesLabel> { label1, label2 };
