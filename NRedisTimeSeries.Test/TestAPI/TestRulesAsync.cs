@@ -60,10 +60,10 @@ namespace NRedisTimeSeries.Test.TestAPI
             await db.TimeSeriesCreateAsync(aggKey);
             var rule = new TimeSeriesRule(aggKey, 50, Aggregation.AVG);
             var ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesCreateRuleAsync(key, rule));
-            Assert.Equal("TSDB: the key does not exist", ex.Message);
+            Assert.Equal("ERR TSDB: the key does not exist", ex.Message);
 
             ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesDeleteRuleAsync(key, aggKey));
-            Assert.Equal("TSDB: the key does not exist", ex.Message);
+            Assert.Equal("ERR TSDB: the key does not exist", ex.Message);
 
             await db.KeyDeleteAsync(aggKey);
         }
@@ -77,10 +77,10 @@ namespace NRedisTimeSeries.Test.TestAPI
             await db.TimeSeriesCreateAsync(key);
             var rule = new TimeSeriesRule(aggKey, 50, Aggregation.AVG);
             var ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesCreateRuleAsync(key, rule));
-            Assert.Equal("TSDB: the key does not exist", ex.Message);
+            Assert.Equal("ERR TSDB: the key does not exist", ex.Message);
 
             ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesDeleteRuleAsync(key, aggKey));
-            Assert.Equal("TSDB: compaction rule does not exist", ex.Message);
+            Assert.Equal("ERR TSDB: compaction rule does not exist", ex.Message);
         }
     }
 }

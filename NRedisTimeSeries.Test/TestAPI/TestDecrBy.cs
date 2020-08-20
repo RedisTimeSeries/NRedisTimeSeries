@@ -85,9 +85,9 @@ namespace NRedisTimeSeries.Test.TestAPI
             double value = 5.5;
             IDatabase db = redisFixture.Redis.GetDatabase();
             var ex = Assert.Throws<RedisServerException>(() => db.TimeSeriesDecrBy(key, value, timestamp: "+"));
-            Assert.Equal("TSDB: invalid timestamp", ex.Message);
+            Assert.Equal("ERR TSDB: invalid timestamp", ex.Message);
             ex = Assert.Throws<RedisServerException>(() => db.TimeSeriesDecrBy(key, value, timestamp: "-"));
-            Assert.Equal("TSDB: invalid timestamp", ex.Message);
+            Assert.Equal("ERR TSDB: invalid timestamp", ex.Message);
         }
     }
 }
