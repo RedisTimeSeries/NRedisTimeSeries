@@ -98,10 +98,10 @@ namespace NRedisTimeSeries.Test.TestAPI
             var value = 5.5;
             var db = redisFixture.Redis.GetDatabase();
             var ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesIncrByAsync(key, value, timestamp: "+"));
-            Assert.Equal("TSDB: invalid timestamp", ex.Message);
+            Assert.Equal("ERR TSDB: invalid timestamp", ex.Message);
 
             ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesIncrByAsync(key, value, timestamp: "-"));
-            Assert.Equal("TSDB: invalid timestamp", ex.Message);
+            Assert.Equal("ERR TSDB: invalid timestamp", ex.Message);
         }
     }
 }
