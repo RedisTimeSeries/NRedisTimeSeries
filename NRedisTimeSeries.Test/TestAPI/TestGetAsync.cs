@@ -16,7 +16,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             var ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesGetAsync(key));
-            Assert.Equal("TSDB: the key does not exist", ex.Message);
+            Assert.Equal("ERR TSDB: the key does not exist", ex.Message);
         }
 
         [Fact]

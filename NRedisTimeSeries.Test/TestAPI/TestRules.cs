@@ -81,9 +81,9 @@ namespace NRedisTimeSeries.Test.TestAPI
             db.TimeSeriesCreate(destKey);
             TimeSeriesRule rule = new TimeSeriesRule(destKey, 50, Aggregation.AVG);
             var ex = Assert.Throws<RedisServerException>(() => db.TimeSeriesCreateRule(srcKey, rule));
-            Assert.Equal("TSDB: the key does not exist", ex.Message);
+            Assert.Equal("ERR TSDB: the key does not exist", ex.Message);
             ex = Assert.Throws<RedisServerException>(() => db.TimeSeriesDeleteRule(srcKey, destKey));
-            Assert.Equal("TSDB: the key does not exist", ex.Message);
+            Assert.Equal("ERR TSDB: the key does not exist", ex.Message);
         }
 
         [Fact]
@@ -94,9 +94,9 @@ namespace NRedisTimeSeries.Test.TestAPI
             db.TimeSeriesCreate(srcKey);
             TimeSeriesRule rule = new TimeSeriesRule(destKey, 50, Aggregation.AVG);
             var ex = Assert.Throws<RedisServerException>(() => db.TimeSeriesCreateRule(srcKey, rule));
-            Assert.Equal("TSDB: the key does not exist", ex.Message);
+            Assert.Equal("ERR TSDB: the key does not exist", ex.Message);
             ex = Assert.Throws<RedisServerException>(() => db.TimeSeriesDeleteRule(srcKey, destKey));
-            Assert.Equal("TSDB: compaction rule does not exist", ex.Message);
+            Assert.Equal("ERR TSDB: compaction rule does not exist", ex.Message);
         }
     }
 }
