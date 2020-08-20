@@ -8,9 +8,9 @@ using Xunit;
 
 namespace NRedisTimeSeries.Test.TestAPI
 {
-    public class TestMRangeAsync : AbstractTimeSeriesTest
+    public class TestMRevRangeAsync : AbstractTimeSeriesTest
     {
-        public TestMRangeAsync(RedisFixture redisFixture) : base(redisFixture) { }
+        public TestMRevRangeAsync(RedisFixture redisFixture) : base(redisFixture) { }
 
         private async Task<List<TimeSeriesTuple>> CreateData(IDatabase db, string[] keys, int timeBucket)
         {
@@ -30,7 +30,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         }
 
         [Fact]
-        public async Task TestSimpleMRange()
+        public async Task TestSimpleMRevRange()
         {
             var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
@@ -42,18 +42,18 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = await CreateData(db, keys, 50);
-            var results = db.TimeSeriesMRange("-", "+", new List<string> { $"{keys[0]}=value" });
+            var results = await db.TimeSeriesMRevRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" });
             Assert.Equal(keys.Length, results.Count);
             for (var i = 0; i < results.Count; i++)
             {
                 Assert.Equal(keys[i], results[i].key);
                 Assert.Equal(0, results[i].labels.Count);
-                Assert.Equal(tuples, results[i].values);
+                Assert.Equal(ReverseData(tuples), results[i].values);
             }
         }
 
         [Fact]
-        public async Task TestMRangeWithLabels()
+        public async Task TestMRevRangeWithLabels()
         {
             var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
@@ -65,18 +65,18 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = await CreateData(db, keys, 50);
-            var results = await db.TimeSeriesMRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, withLabels: true);
+            var results = await db.TimeSeriesMRevRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, withLabels: true);
             Assert.Equal(keys.Length, results.Count);
             for (var i = 0; i < results.Count; i++)
             {
                 Assert.Equal(keys[i], results[i].key);
                 Assert.Equal(labels, results[i].labels);
-                Assert.Equal(tuples, results[i].values);
+                Assert.Equal(ReverseData(tuples), results[i].values);
             }
         }
 
         [Fact]
-        public async Task TestMRangeFilter()
+        public async Task TestMRevRangeFilter()
         {
             var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
@@ -84,15 +84,15 @@ namespace NRedisTimeSeries.Test.TestAPI
             var labels = new List<TimeSeriesLabel> { label };
             await db.TimeSeriesCreateAsync(keys[0], labels: labels);
             var tuples = await CreateData(db, keys, 50);
-            var results = await db.TimeSeriesMRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" });
+            var results = await db.TimeSeriesMRevRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" });
             Assert.Equal(1, results.Count);
             Assert.Equal(keys[0], results[0].key);
             Assert.Equal(0, results[0].labels.Count);
-            Assert.Equal(tuples, results[0].values);
+            Assert.Equal(ReverseData(tuples), results[0].values);
         }
 
         [Fact]
-        public async Task TestMRangeCount()
+        public async Task TestMRevRangeCount()
         {
             var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
@@ -105,13 +105,13 @@ namespace NRedisTimeSeries.Test.TestAPI
 
             var tuples = await CreateData(db, keys, 50);
             var count = 5L;
-            var results = await db.TimeSeriesMRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, count: count);
+            var results = await db.TimeSeriesMRevRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, count: count);
             Assert.Equal(keys.Length, results.Count);
             for (var i = 0; i < results.Count; i++)
             {
                 Assert.Equal(keys[i], results[i].key);
                 Assert.Equal(0, results[i].labels.Count);
-                Assert.Equal(tuples.GetRange(0, (int)count), results[i].values);
+                Assert.Equal(ReverseData(tuples).GetRange(0, (int)count), results[i].values);
             }
         }
 
@@ -128,13 +128,13 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = await CreateData(db, keys, 50);
-            var results = await db.TimeSeriesMRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, aggregation: Aggregation.MIN, timeBucket: 50);
+            var results = await db.TimeSeriesMRevRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, aggregation: Aggregation.MIN, timeBucket: 50);
             Assert.Equal(keys.Length, results.Count);
             for (var i = 0; i < results.Count; i++)
             {
                 Assert.Equal(keys[i], results[i].key);
                 Assert.Equal(0, results[i].labels.Count);
-                Assert.Equal(tuples, results[i].values);
+                Assert.Equal(ReverseData(tuples), results[i].values);
             }
         }
 
@@ -151,7 +151,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = await CreateData(db, keys, 50);
-            var ex = await Assert.ThrowsAsync<ArgumentException>(async () => await db.TimeSeriesMRangeAsync("-", "+", new List<string>()));
+            var ex = await Assert.ThrowsAsync<ArgumentException>(async () => await db.TimeSeriesMRevRangeAsync("-", "+", new List<string>()));
             Assert.Equal("There should be at least one filter on MRANGE/MREVRANGE", ex.Message);
         }
 
@@ -170,7 +170,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var tuples = await CreateData(db, keys, 50);
             var ex = await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
-                await db.TimeSeriesMRangeAsync("-", "+",
+                await db.TimeSeriesMRevRangeAsync("-", "+",
                     filter: new List<string>() { $"key=value" },
                     aggregation: Aggregation.AVG);
             });

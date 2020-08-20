@@ -64,7 +64,7 @@ namespace NRedisTimeSeries
         {
             if(filter == null || filter.Count == 0)
             {
-                throw new ArgumentException("There should be at least one filter on MRANGE");
+                throw new ArgumentException("There should be at least one filter on MRANGE/MREVRANGE");
             }
             args.Add(CommandArgs.FILTER);
             foreach(string f in filter)

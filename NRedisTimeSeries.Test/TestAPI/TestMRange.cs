@@ -22,13 +22,13 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
         }
 
-        private List<TimeSeriesTuple> CreateData(IDatabase db, int timeBuket)
+        private List<TimeSeriesTuple> CreateData(IDatabase db, int timeBucket)
         {
             var tuples = new List<TimeSeriesTuple>();
 
             for (int i = 0; i < 10; i++)
             {
-                TimeStamp ts = new TimeStamp(i*timeBuket);
+                TimeStamp ts = new TimeStamp(i*timeBucket);
                 foreach (var key in keys)
                 {
                     db.TimeSeriesAdd(key, ts, i);
@@ -58,7 +58,7 @@ namespace NRedisTimeSeries.Test.TestAPI
                 Assert.Equal(keys[i], results[i].key);
                 Assert.Equal(0, results[i].labels.Count);
                 Assert.Equal(tuples, results[i].values);
-            } 
+            }
         }
 
         [Fact]
@@ -156,7 +156,7 @@ namespace NRedisTimeSeries.Test.TestAPI
 
             var tuples = CreateData(db, 50);
             var ex = Assert.Throws<ArgumentException>(() => db.TimeSeriesMRange("-", "+", new List<string>()));
-            Assert.Equal("There should be at least one filter on MRANGE", ex.Message);
+            Assert.Equal("There should be at least one filter on MRANGE/MREVRANGE", ex.Message);
         }
 
         [Fact]
