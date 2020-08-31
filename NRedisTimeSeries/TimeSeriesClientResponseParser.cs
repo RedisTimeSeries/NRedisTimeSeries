@@ -116,11 +116,17 @@ namespace NRedisTimeSeries
             TimeStamp lastTimeStamp = ParseTimeStamp(redisResults[7]);
             long retentionTime = (long)redisResults[9];
             long chunkCount = (long)redisResults[11];
-            long maxSamplesPerChunk = (long)redisResults[13];
+            string chunkSizeProperty = (string)redisResults[12];
+            long chunkSize = (long)redisResults[13];
+            // If the property name is maxSamplesPerChunk then this is an old version of RedisTimeSeries and we used the number of samples before ( now Bytes )
+            if (string.Equals(chunkSizeProperty, "maxSamplesPerChunk"))
+            {
+                chunkSize = chunkSize * 16;
+            }
             IReadOnlyList<TimeSeriesLabel> labels = ParseLabelArray(redisResults[15]);
             string destKey = (string)redisResults[17];
             IReadOnlyList <TimeSeriesRule> rules = ParseRuleArray(redisResults[19]);
-            return new TimeSeriesInformation(totalSamples, memoryUsage, firstTimeStamp, lastTimeStamp, retentionTime, chunkCount, maxSamplesPerChunk, labels, destKey, rules);
+            return new TimeSeriesInformation(totalSamples, memoryUsage, firstTimeStamp, lastTimeStamp, retentionTime, chunkCount, chunkSize, labels, destKey, rules);
         }
 
         private static IReadOnlyList<string> ParseStringArray(RedisResult result)

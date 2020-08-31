@@ -42,7 +42,13 @@ namespace NRedisTimeSeries.DataTypes
         /// <summary>
         /// Maximum Number of samples per Memory Chunk.
         /// </summary>
+        [ObsoleteAttribute("This method has been deprecated. Use ChunkSize instead.")]
         public long MaxSamplesPerChunk { get; private set; }
+        
+        /// <summary>
+        /// Memory Chunk size in Bytes.
+        /// </summary>
+        public long ChunkSize { get; private set; }
 
         /// <summary>
         /// A readonly list of TimeSeriesLabel that represent metadata labels of the time-series.
@@ -59,7 +65,7 @@ namespace NRedisTimeSeries.DataTypes
         /// </summary>
         public IReadOnlyList<TimeSeriesRule> Rules { get; private set; }
 
-        internal TimeSeriesInformation(long totalSamples, long memoryUsage, TimeStamp firstTimeStamp, TimeStamp lastTimeStamp, long retentionTime, long chunkCount, long maxSamplesPerChunk, IReadOnlyList<TimeSeriesLabel> labels, string sourceKey, IReadOnlyList<TimeSeriesRule> rules)
+        internal TimeSeriesInformation(long totalSamples, long memoryUsage, TimeStamp firstTimeStamp, TimeStamp lastTimeStamp, long retentionTime, long chunkCount, long chunkSize, IReadOnlyList<TimeSeriesLabel> labels, string sourceKey, IReadOnlyList<TimeSeriesRule> rules)
         {
             TotalSamples = totalSamples;
             MemoryUsage = memoryUsage;
@@ -67,10 +73,12 @@ namespace NRedisTimeSeries.DataTypes
             LastTimeStamp = lastTimeStamp;
             RetentionTime = retentionTime;
             ChunkCount = chunkCount;
-            MaxSamplesPerChunk = maxSamplesPerChunk;
             Labels = labels;
             SourceKey = sourceKey;
             Rules = rules;
+            // backwards compatible with RedisTimeSeries < v1.4
+            MaxSamplesPerChunk = chunkSize/16;
+            ChunkSize = chunkSize;
         }
     }
 }

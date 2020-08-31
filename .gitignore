@@ -3,3 +3,7 @@
 Docs/
 **/bin
 **/obj
+NRedisTimeSeries.Test/TestResults/
+
+# JetBrains related IDEs
+.idea/
