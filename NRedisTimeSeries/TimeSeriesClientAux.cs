@@ -107,7 +107,7 @@ namespace NRedisTimeSeries
             args.Add(rule.TimeBucket);
         }
         
-        private static List<object> CreateTsCreateArgs(string key, long? retentionTime, IReadOnlyCollection<TimeSeriesLabel> labels, bool? uncompressed,
+        private static List<object> BuildTsCreateArgs(string key, long? retentionTime, IReadOnlyCollection<TimeSeriesLabel> labels, bool? uncompressed,
             long? chunkSizeBytes)
         {
             var args = new List<object> {key};
@@ -118,7 +118,7 @@ namespace NRedisTimeSeries
             return args;
         }
         
-        private static List<object> CreateTsAlterArgs(string key, long? retentionTime, IReadOnlyCollection<TimeSeriesLabel> labels)
+        private static List<object> BuildTsAlterArgs(string key, long? retentionTime, IReadOnlyCollection<TimeSeriesLabel> labels)
         {
             var args = new List<object> {key};
             args.AddRetentionTime(retentionTime);
@@ -126,7 +126,7 @@ namespace NRedisTimeSeries
             return args;
         }
         
-        private static List<object> CreateTsAddArgs(string key, TimeStamp timestamp, double value, long? retentionTime,
+        private static List<object> BuildTsAddArgs(string key, TimeStamp timestamp, double value, long? retentionTime,
             IReadOnlyCollection<TimeSeriesLabel> labels, bool? uncompressed, long? chunkSizeBytes)
         {
             var args = new List<object> {key, timestamp.Value, value};
@@ -137,7 +137,7 @@ namespace NRedisTimeSeries
             return args;
         }
         
-        private static List<object> CreateTsIncrDecrByArgs(string key, double value, TimeStamp timestamp, long? retentionTime,
+        private static List<object> BuildTsIncrDecrByArgs(string key, double value, TimeStamp timestamp, long? retentionTime,
             IReadOnlyCollection<TimeSeriesLabel> labels, bool? uncompressed, long? chunkSizeBytes)
         {
             var args = new List<object> {key, value};
@@ -149,7 +149,7 @@ namespace NRedisTimeSeries
             return args;
         }
 
-        private static List<object> CreateTsMaddArgs(IReadOnlyCollection<(string key, TimeStamp timestamp, double value)> sequence)
+        private static List<object> BuildTsMaddArgs(IReadOnlyCollection<(string key, TimeStamp timestamp, double value)> sequence)
         {
             var args = new List<object>();
             foreach (var tuple in sequence)
@@ -162,7 +162,7 @@ namespace NRedisTimeSeries
             return args;
         }
         
-        private static List<object> CreateTsMgetArgs(IReadOnlyCollection<string> filter, bool? withLabels)
+        private static List<object> BuildTsMgetArgs(IReadOnlyCollection<string> filter, bool? withLabels)
         {
             var args = new List<object>();
             args.AddWithLabels(withLabels);
@@ -170,7 +170,7 @@ namespace NRedisTimeSeries
             return args;
         }
         
-        private static List<object> CreateRangeArgs(string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, long? count,
+        private static List<object> BuildRangeArgs(string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, long? count,
             Aggregation aggregation, long? timeBucket)
         {
             var args = new List<object>()
@@ -180,7 +180,7 @@ namespace NRedisTimeSeries
             return args;
         }
         
-        private static List<object> CreateMultiRangeArgs(TimeStamp fromTimeStamp, TimeStamp toTimeStamp, IReadOnlyCollection<string> filter,
+        private static List<object> BuildMultiRangeArgs(TimeStamp fromTimeStamp, TimeStamp toTimeStamp, IReadOnlyCollection<string> filter,
             long? count, Aggregation aggregation, long? timeBucket, bool? withLabels)
         {
             var args = new List<object>() {fromTimeStamp.Value, toTimeStamp.Value};
