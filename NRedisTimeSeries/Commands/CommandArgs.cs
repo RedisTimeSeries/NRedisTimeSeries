@@ -10,5 +10,6 @@
         public static string FILTER => "FILTER";
         public static string WITHLABELS => "WITHLABELS";
         public static string TIMESTAMP => "TIMESTAMP";
+        public static string CHUNK_SIZE => "CHUNK_SIZE";
     }
 }
