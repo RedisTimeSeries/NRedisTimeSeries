@@ -79,6 +79,19 @@ namespace NRedisTimeSeries.Test.TestAPI
             Assert.Equal(timeStamp, info.LastTimeStamp);
             Assert.Equal(labels, info.Labels);
         }
+        
+        [Fact]
+        public async Task TestAddWithChunkSize()
+        {
+            var key = CreateKeyName();
+            var db = redisFixture.Redis.GetDatabase();
+            TimeStamp timeStamp = DateTime.UtcNow;
+            Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.1, chunkSizeBytes: 128));
+            var info = await db.TimeSeriesInfoAsync(key);
+            Assert.Equal(timeStamp, info.FirstTimeStamp);
+            Assert.Equal(timeStamp, info.LastTimeStamp);
+            Assert.Equal(128, info.ChunkSize);
+        }
 
         [Fact]
         public async Task TestAddWithUncompressed()
