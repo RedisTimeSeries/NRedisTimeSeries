@@ -16,6 +16,15 @@ namespace NRedisTimeSeries
             }
         }
 
+        private static void AddChunkSize(this IList<object> args, long? chunkSize)
+        {
+            if (chunkSize.HasValue)
+            {
+                args.Add(CommandArgs.CHUNK_SIZE);
+                args.Add(chunkSize);
+            }
+        }
+
         private static void AddLabels(this IList<object> args, IReadOnlyCollection<TimeSeriesLabel> labels)
         {
             if (labels != null)
@@ -96,6 +105,90 @@ namespace NRedisTimeSeries
             args.Add(CommandArgs.AGGREGATION);
             args.Add(rule.Aggregation.Name);
             args.Add(rule.TimeBucket);
+        }
+        
+        private static List<object> BuildTsCreateArgs(string key, long? retentionTime, IReadOnlyCollection<TimeSeriesLabel> labels, bool? uncompressed,
+            long? chunkSizeBytes)
+        {
+            var args = new List<object> {key};
+            args.AddRetentionTime(retentionTime);
+            args.AddChunkSize(chunkSizeBytes);
+            args.AddLabels(labels);
+            args.AddUncompressed(uncompressed);
+            return args;
+        }
+        
+        private static List<object> BuildTsAlterArgs(string key, long? retentionTime, IReadOnlyCollection<TimeSeriesLabel> labels)
+        {
+            var args = new List<object> {key};
+            args.AddRetentionTime(retentionTime);
+            args.AddLabels(labels);
+            return args;
+        }
+        
+        private static List<object> BuildTsAddArgs(string key, TimeStamp timestamp, double value, long? retentionTime,
+            IReadOnlyCollection<TimeSeriesLabel> labels, bool? uncompressed, long? chunkSizeBytes)
+        {
+            var args = new List<object> {key, timestamp.Value, value};
+            AddRetentionTime(args, retentionTime);
+            AddChunkSize(args, chunkSizeBytes);
+            AddLabels(args, labels);
+            AddUncompressed(args, uncompressed);
+            return args;
+        }
+        
+        private static List<object> BuildTsIncrDecrByArgs(string key, double value, TimeStamp timestamp, long? retentionTime,
+            IReadOnlyCollection<TimeSeriesLabel> labels, bool? uncompressed, long? chunkSizeBytes)
+        {
+            var args = new List<object> {key, value};
+            args.AddTimeStamp(timestamp);
+            args.AddRetentionTime(retentionTime);
+            args.AddChunkSize(chunkSizeBytes);
+            args.AddLabels(labels);
+            args.AddUncompressed(uncompressed);
+            return args;
+        }
+
+        private static List<object> BuildTsMaddArgs(IReadOnlyCollection<(string key, TimeStamp timestamp, double value)> sequence)
+        {
+            var args = new List<object>();
+            foreach (var tuple in sequence)
+            {
+                args.Add(tuple.key);
+                args.Add(tuple.timestamp.Value);
+                args.Add(tuple.value);
+            }
+
+            return args;
+        }
+        
+        private static List<object> BuildTsMgetArgs(IReadOnlyCollection<string> filter, bool? withLabels)
+        {
+            var args = new List<object>();
+            args.AddWithLabels(withLabels);
+            AddFilters(args, filter);
+            return args;
+        }
+        
+        private static List<object> BuildRangeArgs(string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, long? count,
+            Aggregation aggregation, long? timeBucket)
+        {
+            var args = new List<object>()
+                {key, fromTimeStamp.Value, toTimeStamp.Value};
+            args.AddCount(count);
+            args.AddAggregation(aggregation, timeBucket);
+            return args;
+        }
+        
+        private static List<object> BuildMultiRangeArgs(TimeStamp fromTimeStamp, TimeStamp toTimeStamp, IReadOnlyCollection<string> filter,
+            long? count, Aggregation aggregation, long? timeBucket, bool? withLabels)
+        {
+            var args = new List<object>() {fromTimeStamp.Value, toTimeStamp.Value};
+            args.AddCount(count);
+            args.AddAggregation(aggregation, timeBucket);
+            args.AddWithLabels(withLabels);
+            args.AddFilters(filter);
+            return args;
         }
     }
 }

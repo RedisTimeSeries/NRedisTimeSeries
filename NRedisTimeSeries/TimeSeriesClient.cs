@@ -20,13 +20,12 @@ namespace NRedisTimeSeries
         /// <param name="retentionTime">Optional: Maximum age for samples compared to last event time (in milliseconds)</param>
         /// <param name="labels">Optional: Collaction of label-value pairs that represent metadata labels of the key</param>
         /// <param name="uncompressed">Optional: Adding this flag will keep data in an uncompressed form</param>
+        /// <param name="chunkSizeBytes">Optional: Each time-series uses chunks of memory of fixed size for time series samples.
+        /// You can alter the default TSDB chunk size by passing the chunk_size argument (in Bytes)</param>
         /// <returns>If the operation executed successfully</returns>
-        public static bool TimeSeriesCreate(this IDatabase db, string key, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null)
+        public static bool TimeSeriesCreate(this IDatabase db, string key, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null)
         {
-            var args = new List<object> { key };
-            args.AddRetentionTime(retentionTime);
-            args.AddLabels(labels);
-            args.AddUncompressed(uncompressed);
+            var args = BuildTsCreateArgs(key, retentionTime, labels, uncompressed, chunkSizeBytes);
             return ParseBoolean(db.Execute(TS.CREATE, args));
         }
 
@@ -44,9 +43,7 @@ namespace NRedisTimeSeries
         /// <returns>If the operation executed successfully</returns>
         public static bool TimeSeriesAlter(this IDatabase db, string key, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null)
         {
-            var args = new List<object> { key };
-            args.AddRetentionTime(retentionTime);
-            args.AddLabels(labels);
+            var args = BuildTsAlterArgs(key, retentionTime, labels);
             return ParseBoolean(db.Execute(TS.ALTER, args));
         }
 
@@ -60,15 +57,16 @@ namespace NRedisTimeSeries
         /// <param name="retentionTime">Optional: Maximum age for samples compared to last event time (in milliseconds)</param>
         /// <param name="labels">Optional: Collaction of label-value pairs that represent metadata labels of the key</param>
         /// <param name="uncompressed">Optional: Adding this flag will keep data in an uncompressed form</param>
+        /// <param name="chunkSizeBytes">Optional: Each time-series uses chunks of memory of fixed size for time series samples.
+        /// You can alter the default TSDB chunk size by passing the chunk_size argument (in Bytes)</param>
         /// <returns>The timestamp value of the new sample</returns>
-        public static TimeStamp TimeSeriesAdd(this IDatabase db, string key, TimeStamp timestamp, double value, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null)
+        public static TimeStamp TimeSeriesAdd(this IDatabase db, string key, TimeStamp timestamp, double value, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null)
         {
-            var args = new List<object> { key, timestamp.Value, value };
-            AddRetentionTime(args, retentionTime);
-            AddLabels(args, labels);
-            AddUncompressed(args, uncompressed);
+            var args = BuildTsAddArgs(key, timestamp, value, retentionTime, labels, uncompressed, chunkSizeBytes);
             return ParseTimeStamp(db.Execute(TS.ADD, args));
         }
+
+        
 
         /// <summary>
         /// Append new samples to multiple series.
@@ -78,13 +76,7 @@ namespace NRedisTimeSeries
         /// <returns>List of timestamps of the new samples</returns>
         public static IReadOnlyList<TimeStamp> TimeSeriesMAdd(this IDatabase db, IReadOnlyCollection<(string key, TimeStamp timestamp, double value)> sequence)
         {
-            var args = new List<object>();
-            foreach (var tuple in sequence)
-            {
-                args.Add(tuple.key);
-                args.Add(tuple.timestamp.Value);
-                args.Add(tuple.value);
-            }
+            var args = BuildTsMaddArgs(sequence);
             return ParseTimeStampArray(db.Execute(TS.MADD, args));
         }
 
@@ -98,14 +90,12 @@ namespace NRedisTimeSeries
         /// <param name="retentionTime">Optional: Maximum age for samples compared to last event time (in milliseconds)</param>
         /// <param name="labels">Optional: Collaction of label-value pairs that represent metadata labels of the key</param>
         /// <param name="uncompressed">Optional: Adding this flag will keep data in an uncompressed form</param>
+        /// <param name="chunkSizeBytes">Optional: Each time-series uses chunks of memory of fixed size for time series samples.
+        /// You can alter the default TSDB chunk size by passing the chunk_size argument (in Bytes)</param>
         /// <returns>The latests sample timestamp (updated sample)</returns>
-        public static TimeStamp TimeSeriesIncrBy(this IDatabase db, string key, double value, TimeStamp timestamp = null, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null)
+        public static TimeStamp TimeSeriesIncrBy(this IDatabase db, string key, double value, TimeStamp timestamp = null, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null)
         {
-            var args = new List<object> { key, value };
-            args.AddTimeStamp(timestamp);
-            args.AddRetentionTime(retentionTime);
-            args.AddLabels(labels);
-            args.AddUncompressed(uncompressed);
+            var args = BuildTsIncrDecrByArgs(key, value, timestamp, retentionTime, labels, uncompressed, chunkSizeBytes);
             return ParseTimeStamp(db.Execute(TS.INCRBY, args));
         }
 
@@ -119,14 +109,12 @@ namespace NRedisTimeSeries
         /// <param name="retentionTime">Optional: Maximum age for samples compared to last event time (in milliseconds)</param>
         /// <param name="labels">Optional: Collaction of label-value pairs that represent metadata labels of the key</param>
         /// <param name="uncompressed">Optional: Adding this flag will keep data in an uncompressed form</param>
+        /// <param name="chunkSizeBytes">Optional: Each time-series uses chunks of memory of fixed size for time series samples.
+        /// You can alter the default TSDB chunk size by passing the chunk_size argument (in Bytes)</param>
         /// <returns>The latests sample timestamp (updated sample)</returns>
-        public static TimeStamp TimeSeriesDecrBy(this IDatabase db, string key, double value, TimeStamp timestamp = null, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null)
+        public static TimeStamp TimeSeriesDecrBy(this IDatabase db, string key, double value, TimeStamp timestamp = null, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null)
         {
-            var args = new List<object> { key, value };
-            args.AddTimeStamp(timestamp);
-            args.AddRetentionTime(retentionTime);
-            args.AddLabels(labels);
-            args.AddUncompressed(uncompressed);
+            var args = BuildTsIncrDecrByArgs(key, value, timestamp, retentionTime, labels, uncompressed, chunkSizeBytes);
             return ParseTimeStamp(db.Execute(TS.DECRBY, args));
         }
 
@@ -186,9 +174,7 @@ namespace NRedisTimeSeries
         /// <returns>The command returns the last sample for entries with labels matching the specified filter.</returns>
         public static IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, TimeSeriesTuple value)> TimeSeriesMGet(this IDatabase db, IReadOnlyCollection<string> filter, bool? withLabels = null)
         {
-            var args = new List<object>();
-            args.AddWithLabels(withLabels);
-            AddFilters(args, filter);
+            var args = BuildTsMgetArgs(filter, withLabels);
             return ParseMGetesponse(db.Execute(TS.MGET, args));
         }
 
@@ -205,10 +191,7 @@ namespace NRedisTimeSeries
         /// <returns>A list of TimeSeriesTuple</returns>
         public static IReadOnlyList<TimeSeriesTuple> TimeSeriesRange(this IDatabase db, string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, long? count = null, Aggregation aggregation = null, long? timeBucket = null)
         {
-            var args = new List<object>()
-            { key, fromTimeStamp.Value, toTimeStamp.Value };
-            args.AddCount(count);
-            args.AddAggregation(aggregation, timeBucket);
+            var args = BuildRangeArgs(key, fromTimeStamp, toTimeStamp, count, aggregation, timeBucket);
             return ParseTimeSeriesTupleArray(db.Execute(TS.RANGE, args));
         }
 
@@ -225,10 +208,7 @@ namespace NRedisTimeSeries
         /// <returns>A list of TimeSeriesTuple</returns>
         public static IReadOnlyList<TimeSeriesTuple> TimeSeriesRevRange(this IDatabase db, string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, long? count = null, Aggregation aggregation = null, long? timeBucket = null)
         {
-            var args = new List<object>()
-                { key, fromTimeStamp.Value, toTimeStamp.Value };
-            args.AddCount(count);
-            args.AddAggregation(aggregation, timeBucket);
+            var args = BuildRangeArgs(key, fromTimeStamp, toTimeStamp, count, aggregation, timeBucket);
             return ParseTimeSeriesTupleArray(db.Execute(TS.REVRANGE, args));
         }
 
@@ -246,12 +226,7 @@ namespace NRedisTimeSeries
         /// <returns>A list of <(key, labels, values)> tuples. Each tuple contains the key name, its labels and the values which satisfies the given range and filters.</returns>
         public static IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)> TimeSeriesMRange(this IDatabase db, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, IReadOnlyCollection<string> filter, long? count = null, Aggregation aggregation = null, long? timeBucket = null, bool? withLabels = null)
         {
-            var args = new List<object>() { fromTimeStamp.Value, toTimeStamp.Value };
-            args.AddCount(count);
-            args.AddAggregation(aggregation, timeBucket);
-            args.AddWithLabels(withLabels);
-            args.AddFilters(filter);
-
+            var args = BuildMultiRangeArgs(fromTimeStamp, toTimeStamp, filter, count, aggregation, timeBucket, withLabels);
             return ParseMRangeResponse(db.Execute(TS.MRANGE, args));
         }
 
@@ -269,12 +244,7 @@ namespace NRedisTimeSeries
         /// <returns>A list of <(key, labels, values)> tuples. Each tuple contains the key name, its labels and the values which satisfies the given range and filters.</returns>
         public static IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)> TimeSeriesMRevRange(this IDatabase db, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, IReadOnlyCollection<string> filter, long? count = null, Aggregation aggregation = null, long? timeBucket = null, bool? withLabels = null)
         {
-            var args = new List<object>() { fromTimeStamp.Value, toTimeStamp.Value };
-            args.AddCount(count);
-            args.AddAggregation(aggregation, timeBucket);
-            args.AddWithLabels(withLabels);
-            args.AddFilters(filter);
-
+            var args = BuildMultiRangeArgs(fromTimeStamp, toTimeStamp, filter, count, aggregation, timeBucket, withLabels);
             return ParseMRangeResponse(db.Execute(TS.MREVRANGE, args));
         }
 
