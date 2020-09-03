@@ -9,21 +9,21 @@ namespace NRedisTimeSeries.Test.TestAPI
 {
     public class TestCreate : AbstractTimeSeriesTest, IDisposable
     {
-        private readonly string key = "CREATE_TESTS";
+        private readonly string _key = "CREATE_TESTS";
 
         public TestCreate(RedisFixture redisFixture) : base(redisFixture) { }
 
         public void Dispose()
         {
-            redisFixture.Redis.GetDatabase().KeyDelete(key);
+            redisFixture.Redis.GetDatabase().KeyDelete(_key);
         }
 
         [Fact]
         public void TestCreateOK()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            Assert.True(db.TimeSeriesCreate(key));
-            TimeSeriesInformation info = db.TimeSeriesInfo(key);
+            Assert.True(db.TimeSeriesCreate(_key));
+            TimeSeriesInformation info = db.TimeSeriesInfo(_key);
         }
 
         [Fact]
@@ -31,8 +31,8 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             long retentionTime = 5000;
             IDatabase db = redisFixture.Redis.GetDatabase();
-            Assert.True(db.TimeSeriesCreate(key, retentionTime: retentionTime));
-            TimeSeriesInformation info = db.TimeSeriesInfo(key);
+            Assert.True(db.TimeSeriesCreate(_key, retentionTime: retentionTime));
+            TimeSeriesInformation info = db.TimeSeriesInfo(_key);
             Assert.Equal(retentionTime, info.RetentionTime);
         }
 
@@ -42,8 +42,8 @@ namespace NRedisTimeSeries.Test.TestAPI
             TimeSeriesLabel label = new TimeSeriesLabel("key", "value");
             var labels = new List<TimeSeriesLabel> { label };
             IDatabase db = redisFixture.Redis.GetDatabase();
-            Assert.True(db.TimeSeriesCreate(key, labels: labels));
-            TimeSeriesInformation info = db.TimeSeriesInfo(key);
+            Assert.True(db.TimeSeriesCreate(_key, labels: labels));
+            TimeSeriesInformation info = db.TimeSeriesInfo(_key);
             Assert.Equal(labels, info.Labels);
         }
 
@@ -52,8 +52,8 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             var labels = new List<TimeSeriesLabel>();
             IDatabase db = redisFixture.Redis.GetDatabase();
-            Assert.True(db.TimeSeriesCreate(key, labels: labels));
-            TimeSeriesInformation info = db.TimeSeriesInfo(key);
+            Assert.True(db.TimeSeriesCreate(_key, labels: labels));
+            TimeSeriesInformation info = db.TimeSeriesInfo(_key);
             Assert.Equal(labels, info.Labels);
         }
 
@@ -61,7 +61,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestCreateUncompressed()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            Assert.True(db.TimeSeriesCreate(key, uncompressed: true));
+            Assert.True(db.TimeSeriesCreate(_key, uncompressed: true));
         }
     }
 }

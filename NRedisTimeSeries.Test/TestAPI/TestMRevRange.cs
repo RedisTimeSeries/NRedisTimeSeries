@@ -17,7 +17,7 @@ namespace NRedisTimeSeries.Test.TestAPI
 
             for (var i = 0; i < 10; i++)
             {
-                var ts = new TimeStamp(i*timeBucket);
+                var ts = new TsTimeStamp(i*timeBucket);
                 foreach (var key in keys)
                 {
                     db.TimeSeriesAdd(key, ts, i);
@@ -41,7 +41,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = CreateData(db, keys, 50);
-            var results = db.TimeSeriesMRevRange("-", "+", new List<string>{ $"{keys[0]}=value" });
+            var results = db.TimeSeriesMRevRange(TsTimeStamp.MinValue, TsTimeStamp.MaxValue, new List<string>{ $"{keys[0]}=value" });
             Assert.Equal(keys.Length, results.Count);
             for (var i = 0; i < results.Count; i++)
             {
@@ -64,7 +64,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = CreateData(db, keys, 50);
-            var results = db.TimeSeriesMRevRange("-", "+", new List<string> { $"{keys[0]}=value" }, withLabels: true);
+            var results = db.TimeSeriesMRevRange(TsTimeStamp.MinValue, TsTimeStamp.MaxValue, new List<string> { $"{keys[0]}=value" }, withLabels: true);
 
             Assert.Equal(keys.Length, results.Count);
             for (var i = 0; i < results.Count; i++)
@@ -84,7 +84,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var labels = new List<TimeSeriesLabel> { label };
             db.TimeSeriesCreateAsync(keys[0], labels: labels);
             var tuples = CreateData(db, keys, 50);
-            var results = db.TimeSeriesMRevRange("-", "+", new List<string> { $"{keys[0]}=value" });
+            var results = db.TimeSeriesMRevRange(TsTimeStamp.MinValue, TsTimeStamp.MaxValue, new List<string> { $"{keys[0]}=value" });
             Assert.Equal(1, results.Count);
             Assert.Equal(keys[0], results[0].key);
             Assert.Equal(0, results[0].labels.Count);
@@ -105,7 +105,7 @@ namespace NRedisTimeSeries.Test.TestAPI
 
             var tuples = CreateData(db, keys, 50);
             var count = 5L;
-            var results = db.TimeSeriesMRevRange("-", "+", new List<string> { $"{keys[0]}=value" }, count: count);
+            var results = db.TimeSeriesMRevRange(TsTimeStamp.MinValue, TsTimeStamp.MaxValue, new List<string> { $"{keys[0]}=value" }, count: count);
             Assert.Equal(keys.Length, results.Count);
             for (var i = 0; i < results.Count; i++)
             {
@@ -128,7 +128,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = CreateData(db, keys, 50);
-            var results = db.TimeSeriesMRevRange("-", "+", new List<string> { $"{keys[0]}=value" }, aggregation: Aggregation.MIN, timeBucket: 50);
+            var results = db.TimeSeriesMRevRange(TsTimeStamp.MinValue, TsTimeStamp.MaxValue, new List<string> { $"{keys[0]}=value" }, aggregation: Aggregation.MIN, timeBucket: 50);
             Assert.Equal(keys.Length, results.Count);
             for (var i = 0; i < results.Count; i++)
             {
@@ -151,7 +151,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = CreateData(db, keys, 50);
-            var ex = Assert.Throws<ArgumentException>(() => db.TimeSeriesMRevRange("-", "+", new List<string>()));
+            var ex = Assert.Throws<ArgumentException>(() => db.TimeSeriesMRevRange(TsTimeStamp.MinValue, TsTimeStamp.MaxValue, new List<string>()));
             Assert.Equal("There should be at least one filter on MRANGE/MREVRANGE", ex.Message);
         }
 
@@ -168,7 +168,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = CreateData(db, keys, 50);
-            var ex = Assert.Throws<ArgumentException>(() => db.TimeSeriesMRevRange("-", "+", new List<string> { "key=MissingTimeBucket" }, aggregation: Aggregation.AVG));
+            var ex = Assert.Throws<ArgumentException>(() => db.TimeSeriesMRevRange(TsTimeStamp.MinValue, TsTimeStamp.MaxValue, new List<string> { "key=MissingTimeBucket" }, aggregation: Aggregation.AVG));
             Assert.Equal("RANGE Aggregation should have timeBucket value", ex.Message);
 
         }

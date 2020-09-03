@@ -13,16 +13,16 @@ namespace NRedisTimeSeries
             return (string)result == "OK";
         }
 
-        private static TimeStamp ParseTimeStamp(RedisResult result)
+        private static TsTimeStamp ParseTimeStamp(RedisResult result)
         {
-            if (result.Type == ResultType.None) return null;
-            return new TimeStamp((long)result);
+            if (result.Type == ResultType.None) return default;
+            return new TsTimeStamp((long)result);
         }
 
-        private static IReadOnlyList<TimeStamp> ParseTimeStampArray(RedisResult result)
+        private static IReadOnlyList<TsTimeStamp> ParseTimeStampArray(RedisResult result)
         {
             RedisResult[] redisResults = (RedisResult[])result;
-            var list = new List<TimeStamp>(redisResults.Length);
+            var list = new List<TsTimeStamp>(redisResults.Length);
             if (redisResults.Length == 0) return list;
             Array.ForEach(redisResults, timestamp => list.Add(ParseTimeStamp(timestamp)));
             return list;
@@ -112,8 +112,8 @@ namespace NRedisTimeSeries
             RedisResult[] redisResults = (RedisResult[])result;
             long totalSamples = (long)redisResults[1];
             long memoryUsage = (long)redisResults[3];
-            TimeStamp firstTimeStamp = ParseTimeStamp(redisResults[5]);
-            TimeStamp lastTimeStamp = ParseTimeStamp(redisResults[7]);
+            TsTimeStamp firstTimeStamp = ParseTimeStamp(redisResults[5]);
+            TsTimeStamp lastTimeStamp = ParseTimeStamp(redisResults[7]);
             long retentionTime = (long)redisResults[9];
             long chunkCount = (long)redisResults[11];
             string chunkSizeProperty = (string)redisResults[12];
@@ -121,7 +121,7 @@ namespace NRedisTimeSeries
             // If the property name is maxSamplesPerChunk then this is an old version of RedisTimeSeries and we used the number of samples before ( now Bytes )
             if (string.Equals(chunkSizeProperty, "maxSamplesPerChunk"))
             {
-                chunkSize = chunkSize * 16;
+                chunkSize *= 16;
             }
             IReadOnlyList<TimeSeriesLabel> labels = ParseLabelArray(redisResults[15]);
             string destKey = (string)redisResults[17];

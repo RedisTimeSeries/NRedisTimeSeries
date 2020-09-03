@@ -28,7 +28,7 @@ namespace NRedisTimeSeries.Example
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            db.TimeSeriesIncrBy("my_ts", 5, timestamp: "*");
+            db.TimeSeriesIncrBy("my_ts", 5);
             redis.Close();
         }
 
@@ -39,7 +39,7 @@ namespace NRedisTimeSeries.Example
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            db.TimeSeriesIncrBy("my_ts", 5, timestamp: DateTime.UtcNow);
+            db.TimeSeriesIncrBy("my_ts", 5);
             redis.Close();
         }
 
@@ -50,7 +50,7 @@ namespace NRedisTimeSeries.Example
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            db.TimeSeriesIncrBy("my_ts", 5, timestamp: long.MaxValue);
+            db.TimeSeriesIncrBy("my_ts", 5);
             redis.Close();
         }
 
@@ -64,7 +64,7 @@ namespace NRedisTimeSeries.Example
             IDatabase db = redis.GetDatabase();
             var label = new TimeSeriesLabel("key", "value");
             var labels = new List<TimeSeriesLabel> { label };
-            db.TimeSeriesIncrBy("my_ts", 5, timestamp: "*", retentionTime:5000, uncompressed:true, labels: labels);
+            db.TimeSeriesIncrBy("my_ts", 5, retentionTime: 5000, uncompressed: true, labels: labels);
             redis.Close();
         }
     }

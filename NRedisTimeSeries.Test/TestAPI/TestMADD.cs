@@ -9,13 +9,13 @@ namespace NRedisTimeSeries.Test.TestAPI
     public class TestMADD : AbstractTimeSeriesTest, IDisposable
     {
 
-        private readonly string[] keys = { "MADD_TESTS_1", "MADD_TESTS_2" };
+        private readonly string[] _keys = { "MADD_TESTS_1", "MADD_TESTS_2" };
 
         public TestMADD(RedisFixture redisFixture) : base(redisFixture) { }
 
         public void Dispose()
         {
-            foreach(string key in keys)
+            foreach (string key in _keys)
             {
                 redisFixture.Redis.GetDatabase().KeyDelete(key);
             }
@@ -27,23 +27,23 @@ namespace NRedisTimeSeries.Test.TestAPI
 
             IDatabase db = redisFixture.Redis.GetDatabase();
 
-            foreach (string key in keys)
+            foreach (string key in _keys)
             {
                 db.TimeSeriesCreate(key);
             }
-            List<(string, TimeStamp, double)> sequence = new List<(string, TimeStamp, double)>(keys.Length);
-            foreach (var keyname in keys)
+            List<(string, double)> sequence = new List<(string, double)>(_keys.Length);
+            foreach (var keyname in _keys)
             {
-                sequence.Add((keyname, "*", 1.1));
+                sequence.Add((keyname, 1.1));
             }
             var response = db.TimeSeriesMAdd(sequence);
 
-            Assert.Equal(keys.Length, response.Count);
+            Assert.Equal(_keys.Length, response.Count);
 
-            foreach (var key in keys)
+            foreach (var key in _keys)
             {
                 TimeSeriesInformation info = db.TimeSeriesInfo(key);
-                Assert.True(info.FirstTimeStamp > 0);
+                Assert.True(info.FirstTimeStamp.UnixMilliseconds > 0);
                 Assert.Equal(info.FirstTimeStamp, info.LastTimeStamp);
             }
         }
@@ -54,25 +54,25 @@ namespace NRedisTimeSeries.Test.TestAPI
 
             IDatabase db = redisFixture.Redis.GetDatabase();
 
-            foreach (string key in keys)
+            foreach (string key in _keys)
             {
                 db.TimeSeriesCreate(key);
             }
 
-            List<(string, TimeStamp, double)> sequence = new List<(string, TimeStamp, double)>(keys.Length);
-            List<DateTime> timestamps = new List<DateTime>(keys.Length);
-            foreach (var keyname in keys)
+            List<(string, TsTimeStamp, double)> sequence = new List<(string, TsTimeStamp, double)>(_keys.Length);
+            List<TsTimeStamp> timestamps = new List<TsTimeStamp>(_keys.Length);
+            foreach (var keyname in _keys)
             {
-                DateTime now = DateTime.UtcNow;
+                TsTimeStamp now = DateTime.UtcNow;
                 timestamps.Add(now);
                 sequence.Add((keyname, now, 1.1));
             }
             var response = db.TimeSeriesMAdd(sequence);
 
             Assert.Equal(timestamps.Count, response.Count);
-            for(int i = 0; i < response.Count; i++)
+            for (int i = 0; i < response.Count; i++)
             {
-                Assert.Equal<DateTime>(timestamps[i], response[i]);
+                Assert.Equal(timestamps[i], response[i]);
             }
         }
 
@@ -81,19 +81,19 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
 
-            foreach (string key in keys)
+            foreach (string key in _keys)
             {
                 db.TimeSeriesCreate(key);
             }
 
-            List<DateTime> oldTimeStamps = new List<DateTime>();
-            foreach (var keyname in keys)
+            List<TsTimeStamp> oldTimeStamps = new List<TsTimeStamp>();
+            foreach (var keyname in _keys)
             {
                 oldTimeStamps.Add(DateTime.UtcNow);
             }
 
-            List<(string, TimeStamp, double)> sequence = new List<(string, TimeStamp, double)>(keys.Length);
-            foreach (var keyname in keys)
+            List<(string, TsTimeStamp, double)> sequence = new List<(string, TsTimeStamp, double)>(_keys.Length);
+            foreach (var keyname in _keys)
             {
                 sequence.Add((keyname, DateTime.UtcNow, 1.1));
             }
@@ -102,16 +102,16 @@ namespace NRedisTimeSeries.Test.TestAPI
             sequence.Clear();
 
             // Override the same events should not throw an error
-            for (int i =0; i < keys.Length; i++)
+            for (int i = 0; i < _keys.Length; i++)
             {
-                sequence.Add((keys[i], oldTimeStamps[i], 1.1));
+                sequence.Add((_keys[i], oldTimeStamps[i], 1.1));
             }
             var response = db.TimeSeriesMAdd(sequence);
 
             Assert.Equal(oldTimeStamps.Count, response.Count);
-            for(int i = 0; i < response.Count; i++)
+            for (int i = 0; i < response.Count; i++)
             {
-                Assert.Equal<DateTime>(oldTimeStamps[i], response[i]);
+                Assert.Equal(oldTimeStamps[i], response[i]);
             }
         }
     }

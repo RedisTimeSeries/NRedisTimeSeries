@@ -90,12 +90,12 @@ namespace NRedisTimeSeries
             }
         }
 
-        private static void AddTimeStamp(this IList<object> args, TimeStamp timeStamp)
+        private static void AddTimeStamp(this IList<object> args, TsTimeStamp? timeStamp)
         {
             if(timeStamp != null)
             {
                 args.Add(CommandArgs.TIMESTAMP);
-                args.Add(timeStamp.Value);
+                args.Add(timeStamp?.UnixMilliseconds);
             }
         }
 
@@ -126,10 +126,10 @@ namespace NRedisTimeSeries
             return args;
         }
         
-        private static List<object> BuildTsAddArgs(string key, TimeStamp timestamp, double value, long? retentionTime,
-            IReadOnlyCollection<TimeSeriesLabel> labels, bool? uncompressed, long? chunkSizeBytes)
+        private static List<object> BuildTsAddArgs(string key,  double value, long? retentionTime,
+            IReadOnlyCollection<TimeSeriesLabel> labels, bool? uncompressed, long? chunkSizeBytes, TsTimeStamp? timestamp = null)
         {
-            var args = new List<object> {key, timestamp.Value, value};
+            var args = new List<object> {key, timestamp?.UnixMilliseconds.ToString() ?? "*", value};
             AddRetentionTime(args, retentionTime);
             AddChunkSize(args, chunkSizeBytes);
             AddLabels(args, labels);
@@ -137,7 +137,7 @@ namespace NRedisTimeSeries
             return args;
         }
         
-        private static List<object> BuildTsIncrDecrByArgs(string key, double value, TimeStamp timestamp, long? retentionTime,
+        private static List<object> BuildTsIncrDecrByArgs(string key, double value, TsTimeStamp? timestamp, long? retentionTime,
             IReadOnlyCollection<TimeSeriesLabel> labels, bool? uncompressed, long? chunkSizeBytes)
         {
             var args = new List<object> {key, value};
@@ -149,19 +149,32 @@ namespace NRedisTimeSeries
             return args;
         }
 
-        private static List<object> BuildTsMaddArgs(IReadOnlyCollection<(string key, TimeStamp timestamp, double value)> sequence)
+        private static List<object> BuildTsMaddArgs(IReadOnlyCollection<(string key, TsTimeStamp timestamp, double value)> sequence)
         {
             var args = new List<object>();
-            foreach (var tuple in sequence)
+            foreach (var (key, timestamp, value) in sequence)
             {
-                args.Add(tuple.key);
-                args.Add(tuple.timestamp.Value);
-                args.Add(tuple.value);
+                args.Add(key);
+                args.Add(timestamp.UnixMilliseconds);
+                args.Add(value);
             }
 
             return args;
         }
-        
+
+        private static List<object> BuildTsMaddArgs(IReadOnlyCollection<(string key, double value)> sequence)
+        {
+            var args = new List<object>();
+            foreach (var (key, value) in sequence)
+            {
+                args.Add(key);
+                args.Add("*");
+                args.Add(value);
+            }
+
+            return args;
+        }
+
         private static List<object> BuildTsMgetArgs(IReadOnlyCollection<string> filter, bool? withLabels)
         {
             var args = new List<object>();
@@ -170,20 +183,20 @@ namespace NRedisTimeSeries
             return args;
         }
         
-        private static List<object> BuildRangeArgs(string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, long? count,
+        private static List<object> BuildRangeArgs(string key, TsTimeStamp fromTimeStamp, TsTimeStamp toTimeStamp, long? count,
             Aggregation aggregation, long? timeBucket)
         {
             var args = new List<object>()
-                {key, fromTimeStamp.Value, toTimeStamp.Value};
+                {key, fromTimeStamp.UnixMilliseconds, toTimeStamp.UnixMilliseconds};
             args.AddCount(count);
             args.AddAggregation(aggregation, timeBucket);
             return args;
         }
         
-        private static List<object> BuildMultiRangeArgs(TimeStamp fromTimeStamp, TimeStamp toTimeStamp, IReadOnlyCollection<string> filter,
+        private static List<object> BuildMultiRangeArgs(TsTimeStamp fromTimeStamp, TsTimeStamp toTimeStamp, IReadOnlyCollection<string> filter,
             long? count, Aggregation aggregation, long? timeBucket, bool? withLabels)
         {
-            var args = new List<object>() {fromTimeStamp.Value, toTimeStamp.Value};
+            var args = new List<object>() {fromTimeStamp.UnixMilliseconds, toTimeStamp.UnixMilliseconds };
             args.AddCount(count);
             args.AddAggregation(aggregation, timeBucket);
             args.AddWithLabels(withLabels);

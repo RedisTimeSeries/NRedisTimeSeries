@@ -55,7 +55,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         public async Task TestNonExistingSrc()
         {
             var key = CreateKeyName();
-            var aggKey = $"{key}:{Aggregation.AVG}";
+            var aggKey = $"{key}:{Aggregation.AVG.Name}";
             var db = redisFixture.Redis.GetDatabase();
             await db.TimeSeriesCreateAsync(aggKey);
             var rule = new TimeSeriesRule(aggKey, 50, Aggregation.AVG);
@@ -72,7 +72,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         public async Task TestNonExisitingDestinaion()
         {
             var key = CreateKeyName();
-            var aggKey = $"{key}:{Aggregation.AVG}";
+            var aggKey = $"{key}:{Aggregation.AVG.Name}";
             var db = redisFixture.Redis.GetDatabase();
             await db.TimeSeriesCreateAsync(key);
             var rule = new TimeSeriesRule(aggKey, 50, Aggregation.AVG);

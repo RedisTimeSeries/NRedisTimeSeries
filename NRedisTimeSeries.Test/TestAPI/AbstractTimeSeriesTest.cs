@@ -15,7 +15,7 @@ namespace NRedisTimeSeries.Test.TestAPI
 
         protected internal AbstractTimeSeriesTest(RedisFixture redisFixture) => this.redisFixture = redisFixture;
 
-        private List<string> keyNames = new List<string>();
+        private List<string> _keyNames = new List<string>();
 
         protected internal string CreateKeyName([CallerMemberName] string memberName = "") => CreateKeyNames(1, memberName)[0];
 
@@ -29,7 +29,7 @@ namespace NRedisTimeSeries.Test.TestAPI
                 newKeys[i] = $"{GetType().Name}:{memberName}:{i}";
             }
 
-            keyNames.AddRange(newKeys);
+            _keyNames.AddRange(newKeys);
 
             return newKeys;
         }
@@ -50,7 +50,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         public async Task DisposeAsync()
         {
             var redis = redisFixture.Redis.GetDatabase();
-            await redis.KeyDeleteAsync(keyNames.Select(i => (RedisKey)i).ToArray());
+            await redis.KeyDeleteAsync(_keyNames.Select(i => (RedisKey)i).ToArray());
         }
     }
 }

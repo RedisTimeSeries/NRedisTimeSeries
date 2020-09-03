@@ -12,7 +12,7 @@ namespace NRedisTimeSeries.Example
     public class RangeExample
     {
         /// <summary>
-        /// Example for basic usage of RedisTimeSeries RANGE command with "-" and "+" as range boundreis.
+        /// Example for basic usage of RedisTimeSeries RANGE command with TsTimeStamp.MinValue and TsTimeStamp.MaxValue as range boundreis.
         /// NRedisTimeSeris Range is expecting two TimeStamps objects as the range boundries.
         /// In this case, the strings are implicitly casted into TimeStamp objects.
         /// The TimeSeriesRange command returns an IReadOnlyList<TimeSeriesTuple> collection.
@@ -21,12 +21,12 @@ namespace NRedisTimeSeries.Example
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            IReadOnlyList<TimeSeriesTuple> results = db.TimeSeriesRange("my_ts", "-", "+");
+            IReadOnlyList<TimeSeriesTuple> results = db.TimeSeriesRange("my_ts", TsTimeStamp.MinValue, TsTimeStamp.MaxValue);
             redis.Close();
         }
 
         /// <summary>
-        /// Example for basic usage of RedisTimeSeries RANGE command with "-" and "+" as range boundreis, and the COUNT parameter.
+        /// Example for basic usage of RedisTimeSeries RANGE command with TsTimeStamp.MinValue and TsTimeStamp.MaxValue as range boundreis, and the COUNT parameter.
         /// NRedisTimeSeris Range is expecting two TimeStamps objects as the range boundries.
         /// In this case, the strings are implicitly casted into TimeStamp objects.
         /// The TimeSeriesRange command returns an IReadOnlyList<TimeSeriesTuple> collection.
@@ -35,12 +35,12 @@ namespace NRedisTimeSeries.Example
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            IReadOnlyList<TimeSeriesTuple> results = db.TimeSeriesRange("my_ts", "-", "+", count:50);
+            IReadOnlyList<TimeSeriesTuple> results = db.TimeSeriesRange("my_ts", TsTimeStamp.MinValue, TsTimeStamp.MaxValue, count:50);
             redis.Close();
         }
 
         /// <summary>
-        /// Example for basic usage of RedisTimeSeries RANGE command with "-" and "+" as range boundreis, and MIN aggregation.
+        /// Example for basic usage of RedisTimeSeries RANGE command with TsTimeStamp.MinValue and TsTimeStamp.MaxValue as range boundreis, and MIN aggregation.
         /// NRedisTimeSeris Range is expecting two TimeStamps objects as the range boundries.
         /// In this case, the strings are implicitly casted into TimeStamp objects.
         /// The TimeSeriesRange command returns an IReadOnlyList<TimeSeriesTuple> collection.
@@ -49,7 +49,7 @@ namespace NRedisTimeSeries.Example
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            db.TimeSeriesRange("my_ts", "-", "+", aggregation: Aggregation.MIN, timeBucket: 50);
+            db.TimeSeriesRange("my_ts", TsTimeStamp.MinValue, TsTimeStamp.MaxValue, aggregation: Aggregation.MIN, timeBucket: 50);
             redis.Close();
         }
     }

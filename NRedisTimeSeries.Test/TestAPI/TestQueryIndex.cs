@@ -7,13 +7,13 @@ namespace NRedisTimeSeries.Test.TestAPI
 {
     public class TestQueryIndex : AbstractTimeSeriesTest, IDisposable
     {
-        private readonly string[] keys = { "QUERYINDEX_TESTS_1", "QUERYINDEX_TESTS_2" };
+        private readonly string[] _keys = { "QUERYINDEX_TESTS_1", "QUERYINDEX_TESTS_2" };
 
         public TestQueryIndex(RedisFixture redisFixture) : base(redisFixture) { }
 
         public void Dispose()
         {
-            foreach (var key in keys)
+            foreach (var key in _keys)
             {
                 redisFixture.Redis.GetDatabase().KeyDelete(key);
             }
@@ -28,10 +28,10 @@ namespace NRedisTimeSeries.Test.TestAPI
             var labels1 = new List<TimeSeriesLabel> { label1, label2 };
             var labels2 = new List<TimeSeriesLabel> { label1 };
 
-            db.TimeSeriesCreate(keys[0], labels: labels1);
-            db.TimeSeriesCreate(keys[1], labels: labels2);
-            Assert.Equal(keys, db.TimeSeriesQueryIndex(new List<string> { "QUERYINDEX_TESTS_1=value" }));
-            Assert.Equal(new List<string> { keys[0] }, db.TimeSeriesQueryIndex(new List<string> { "QUERYINDEX_TESTS_2=value2" }));
+            db.TimeSeriesCreate(_keys[0], labels: labels1);
+            db.TimeSeriesCreate(_keys[1], labels: labels2);
+            Assert.Equal(_keys, db.TimeSeriesQueryIndex(new List<string> { "QUERYINDEX_TESTS_1=value" }));
+            Assert.Equal(new List<string> { _keys[0] }, db.TimeSeriesQueryIndex(new List<string> { "QUERYINDEX_TESTS_2=value2" }));
         }
     }
 }

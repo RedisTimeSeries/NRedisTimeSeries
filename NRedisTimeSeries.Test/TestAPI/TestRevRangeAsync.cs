@@ -17,7 +17,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var tuples = new List<TimeSeriesTuple>();
             for (var i = 0; i < 10; i++)
             {
-                var ts = await db.TimeSeriesAddAsync(key, i * timeBucket, i);
+                var ts = await db.TimeSeriesAddAsync(key, new TsTimeStamp(i * timeBucket), i);
                 tuples.Add(new TimeSeriesTuple(ts, i));
             }
             return tuples;
@@ -29,7 +29,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             var tuples = await CreateData(db, key, 50);
-            Assert.Equal(ReverseData(tuples), await db.TimeSeriesRevRangeAsync(key, "-", "+"));
+            Assert.Equal(ReverseData(tuples), await db.TimeSeriesRevRangeAsync(key, TsTimeStamp.MinValue, TsTimeStamp.MaxValue));
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             var tuples = await CreateData(db, key, 50);
-            Assert.Equal(ReverseData(tuples).GetRange(0, 5), await db.TimeSeriesRevRangeAsync(key, "-", "+", count: 5));
+            Assert.Equal(ReverseData(tuples).GetRange(0, 5), await db.TimeSeriesRevRangeAsync(key, TsTimeStamp.MinValue, TsTimeStamp.MaxValue, count: 5));
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             var tuples = await CreateData(db, key, 50);
-            Assert.Equal(ReverseData(tuples), await db.TimeSeriesRevRangeAsync(key, "-", "+", aggregation: Aggregation.MIN, timeBucket: 50));
+            Assert.Equal(ReverseData(tuples), await db.TimeSeriesRevRangeAsync(key, TsTimeStamp.MinValue, TsTimeStamp.MaxValue, aggregation: Aggregation.MIN, timeBucket: 50));
         }
 
         [Fact]
@@ -56,7 +56,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             var tuples = await CreateData(db, key, 50);
-            var ex = await Assert.ThrowsAsync<ArgumentException>(async () => await db.TimeSeriesRevRangeAsync(key, "-", "+", aggregation: Aggregation.AVG));
+            var ex = await Assert.ThrowsAsync<ArgumentException>(async () => await db.TimeSeriesRevRangeAsync(key, TsTimeStamp.MinValue, TsTimeStamp.MaxValue, aggregation: Aggregation.AVG));
             Assert.Equal("RANGE Aggregation should have timeBucket value", ex.Message);
         }
     }
