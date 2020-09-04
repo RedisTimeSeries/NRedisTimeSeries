@@ -20,9 +20,9 @@ namespace NRedisTimeSeries.Test.TestAPI
             var labels1 = new List<TimeSeriesLabel> { label1, label2 };
             var labels2 = new List<TimeSeriesLabel> { label1 };
 
-            var ts1 = await db.TimeSeriesAddAsync(keys[0], "*", 1.1, labels: labels1);
+            var ts1 = await db.TimeSeriesAddAsync(keys[0], 1.1, labels: labels1);
             var tuple1 = new TimeSeriesTuple(ts1, 1.1);
-            var ts2 = await db.TimeSeriesAddAsync(keys[1], "*", 2.2, labels: labels2);
+            var ts2 = await db.TimeSeriesAddAsync(keys[1], 2.2, labels: labels2);
             var tuple2 = new TimeSeriesTuple(ts2, 2.2);
 
             var results = await db.TimeSeriesMGetAsync(new List<string> { $"{keys[0]}=value" });
@@ -46,9 +46,9 @@ namespace NRedisTimeSeries.Test.TestAPI
             var labels1 = new List<TimeSeriesLabel> { label1, label2 };
             var labels2 = new List<TimeSeriesLabel> { label1 };
 
-            var ts1 = await db.TimeSeriesAddAsync(keys[0], "*", 1.1, labels: labels1);
+            var ts1 = await db.TimeSeriesAddAsync(keys[0], 1.1, labels: labels1);
             var tuple1 = new TimeSeriesTuple(ts1, 1.1);
-            var ts2 = await db.TimeSeriesAddAsync(keys[1], "*", 2.2, labels: labels2);
+            var ts2 = await db.TimeSeriesAddAsync(keys[1], 2.2, labels: labels2);
             var tuple2 = new TimeSeriesTuple(ts2, 2.2);
 
             var results = await db.TimeSeriesMGetAsync(new List<string> { $"{keys[0]}=value" }, withLabels: true);

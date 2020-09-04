@@ -11,7 +11,6 @@ namespace NRedisTimeSeries.Test.TestAPI
     {
         public TestMAddAsync(RedisFixture redisFixture) : base(redisFixture) { }
 
-
         [Fact]
         public async Task TestStarMADD()
         {
@@ -24,10 +23,10 @@ namespace NRedisTimeSeries.Test.TestAPI
                 await db.TimeSeriesCreateAsync(key);
             }
 
-            List<(string, TimeStamp, double)> sequence = new List<(string, TimeStamp, double)>(keys.Length);
+            List<(string, double)> sequence = new List<(string, double)>(keys.Length);
             foreach (var keyname in keys)
             {
-                sequence.Add((keyname, "*", 1.1));
+                sequence.Add((keyname, 1.1));
             }
             var response = await db.TimeSeriesMAddAsync(sequence);
 
@@ -36,11 +35,10 @@ namespace NRedisTimeSeries.Test.TestAPI
             foreach (var key in keys)
             {
                 TimeSeriesInformation info = await db.TimeSeriesInfoAsync(key);
-                Assert.True(info.FirstTimeStamp > 0);
+                Assert.True(info.FirstTimeStamp.UnixMilliseconds > 0);
                 Assert.Equal(info.FirstTimeStamp, info.LastTimeStamp);
             }
         }
-
 
         [Fact]
         public async Task TestSuccessfulMAdd()
@@ -53,8 +51,8 @@ namespace NRedisTimeSeries.Test.TestAPI
                 await db.TimeSeriesCreateAsync(key);
             }
 
-            var sequence = new List<(string, TimeStamp, double)>(keys.Length);
-            var timestamps = new List<DateTime>(keys.Length);
+            var sequence = new List<(string, TsTimeStamp, double)>(keys.Length);
+            var timestamps = new List<TsTimeStamp>(keys.Length);
             foreach (var keyname in keys)
             {
                 var now = DateTime.UtcNow;
@@ -66,7 +64,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             Assert.Equal(timestamps.Count, response.Count);
             for (var i = 0; i < response.Count; i++)
             {
-                Assert.Equal<DateTime>(timestamps[i], response[i]);
+                Assert.Equal(timestamps[i], response[i]);
             }
         }
 
@@ -81,13 +79,13 @@ namespace NRedisTimeSeries.Test.TestAPI
                 await db.TimeSeriesCreateAsync(key);
             }
 
-            var oldTimeStamps = new List<DateTime>();
+            var oldTimeStamps = new List<TsTimeStamp>();
             foreach (var keyname in keys)
             {
                 oldTimeStamps.Add(DateTime.UtcNow);
             }
 
-            var sequence = new List<(string, TimeStamp, double)>(keys.Length);
+            var sequence = new List<(string, TsTimeStamp, double)>(keys.Length);
             foreach (var keyname in keys)
             {
                 sequence.Add((keyname, DateTime.UtcNow, 1.1));
@@ -101,13 +99,13 @@ namespace NRedisTimeSeries.Test.TestAPI
             {
                 sequence.Add((keys[i], oldTimeStamps[i], 1.1));
             }
-            
+
             var response = await db.TimeSeriesMAddAsync(sequence);
 
             Assert.Equal(oldTimeStamps.Count, response.Count);
-            for(int i = 0; i < response.Count; i++)
+            for (int i = 0; i < response.Count; i++)
             {
-                Assert.Equal<DateTime>(oldTimeStamps[i], response[i]);
+                Assert.Equal(oldTimeStamps[i], response[i]);
             }
         }
     }

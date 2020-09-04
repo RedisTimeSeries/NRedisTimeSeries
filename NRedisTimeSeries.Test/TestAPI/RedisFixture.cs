@@ -5,7 +5,7 @@ namespace NRedisTimeSeries.Test.TestAPI
 {
     public class RedisFixture : IDisposable
     {
-        public RedisFixture() => Redis = ConnectionMultiplexer.Connect("localhost");
+        public RedisFixture() => Redis = ConnectionMultiplexer.Connect("localhost:6381");
 
         public void Dispose()
         {

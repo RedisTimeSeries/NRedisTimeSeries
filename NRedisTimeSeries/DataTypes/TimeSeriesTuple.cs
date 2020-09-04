@@ -10,7 +10,7 @@ namespace NRedisTimeSeries.DataTypes
         /// <summary>
         /// Tuple key - timestamp.
         /// </summary>
-        public TimeStamp Time { get; }
+        public TsTimeStamp Time { get; }
 
         /// <summary>
         /// Tuple value
@@ -22,7 +22,7 @@ namespace NRedisTimeSeries.DataTypes
         /// </summary>
         /// <param name="time">Timestamp</param>
         /// <param name="val">Value</param>
-        public TimeSeriesTuple(TimeStamp time, double val) => (Time, Val) = (time, val);
+        public TimeSeriesTuple(TsTimeStamp time, double val) => (Time, Val) = (time, val);
 
         /// <summary>
         /// Equality of TimeSeriesTuple objects
@@ -31,7 +31,7 @@ namespace NRedisTimeSeries.DataTypes
         /// <returns>If two TimeSeriesTuple objects are equal</returns>
         public override bool Equals(object obj) => 
             obj is TimeSeriesTuple tuple && 
-            EqualityComparer<TimeStamp>.Default.Equals(Time, tuple.Time) && 
+            EqualityComparer<TsTimeStamp>.Default.Equals(Time, tuple.Time) && 
             Val == tuple.Val;
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace NRedisTimeSeries.DataTypes
         public override int GetHashCode()
         {
             var hashCode = 459537088;
-            hashCode = (hashCode * -1521134295) + EqualityComparer<TimeStamp>.Default.GetHashCode(Time);
+            hashCode = (hashCode * -1521134295) + EqualityComparer<TsTimeStamp>.Default.GetHashCode(Time);
             hashCode = (hashCode * -1521134295) + Val.GetHashCode();
             return hashCode;
         }

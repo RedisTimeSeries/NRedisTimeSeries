@@ -16,7 +16,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
-            TimeStamp timeStamp = DateTime.UtcNow;
+            TsTimeStamp timeStamp = DateTime.UtcNow;
             Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.1));
 
             var info = await db.TimeSeriesInfoAsync(key);
@@ -30,7 +30,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             await db.TimeSeriesCreateAsync(key);
-            TimeStamp timeStamp = DateTime.UtcNow;
+            TsTimeStamp timeStamp = DateTime.UtcNow;
             Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.1));
 
             var info = await db.TimeSeriesInfoAsync(key);
@@ -43,9 +43,9 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
-            await db.TimeSeriesAddAsync(key, "*", 1.1);
+            await db.TimeSeriesAddAsync(key, 1.1);
             var info = await db.TimeSeriesInfoAsync(key);
-            Assert.True(info.FirstTimeStamp > 0);
+            Assert.True(info.FirstTimeStamp.UnixMilliseconds > 0);
             Assert.Equal(info.FirstTimeStamp, info.LastTimeStamp);
         }
 
@@ -54,7 +54,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
-            TimeStamp timeStamp = DateTime.UtcNow;
+            TsTimeStamp timeStamp = DateTime.UtcNow;
             long retentionTime = 5000;
             Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.1, retentionTime: retentionTime));
 
@@ -69,7 +69,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
-            TimeStamp timeStamp = DateTime.UtcNow;
+            TsTimeStamp timeStamp = DateTime.UtcNow;
             var label = new TimeSeriesLabel("key", "value");
             var labels = new List<TimeSeriesLabel> { label };
             Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.1, labels: labels));
@@ -79,13 +79,13 @@ namespace NRedisTimeSeries.Test.TestAPI
             Assert.Equal(timeStamp, info.LastTimeStamp);
             Assert.Equal(labels, info.Labels);
         }
-        
+
         [Fact]
         public async Task TestAddWithChunkSize()
         {
             var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
-            TimeStamp timeStamp = DateTime.UtcNow;
+            TsTimeStamp timeStamp = DateTime.UtcNow;
             Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.1, chunkSizeBytes: 128));
             var info = await db.TimeSeriesInfoAsync(key);
             Assert.Equal(timeStamp, info.FirstTimeStamp);
@@ -99,7 +99,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             await db.TimeSeriesCreateAsync(key);
-            TimeStamp timeStamp = DateTime.UtcNow;
+            TsTimeStamp timeStamp = DateTime.UtcNow;
             Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.1, uncompressed: true));
 
             var info = await db.TimeSeriesInfoAsync(key);
@@ -114,25 +114,12 @@ namespace NRedisTimeSeries.Test.TestAPI
             var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             var dateTime = DateTime.UtcNow;
-            TimeStamp oldTimeStamp = dateTime.AddSeconds(-1);
-            TimeStamp newTimeStamp = dateTime;
+            TsTimeStamp oldTimeStamp = dateTime.AddSeconds(-1);
+            TsTimeStamp newTimeStamp = dateTime;
             await db.TimeSeriesCreateAsync(key);
             await db.TimeSeriesAddAsync(key, newTimeStamp, 1.1);
             // Adding old event
-            Assert.Equal( oldTimeStamp, await db.TimeSeriesAddAsync(key, oldTimeStamp, 1.1));
-        }
-
-        [Fact]
-        public async Task TestWrongParameters()
-        {
-            var key = CreateKeyName();
-            var value = 1.1;
-            var db = redisFixture.Redis.GetDatabase();
-            var ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesAddAsync(key, "+", value));
-            Assert.Equal("ERR TSDB: invalid timestamp", ex.Message);
-
-            ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesAddAsync(key, "-", value));
-            Assert.Equal("ERR TSDB: invalid timestamp", ex.Message);
+            Assert.Equal(oldTimeStamp, await db.TimeSeriesAddAsync(key, oldTimeStamp, 1.1));
         }
     }
 }
