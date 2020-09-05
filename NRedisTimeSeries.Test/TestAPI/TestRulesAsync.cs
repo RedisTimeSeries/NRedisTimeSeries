@@ -24,7 +24,7 @@ namespace NRedisTimeSeries.Test.TestAPI
                 await db.TimeSeriesCreateAsync($"{key}:{aggregation.Name}");
             }
 
-            var timeBucket = 50L;
+            var timeBucket = new TsTimeBucket(50L);
             var rules = new List<TimeSeriesRule>();
             var rulesMap = new Dictionary<Aggregation, TimeSeriesRule>();
             foreach (var aggregation in Aggregation.GetEnumerator())
@@ -58,7 +58,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var aggKey = $"{key}:{Aggregation.AVG.Name}";
             var db = redisFixture.Redis.GetDatabase();
             await db.TimeSeriesCreateAsync(aggKey);
-            var rule = new TimeSeriesRule(aggKey, 50, Aggregation.AVG);
+            var rule = new TimeSeriesRule(aggKey, new TsTimeBucket(50), Aggregation.AVG);
             var ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesCreateRuleAsync(key, rule));
             Assert.Equal("ERR TSDB: the key does not exist", ex.Message);
 
@@ -75,7 +75,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var aggKey = $"{key}:{Aggregation.AVG.Name}";
             var db = redisFixture.Redis.GetDatabase();
             await db.TimeSeriesCreateAsync(key);
-            var rule = new TimeSeriesRule(aggKey, 50, Aggregation.AVG);
+            var rule = new TimeSeriesRule(aggKey, new TsTimeBucket(50), Aggregation.AVG);
             var ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesCreateRuleAsync(key, rule));
             Assert.Equal("ERR TSDB: the key does not exist", ex.Message);
 

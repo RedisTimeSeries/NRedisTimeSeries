@@ -47,7 +47,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             var tuples = await CreateData(db, key, 50);
-            Assert.Equal(ReverseData(tuples), await db.TimeSeriesRevRangeAsync(key, TsTimeStamp.MinValue, TsTimeStamp.MaxValue, aggregation: Aggregation.MIN, timeBucket: 50));
+            Assert.Equal(ReverseData(tuples), await db.TimeSeriesRevRangeAsync(key, TsTimeStamp.MinValue, TsTimeStamp.MaxValue, aggregation: Aggregation.MIN, timeBucket: new TsTimeBucket(50)));
         }
 
         [Fact]

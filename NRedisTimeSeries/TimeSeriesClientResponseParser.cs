@@ -93,9 +93,9 @@ namespace NRedisTimeSeries
         {
             RedisResult[] redisResults = (RedisResult[])result;
             string destKey = (string)redisResults[0];
-            long bucketTime = (long)redisResults[1];
+            TsTimeBucket timeBucket = new TsTimeBucket((long)redisResults[1]);
             Aggregation aggregation = (string)redisResults[2];
-            return new TimeSeriesRule(destKey, bucketTime, aggregation);
+            return new TimeSeriesRule(destKey, timeBucket, aggregation);
         }
 
         private static IReadOnlyList<TimeSeriesRule> ParseRuleArray(RedisResult result)

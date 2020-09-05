@@ -82,7 +82,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var db = redisFixture.Redis.GetDatabase();
             var label = new TimeSeriesLabel(keys[0], "value");
             var labels = new List<TimeSeriesLabel> { label };
-            db.TimeSeriesCreateAsync(keys[0], labels: labels);
+            db.TimeSeriesCreate(keys[0], labels: labels);
             var tuples = CreateData(db, keys, 50);
             var results = db.TimeSeriesMRevRange(TsTimeStamp.MinValue, TsTimeStamp.MaxValue, new List<string> { $"{keys[0]}=value" });
             Assert.Equal(1, results.Count);
@@ -124,11 +124,11 @@ namespace NRedisTimeSeries.Test.TestAPI
             var labels = new List<TimeSeriesLabel> { label };
             foreach (var key in keys)
             {
-                db.TimeSeriesCreateAsync(key, labels: labels);
+                db.TimeSeriesCreate(key, labels: labels);
             }
 
             var tuples = CreateData(db, keys, 50);
-            var results = db.TimeSeriesMRevRange(TsTimeStamp.MinValue, TsTimeStamp.MaxValue, new List<string> { $"{keys[0]}=value" }, aggregation: Aggregation.MIN, timeBucket: 50);
+            var results = db.TimeSeriesMRevRange(TsTimeStamp.MinValue, TsTimeStamp.MaxValue, new List<string> { $"{keys[0]}=value" }, aggregation: Aggregation.MIN, timeBucket: new TsTimeBucket(50));
             Assert.Equal(keys.Length, results.Count);
             for (var i = 0; i < results.Count; i++)
             {
@@ -147,7 +147,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var labels = new List<TimeSeriesLabel> { label };
             foreach (var key in keys)
             {
-                db.TimeSeriesCreateAsync(key, labels: labels);
+                db.TimeSeriesCreate(key, labels: labels);
             }
 
             var tuples = CreateData(db, keys, 50);
@@ -164,7 +164,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var labels = new List<TimeSeriesLabel> { label };
             foreach (var key in keys)
             {
-                db.TimeSeriesCreateAsync(key, labels: labels);
+                db.TimeSeriesCreate(key, labels: labels);
             }
 
             var tuples = CreateData(db, keys, 50);

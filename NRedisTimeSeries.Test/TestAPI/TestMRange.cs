@@ -133,7 +133,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = CreateData(db, 50);
-            var results = db.TimeSeriesMRange(TsTimeStamp.MinValue, TsTimeStamp.MaxValue, new List<string> { "key=MRangeAggregation" }, aggregation: Aggregation.MIN, timeBucket: 50);
+            var results = db.TimeSeriesMRange(TsTimeStamp.MinValue, TsTimeStamp.MaxValue, new List<string> { "key=MRangeAggregation" }, aggregation: Aggregation.MIN, timeBucket: new TsTimeBucket(50));
             Assert.Equal(_keys.Length, results.Count);
             for (int i = 0; i < results.Count; i++)
             {

@@ -128,7 +128,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = await CreateData(db, keys, 50);
-            var results = await db.TimeSeriesMRevRangeAsync(TsTimeStamp.MinValue, TsTimeStamp.MaxValue, new List<string> { $"{keys[0]}=value" }, aggregation: Aggregation.MIN, timeBucket: 50);
+            var results = await db.TimeSeriesMRevRangeAsync(TsTimeStamp.MinValue, TsTimeStamp.MaxValue, new List<string> { $"{keys[0]}=value" }, aggregation: Aggregation.MIN, timeBucket: new TsTimeBucket(50));
             Assert.Equal(keys.Length, results.Count);
             for (var i = 0; i < results.Count; i++)
             {

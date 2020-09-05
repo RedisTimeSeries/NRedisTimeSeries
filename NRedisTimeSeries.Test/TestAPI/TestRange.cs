@@ -50,7 +50,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
             var tuples = CreateData(db, 50);
-            Assert.Equal(tuples, db.TimeSeriesRange(_key, TsTimeStamp.MinValue, TsTimeStamp.MaxValue, aggregation: Aggregation.MIN, timeBucket: 50));
+            Assert.Equal(tuples, db.TimeSeriesRange(_key, TsTimeStamp.MinValue, TsTimeStamp.MaxValue, aggregation: Aggregation.MIN, timeBucket: new TsTimeBucket(50)));
         }
 
         [Fact]
