@@ -22,12 +22,12 @@ namespace NRedisTimeSeries.DataTypes
         /// <summary>
         /// First timestamp present in the time-series.
         /// </summary>
-        public TimeStamp FirstTimeStamp { get; private set; }
+        public TsTimeStamp FirstTimeStamp { get; private set; }
 
         /// <summary>
         /// Last timestamp present in the time-series.
         /// </summary>
-        public TimeStamp LastTimeStamp { get; private set; }
+        public TsTimeStamp LastTimeStamp { get; private set; }
 
         /// <summary>
         /// Retention time, in milliseconds, for the time-series.
@@ -65,7 +65,7 @@ namespace NRedisTimeSeries.DataTypes
         /// </summary>
         public IReadOnlyList<TimeSeriesRule> Rules { get; private set; }
 
-        internal TimeSeriesInformation(long totalSamples, long memoryUsage, TimeStamp firstTimeStamp, TimeStamp lastTimeStamp, long retentionTime, long chunkCount, long chunkSize, IReadOnlyList<TimeSeriesLabel> labels, string sourceKey, IReadOnlyList<TimeSeriesRule> rules)
+        internal TimeSeriesInformation(long totalSamples, long memoryUsage, TsTimeStamp firstTimeStamp, TsTimeStamp lastTimeStamp, long retentionTime, long chunkCount, long chunkSize, IReadOnlyList<TimeSeriesLabel> labels, string sourceKey, IReadOnlyList<TimeSeriesRule> rules)
         {
             TotalSamples = totalSamples;
             MemoryUsage = memoryUsage;

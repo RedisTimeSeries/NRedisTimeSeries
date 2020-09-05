@@ -16,7 +16,7 @@ namespace NRedisTimeSeries.DataTypes
         /// <summary>
         /// Rule's aggregation time bucket.
         /// </summary>
-        public long TimeBucket { get; private set; }
+        public TsTimeBucket TimeBucket { get; private set; }
 
         /// <summary>
         /// Rule's aggregation type.
@@ -29,7 +29,7 @@ namespace NRedisTimeSeries.DataTypes
         /// <param name="destKey">Rule's destination key.</param>
         /// <param name="timeBucket">Rule's aggregation time bucket.</param>
         /// <param name="aggregation">Rule's aggregation type.</param>
-        public TimeSeriesRule(string destKey, long timeBucket, Aggregation aggregation) =>
+        public TimeSeriesRule(string destKey, TsTimeBucket timeBucket, Aggregation aggregation) =>
             (DestKey, TimeBucket, Aggregation) = (destKey, timeBucket, aggregation);
 
         /// <summary>

@@ -7,21 +7,20 @@ namespace NRedisTimeSeries.Test.TestAPI
 {
     public class TestGet : AbstractTimeSeriesTest, IDisposable
     {
-
-        private readonly string key = "GET_TESTS";
+        private readonly string _key = "GET_TESTS";
 
         public TestGet(RedisFixture redisFixture) : base(redisFixture) { }
 
         public void Dispose()
         {
-            redisFixture.Redis.GetDatabase().KeyDelete(key);
+            redisFixture.Redis.GetDatabase().KeyDelete(_key);
         }
 
         [Fact]
         public void TestGetNotExists()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            var ex = Assert.Throws<RedisServerException>(()=>db.TimeSeriesGet(key));
+            var ex = Assert.Throws<RedisServerException>(()=>db.TimeSeriesGet(_key));
             Assert.Equal("ERR TSDB: the key does not exist", ex.Message);
         }
 
@@ -29,8 +28,8 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestEmptyGet()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            db.TimeSeriesCreate(key);
-            Assert.Null(db.TimeSeriesGet(key));
+            db.TimeSeriesCreate(_key);
+            Assert.Null(db.TimeSeriesGet(_key));
         }
 
         [Fact]
@@ -39,9 +38,9 @@ namespace NRedisTimeSeries.Test.TestAPI
             DateTime now = DateTime.UtcNow;
             TimeSeriesTuple expected = new TimeSeriesTuple(now, 1.1);
             IDatabase db = redisFixture.Redis.GetDatabase();
-            db.TimeSeriesCreate(key);
-            db.TimeSeriesAdd(key, now, 1.1);
-            TimeSeriesTuple actual = db.TimeSeriesGet(key);
+            db.TimeSeriesCreate(_key);
+            db.TimeSeriesAdd(_key, now, 1.1);
+            TimeSeriesTuple actual = db.TimeSeriesGet(_key);
             Assert.Equal(expected, actual);
         }
     }

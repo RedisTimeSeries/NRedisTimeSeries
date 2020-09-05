@@ -12,21 +12,22 @@ namespace NRedisTimeSeries.Test.TestDataTypes
         [Fact]
         public void TestRuleConstructor()
         {
-            TimeSeriesRule rule = new TimeSeriesRule("key", 50, Aggregation.AVG);
+            TimeSeriesRule rule = new TimeSeriesRule("key", new TsTimeBucket(50), Aggregation.AVG);
             Assert.Equal("key", rule.DestKey);
             Assert.Equal(Aggregation.AVG, rule.Aggregation);
-            Assert.Equal(50, rule.TimeBucket);
+            Assert.Equal(new TsTimeBucket(50), rule.TimeBucket);
         }
 
         [Fact]
         public void TestRuleEquals()
         {
-            TimeSeriesRule rule = new TimeSeriesRule("key", 50, Aggregation.AVG);
+            var timeBucket = new TsTimeBucket(50);
+            TimeSeriesRule rule = new TimeSeriesRule("key", timeBucket, Aggregation.AVG);
 
-            TimeSeriesRule rule1 = new TimeSeriesRule("key", 50, Aggregation.AVG);
-            TimeSeriesRule rule2 = new TimeSeriesRule("key2", 50, Aggregation.AVG);
-            TimeSeriesRule rule3 = new TimeSeriesRule("key", 51, Aggregation.AVG);
-            TimeSeriesRule rule4 = new TimeSeriesRule("key", 50, Aggregation.COUNT);
+            TimeSeriesRule rule1 = new TimeSeriesRule("key", timeBucket, Aggregation.AVG);
+            TimeSeriesRule rule2 = new TimeSeriesRule("key2", timeBucket, Aggregation.AVG);
+            TimeSeriesRule rule3 = new TimeSeriesRule("key", new TsTimeBucket(51), Aggregation.AVG);
+            TimeSeriesRule rule4 = new TimeSeriesRule("key", timeBucket, Aggregation.COUNT);
 
             Assert.Equal(rule, rule1);
             Assert.NotEqual(rule, rule2);
@@ -37,12 +38,13 @@ namespace NRedisTimeSeries.Test.TestDataTypes
         [Fact]
         public void TestRuleHashCode()
         {
-            TimeSeriesRule rule = new TimeSeriesRule("key", 50, Aggregation.AVG);
+            var timeBucket = new TsTimeBucket(50);
+            TimeSeriesRule rule = new TimeSeriesRule("key", timeBucket, Aggregation.AVG);
 
-            TimeSeriesRule rule1 = new TimeSeriesRule("key", 50, Aggregation.AVG);
-            TimeSeriesRule rule2 = new TimeSeriesRule("key2", 50, Aggregation.AVG);
-            TimeSeriesRule rule3 = new TimeSeriesRule("key", 51, Aggregation.AVG);
-            TimeSeriesRule rule4 = new TimeSeriesRule("key", 50, Aggregation.COUNT);
+            TimeSeriesRule rule1 = new TimeSeriesRule("key", timeBucket, Aggregation.AVG);
+            TimeSeriesRule rule2 = new TimeSeriesRule("key2", timeBucket, Aggregation.AVG);
+            TimeSeriesRule rule3 = new TimeSeriesRule("key", new TsTimeBucket(51), Aggregation.AVG);
+            TimeSeriesRule rule4 = new TimeSeriesRule("key", timeBucket, Aggregation.COUNT);
 
             Assert.Equal(rule.GetHashCode(), rule1.GetHashCode());
             Assert.NotEqual(rule.GetHashCode(), rule2.GetHashCode());

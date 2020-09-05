@@ -1,8 +1,8 @@
-﻿using System;
+﻿using NRedisTimeSeries.DataTypes;
+using StackExchange.Redis;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NRedisTimeSeries.DataTypes;
-using StackExchange.Redis;
 
 namespace NRedisTimeSeries.Example
 {
@@ -20,8 +20,7 @@ namespace NRedisTimeSeries.Example
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            TimeStamp timestamp = "*";
-            await db.TimeSeriesAddAsync("my_ts", timestamp, 0.0);
+            await db.TimeSeriesAddAsync("my_ts", 0.0);
             redis.Close();
         }
 
@@ -34,7 +33,7 @@ namespace NRedisTimeSeries.Example
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            TimeStamp timestamp = 1;
+            var timestamp = new TsTimeStamp(1);
             await db.TimeSeriesAddAsync("my_ts", timestamp, 0.0);
             redis.Close();
         }
@@ -48,7 +47,7 @@ namespace NRedisTimeSeries.Example
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            TimeStamp timestamp = DateTime.UtcNow;
+            var timestamp = DateTime.UtcNow;
             await db.TimeSeriesAddAsync("my_ts", timestamp, 0.0);
             redis.Close();
         }
@@ -61,10 +60,9 @@ namespace NRedisTimeSeries.Example
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            TimeStamp timestamp = "*";
             var label = new TimeSeriesLabel("key", "value");
             var labels = new List<TimeSeriesLabel> { label };
-            await db.TimeSeriesAddAsync("my_ts", timestamp, 0.0, retentionTime:5000, labels:labels, uncompressed:true);
+            await db.TimeSeriesAddAsync("my_ts", 0.0, retentionTime: 5000, labels: labels, uncompressed: true);
             redis.Close();
         }
     }

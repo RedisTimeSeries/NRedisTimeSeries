@@ -1,4 +1,3 @@
-using System;
 using NRedisTimeSeries.DataTypes;
 using Xunit;
 
@@ -9,17 +8,17 @@ namespace NRedisTimeSeries.Test
         [Fact]
         public void TestTimeSeriesTupleConstructor()
         {
-            TimeSeriesTuple tuple = new TimeSeriesTuple(1, 1.1);
-            Assert.Equal(1, tuple.Time);
+            TimeSeriesTuple tuple = new TimeSeriesTuple(new TsTimeStamp(1), 1.1);
+            Assert.Equal(new TsTimeStamp(1), tuple.Time);
             Assert.Equal(1.1, tuple.Val);
         }
 
         [Fact]
         public void TestTimeSeriesTupleEqual()
         {
-            TimeSeriesTuple tuple1 = new TimeSeriesTuple(1, 1.1);
-            TimeSeriesTuple tuple1_1 = new TimeSeriesTuple(1, 1.1);
-            TimeSeriesTuple tuple1_2 = new TimeSeriesTuple(2, 2.2);
+            TimeSeriesTuple tuple1 = new TimeSeriesTuple(new TsTimeStamp(1), 1.1);
+            TimeSeriesTuple tuple1_1 = new TimeSeriesTuple(new TsTimeStamp(1), 1.1);
+            TimeSeriesTuple tuple1_2 = new TimeSeriesTuple(new TsTimeStamp(2), 2.2);
             Assert.Equal(tuple1, tuple1_1);
             Assert.NotEqual(tuple1, tuple1_2);
         }
@@ -27,9 +26,9 @@ namespace NRedisTimeSeries.Test
         [Fact]
         public void TestTimeSeriesTupleHashCode()
         {
-            TimeSeriesTuple tuple1 = new TimeSeriesTuple(1, 1.1);
-            TimeSeriesTuple tuple1_1 = new TimeSeriesTuple(1, 1.1);
-            TimeSeriesTuple tuple1_2 = new TimeSeriesTuple(2, 2.2);
+            TimeSeriesTuple tuple1 = new TimeSeriesTuple(new TsTimeStamp(1), 1.1);
+            TimeSeriesTuple tuple1_1 = new TimeSeriesTuple(new TsTimeStamp(1), 1.1);
+            TimeSeriesTuple tuple1_2 = new TimeSeriesTuple(new TsTimeStamp(2), 2.2);
             Assert.Equal(tuple1.GetHashCode(), tuple1_1.GetHashCode());
             Assert.NotEqual(tuple1.GetHashCode(), tuple1_2.GetHashCode());
         }

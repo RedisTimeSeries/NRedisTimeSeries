@@ -9,13 +9,13 @@ namespace NRedisTimeSeries.Test.TestAPI
 {
     public class TestRange : AbstractTimeSeriesTest, IDisposable
     {
-        private readonly string key = "RANGE_TESTS";
+        private readonly string _key = "RANGE_TESTS";
 
         public TestRange(RedisFixture redisFixture) : base(redisFixture) { }
 
         public void Dispose()
         {
-            redisFixture.Redis.GetDatabase().KeyDelete(key);
+            redisFixture.Redis.GetDatabase().KeyDelete(_key);
         }
 
         private List<TimeSeriesTuple> CreateData(IDatabase db, int timeBucket)
@@ -23,7 +23,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var tuples = new List<TimeSeriesTuple>();
             for (int i = 0; i < 10; i++)
             {
-                TimeStamp ts = db.TimeSeriesAdd(key, i*timeBucket, i);
+                TsTimeStamp ts = db.TimeSeriesAdd(_key, new TsTimeStamp(i * timeBucket), i);
                 tuples.Add(new TimeSeriesTuple(ts, i));
             }
             return tuples;
@@ -34,7 +34,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
             var tuples = CreateData(db, 50);
-            Assert.Equal(tuples, db.TimeSeriesRange(key, "-", "+"));
+            Assert.Equal(tuples, db.TimeSeriesRange(_key, TsTimeStamp.MinValue, TsTimeStamp.MaxValue));
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
             var tuples = CreateData(db, 50);
-            Assert.Equal(tuples.GetRange(0, 5), db.TimeSeriesRange(key, "-", "+", count: 5));
+            Assert.Equal(tuples.GetRange(0, 5), db.TimeSeriesRange(_key, TsTimeStamp.MinValue, TsTimeStamp.MaxValue, count: 5));
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
             var tuples = CreateData(db, 50);
-            Assert.Equal(tuples, db.TimeSeriesRange(key, "-", "+", aggregation: Aggregation.MIN, timeBucket: 50));
+            Assert.Equal(tuples, db.TimeSeriesRange(_key, TsTimeStamp.MinValue, TsTimeStamp.MaxValue, aggregation: Aggregation.MIN, timeBucket: new TsTimeBucket(50)));
         }
 
         [Fact]
@@ -58,7 +58,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
             var tuples = CreateData(db, 50);
-            var ex = Assert.Throws<ArgumentException>(() => db.TimeSeriesRange(key, "-", "+", aggregation: Aggregation.AVG));
+            var ex = Assert.Throws<ArgumentException>(() => db.TimeSeriesRange(_key, TsTimeStamp.MinValue, TsTimeStamp.MaxValue, aggregation: Aggregation.AVG));
             Assert.Equal("RANGE Aggregation should have timeBucket value", ex.Message);
 
         }

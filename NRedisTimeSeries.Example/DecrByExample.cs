@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using NRedisTimeSeries.DataTypes;
+﻿using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
+using System.Collections.Generic;
 
 namespace NRedisTimeSeries.Example
 {
@@ -28,7 +27,7 @@ namespace NRedisTimeSeries.Example
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            db.TimeSeriesDecrBy("my_ts", 5, timestamp: "*");
+            db.TimeSeriesDecrBy("my_ts", 5);
             redis.Close();
         }
 
@@ -39,7 +38,7 @@ namespace NRedisTimeSeries.Example
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            db.TimeSeriesDecrBy("my_ts", 5, timestamp: DateTime.UtcNow);
+            db.TimeSeriesDecrBy("my_ts", 5);
             redis.Close();
         }
 
@@ -50,7 +49,7 @@ namespace NRedisTimeSeries.Example
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            db.TimeSeriesDecrBy("my_ts", 5, timestamp: long.MaxValue);
+            db.TimeSeriesDecrBy("my_ts", 5);
             redis.Close();
         }
 
@@ -64,7 +63,7 @@ namespace NRedisTimeSeries.Example
             IDatabase db = redis.GetDatabase();
             var label = new TimeSeriesLabel("key", "value");
             var labels = new List<TimeSeriesLabel> { label };
-            db.TimeSeriesDecrBy("my_ts", 5, timestamp: "*", retentionTime: 5000, uncompressed: true, labels: labels);
+            db.TimeSeriesDecrBy("my_ts", 5, retentionTime: 5000, uncompressed: true, labels: labels);
             redis.Close();
         }
     }

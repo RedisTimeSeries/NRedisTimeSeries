@@ -8,13 +8,13 @@ namespace NRedisTimeSeries.Test.TestAPI
 {
     public class TestIncrBy : AbstractTimeSeriesTest, IDisposable
     {
-        private readonly string key = "INCRBY_TESTS";
+        private readonly string _key = "INCRBY_TESTS";
 
         public TestIncrBy(RedisFixture redisFixture) : base(redisFixture) { }
 
         public void Dispose()
         {
-            redisFixture.Redis.GetDatabase().KeyDelete(key);
+            redisFixture.Redis.GetDatabase().KeyDelete(_key);
         }
 
         [Fact]
@@ -22,17 +22,9 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             double value = 5.5;
             IDatabase db = redisFixture.Redis.GetDatabase();
-            Assert.True(db.TimeSeriesIncrBy(key, value) > 0);
-            Assert.Equal(value, db.TimeSeriesGet(key).Val);
-        }
-
-        [Fact]
-        public void TestStarIncrBy()
-        {
-            double value = 5.5;
-            IDatabase db = redisFixture.Redis.GetDatabase();
-            Assert.True(db.TimeSeriesIncrBy(key, value, timestamp: "*") > 0);
-            Assert.Equal(value, db.TimeSeriesGet(key).Val);
+            var timeStamp = db.TimeSeriesIncrBy(_key, value);
+            Assert.True(timeStamp.UnixMilliseconds > 0);
+            Assert.Equal(value, db.TimeSeriesGet(_key).Val);
         }
 
         [Fact]
@@ -40,9 +32,9 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             double value = 5.5;
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeStamp timeStamp = DateTime.UtcNow;
-            Assert.Equal(timeStamp, db.TimeSeriesIncrBy(key, value, timestamp: timeStamp));
-            Assert.Equal(new TimeSeriesTuple(timeStamp, value), db.TimeSeriesGet(key));
+            TsTimeStamp timeStamp = DateTime.UtcNow;
+            Assert.Equal(timeStamp, db.TimeSeriesIncrBy(_key, timeStamp, value));
+            Assert.Equal(new TimeSeriesTuple(timeStamp, value), db.TimeSeriesGet(_key));
         }
 
         [Fact]
@@ -51,9 +43,10 @@ namespace NRedisTimeSeries.Test.TestAPI
             double value = 5.5;
             long retentionTime = 5000;
             IDatabase db = redisFixture.Redis.GetDatabase();
-            Assert.True(db.TimeSeriesIncrBy(key, value, retentionTime: retentionTime) > 0);
-            Assert.Equal(value, db.TimeSeriesGet(key).Val);
-            TimeSeriesInformation info = db.TimeSeriesInfo(key);
+            var timeStamp = db.TimeSeriesIncrBy(_key, value, retentionTime: retentionTime);
+            Assert.True(timeStamp.UnixMilliseconds > 0);
+            Assert.Equal(value, db.TimeSeriesGet(_key).Val);
+            TimeSeriesInformation info = db.TimeSeriesInfo(_key);
             Assert.Equal(retentionTime, info.RetentionTime);
         }
 
@@ -64,9 +57,10 @@ namespace NRedisTimeSeries.Test.TestAPI
             TimeSeriesLabel label = new TimeSeriesLabel("key", "value");
             IDatabase db = redisFixture.Redis.GetDatabase();
             var labels = new List<TimeSeriesLabel> { label };
-            Assert.True(db.TimeSeriesIncrBy(key, value, labels: labels) > 0);
-            Assert.Equal(value, db.TimeSeriesGet(key).Val);
-            TimeSeriesInformation info = db.TimeSeriesInfo(key);
+            var timeStamp = db.TimeSeriesIncrBy(_key, value, labels: labels);
+            Assert.True(timeStamp.UnixMilliseconds > 0);
+            Assert.Equal(value, db.TimeSeriesGet(_key).Val);
+            TimeSeriesInformation info = db.TimeSeriesInfo(_key);
             Assert.Equal(labels, info.Labels);
         }
 
@@ -75,19 +69,9 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             double value = 5.5;
             IDatabase db = redisFixture.Redis.GetDatabase();
-            Assert.True(db.TimeSeriesIncrBy(key, value, uncompressed:true) > 0);
-            Assert.Equal(value, db.TimeSeriesGet(key).Val);
-        }
-
-        [Fact]
-        public void TestWrongParameters()
-        {
-            double value = 5.5;
-            IDatabase db = redisFixture.Redis.GetDatabase();
-            var ex = Assert.Throws<RedisServerException>(() => db.TimeSeriesIncrBy(key, value, timestamp: "+"));
-            Assert.Equal("ERR TSDB: invalid timestamp", ex.Message);
-            ex = Assert.Throws<RedisServerException>(() => db.TimeSeriesIncrBy(key, value, timestamp: "-"));
-            Assert.Equal("ERR TSDB: invalid timestamp", ex.Message);
+            var timeStamp = db.TimeSeriesIncrBy(_key, value, uncompressed: true);
+            Assert.True(timeStamp.UnixMilliseconds > 0);
+            Assert.Equal(value, db.TimeSeriesGet(_key).Val);
         }
     }
 }

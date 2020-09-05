@@ -8,13 +8,13 @@ namespace NRedisTimeSeries.Test.TestAPI
 {
     public class TestAlter : AbstractTimeSeriesTest, IDisposable
     {
-        private readonly string key = "ALTER_TESTS";
+        private readonly string _key = "ALTER_TESTS";
 
         public TestAlter(RedisFixture redisFixture): base(redisFixture) { }
 
         public void Dispose()
         {
-            redisFixture.Redis.GetDatabase().KeyDelete(key);
+            redisFixture.Redis.GetDatabase().KeyDelete(_key);
         }
 
         [Fact]
@@ -22,9 +22,9 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             long retentionTime = 5000;
             IDatabase db = redisFixture.Redis.GetDatabase();
-            db.TimeSeriesCreate(key);
-            Assert.True(db.TimeSeriesAlter(key, retentionTime: retentionTime));
-            TimeSeriesInformation info = db.TimeSeriesInfo(key);
+            db.TimeSeriesCreate(_key);
+            Assert.True(db.TimeSeriesAlter(_key, retentionTime: retentionTime));
+            TimeSeriesInformation info = db.TimeSeriesInfo(_key);
             Assert.Equal(retentionTime, info.RetentionTime);
         }
 
@@ -34,13 +34,13 @@ namespace NRedisTimeSeries.Test.TestAPI
             TimeSeriesLabel label = new TimeSeriesLabel("key", "value");
             var labels = new List<TimeSeriesLabel> { label };
             IDatabase db = redisFixture.Redis.GetDatabase();
-            db.TimeSeriesCreate(key);
-            Assert.True(db.TimeSeriesAlter(key, labels: labels));
-            TimeSeriesInformation info = db.TimeSeriesInfo(key);
+            db.TimeSeriesCreate(_key);
+            Assert.True(db.TimeSeriesAlter(_key, labels: labels));
+            TimeSeriesInformation info = db.TimeSeriesInfo(_key);
             Assert.Equal(labels, info.Labels);
             labels.Clear();
-            Assert.True(db.TimeSeriesAlter(key, labels: labels));
-            info = db.TimeSeriesInfo(key);
+            Assert.True(db.TimeSeriesAlter(_key, labels: labels));
+            info = db.TimeSeriesInfo(_key);
             Assert.Equal(labels, info.Labels);
         }
 

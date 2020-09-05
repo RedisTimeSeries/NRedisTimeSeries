@@ -55,28 +55,24 @@ namespace NRedisTimeSeries
             }
         }
 
-        private static void AddAggregation(this IList<object> args, Aggregation aggregation, long? timeBucket)
+        private static void AddAggregation(this IList<object> args, Aggregation aggregation, TsTimeBucket timeBucket)
         {
-            if(aggregation != null)
+            if (aggregation != null)
             {
                 args.Add(CommandArgs.AGGREGATION);
                 args.Add(aggregation.Name);
-                if (!timeBucket.HasValue)
-                {
-                    throw new ArgumentException("RANGE Aggregation should have timeBucket value");
-                }
-                args.Add(timeBucket.Value);
+                args.Add(timeBucket.UnixMilliseconds);
             }
         }
 
         private static void AddFilters(this List<object> args, IReadOnlyCollection<string> filter)
         {
-            if(filter == null || filter.Count == 0)
+            if (filter == null || filter.Count == 0)
             {
                 throw new ArgumentException("There should be at least one filter on MRANGE/MREVRANGE");
             }
             args.Add(CommandArgs.FILTER);
-            foreach(string f in filter)
+            foreach (string f in filter)
             {
                 args.Add(f);
             }
@@ -84,18 +80,18 @@ namespace NRedisTimeSeries
 
         private static void AddWithLabels(this IList<object> args, bool? withLabels)
         {
-            if(withLabels.HasValue && withLabels.Value)
+            if (withLabels.HasValue && withLabels.Value)
             {
                 args.Add(CommandArgs.WITHLABELS);
             }
         }
 
-        private static void AddTimeStamp(this IList<object> args, TimeStamp timeStamp)
+        private static void AddTimeStamp(this IList<object> args, TsTimeStamp? timeStamp)
         {
-            if(timeStamp != null)
+            if (timeStamp != null)
             {
                 args.Add(CommandArgs.TIMESTAMP);
-                args.Add(timeStamp.Value);
+                args.Add(timeStamp?.UnixMilliseconds);
             }
         }
 
@@ -104,43 +100,43 @@ namespace NRedisTimeSeries
             args.Add(rule.DestKey);
             args.Add(CommandArgs.AGGREGATION);
             args.Add(rule.Aggregation.Name);
-            args.Add(rule.TimeBucket);
+            args.Add(rule.TimeBucket.UnixMilliseconds);
         }
-        
+
         private static List<object> BuildTsCreateArgs(string key, long? retentionTime, IReadOnlyCollection<TimeSeriesLabel> labels, bool? uncompressed,
             long? chunkSizeBytes)
         {
-            var args = new List<object> {key};
+            var args = new List<object> { key };
             args.AddRetentionTime(retentionTime);
             args.AddChunkSize(chunkSizeBytes);
             args.AddLabels(labels);
             args.AddUncompressed(uncompressed);
             return args;
         }
-        
+
         private static List<object> BuildTsAlterArgs(string key, long? retentionTime, IReadOnlyCollection<TimeSeriesLabel> labels)
         {
-            var args = new List<object> {key};
+            var args = new List<object> { key };
             args.AddRetentionTime(retentionTime);
             args.AddLabels(labels);
             return args;
         }
-        
-        private static List<object> BuildTsAddArgs(string key, TimeStamp timestamp, double value, long? retentionTime,
-            IReadOnlyCollection<TimeSeriesLabel> labels, bool? uncompressed, long? chunkSizeBytes)
+
+        private static List<object> BuildTsAddArgs(string key, double value, long? retentionTime,
+            IReadOnlyCollection<TimeSeriesLabel> labels, bool? uncompressed, long? chunkSizeBytes, TsTimeStamp? timestamp = null)
         {
-            var args = new List<object> {key, timestamp.Value, value};
+            var args = new List<object> { key, timestamp?.UnixMilliseconds.ToString() ?? "*", value };
             AddRetentionTime(args, retentionTime);
             AddChunkSize(args, chunkSizeBytes);
             AddLabels(args, labels);
             AddUncompressed(args, uncompressed);
             return args;
         }
-        
-        private static List<object> BuildTsIncrDecrByArgs(string key, double value, TimeStamp timestamp, long? retentionTime,
+
+        private static List<object> BuildTsIncrDecrByArgs(string key, double value, TsTimeStamp? timestamp, long? retentionTime,
             IReadOnlyCollection<TimeSeriesLabel> labels, bool? uncompressed, long? chunkSizeBytes)
         {
-            var args = new List<object> {key, value};
+            var args = new List<object> { key, value };
             args.AddTimeStamp(timestamp);
             args.AddRetentionTime(retentionTime);
             args.AddChunkSize(chunkSizeBytes);
@@ -149,19 +145,32 @@ namespace NRedisTimeSeries
             return args;
         }
 
-        private static List<object> BuildTsMaddArgs(IReadOnlyCollection<(string key, TimeStamp timestamp, double value)> sequence)
+        private static List<object> BuildTsMaddArgs(IReadOnlyCollection<(string key, TsTimeStamp timestamp, double value)> sequence)
         {
             var args = new List<object>();
-            foreach (var tuple in sequence)
+            foreach (var (key, timestamp, value) in sequence)
             {
-                args.Add(tuple.key);
-                args.Add(tuple.timestamp.Value);
-                args.Add(tuple.value);
+                args.Add(key);
+                args.Add(timestamp.UnixMilliseconds);
+                args.Add(value);
             }
 
             return args;
         }
-        
+
+        private static List<object> BuildTsMaddArgs(IReadOnlyCollection<(string key, double value)> sequence)
+        {
+            var args = new List<object>();
+            foreach (var (key, value) in sequence)
+            {
+                args.Add(key);
+                args.Add("*");
+                args.Add(value);
+            }
+
+            return args;
+        }
+
         private static List<object> BuildTsMgetArgs(IReadOnlyCollection<string> filter, bool? withLabels)
         {
             var args = new List<object>();
@@ -169,25 +178,37 @@ namespace NRedisTimeSeries
             AddFilters(args, filter);
             return args;
         }
-        
-        private static List<object> BuildRangeArgs(string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, long? count,
-            Aggregation aggregation, long? timeBucket)
+
+        private static List<object> BuildRangeArgs(string key, TsTimeStamp fromTimeStamp, TsTimeStamp toTimeStamp, long? count,
+            Aggregation aggregation, TsTimeBucket? timeBucket)
         {
-            var args = new List<object>()
-                {key, fromTimeStamp.Value, toTimeStamp.Value};
+            var args = new List<object>() { key, fromTimeStamp.UnixMilliseconds, toTimeStamp.UnixMilliseconds };
             args.AddCount(count);
-            args.AddAggregation(aggregation, timeBucket);
+
+            if (aggregation != null && !timeBucket.HasValue)
+                throw new ArgumentException("RANGE Aggregation should have timeBucket value");
+
+            if (aggregation != null && timeBucket.HasValue)
+                args.AddAggregation(aggregation, timeBucket.Value);
+
             return args;
         }
-        
-        private static List<object> BuildMultiRangeArgs(TimeStamp fromTimeStamp, TimeStamp toTimeStamp, IReadOnlyCollection<string> filter,
-            long? count, Aggregation aggregation, long? timeBucket, bool? withLabels)
+
+        private static List<object> BuildMultiRangeArgs(TsTimeStamp fromTimeStamp, TsTimeStamp toTimeStamp, IReadOnlyCollection<string> filter,
+            long? count, Aggregation aggregation, TsTimeBucket? timeBucket, bool? withLabels)
         {
-            var args = new List<object>() {fromTimeStamp.Value, toTimeStamp.Value};
+            var args = new List<object>() { fromTimeStamp.UnixMilliseconds, toTimeStamp.UnixMilliseconds };
             args.AddCount(count);
-            args.AddAggregation(aggregation, timeBucket);
+
+            if (aggregation != null && !timeBucket.HasValue)
+                throw new ArgumentException("RANGE Aggregation should have timeBucket value");
+
+            if (aggregation != null && timeBucket.HasValue)
+                args.AddAggregation(aggregation, timeBucket.Value);
+
             args.AddWithLabels(withLabels);
             args.AddFilters(filter);
+
             return args;
         }
     }
