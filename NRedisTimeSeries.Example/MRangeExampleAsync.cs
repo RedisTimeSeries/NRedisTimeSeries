@@ -64,7 +64,7 @@ namespace NRedisTimeSeries.Example
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
             var filter = new List<string> { "MRANGEkey=MRANGEvalue" };
-            var results = await db.TimeSeriesMRangeAsync(TsTimeStamp.MinValue, TsTimeStamp.MaxValue, filter, aggregation: Aggregation.MIN, timeBucket: 50);
+            var results = await db.TimeSeriesMRangeAsync(TsTimeStamp.MinValue, TsTimeStamp.MaxValue, filter, aggregation: Aggregation.MIN, timeBucket: new TsTimeBucket(50));
             // Values extraction example. No lables in this case.
             foreach (var result in results)
             {

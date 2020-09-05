@@ -49,7 +49,7 @@ namespace NRedisTimeSeries.Example
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            await db.TimeSeriesRangeAsync("my_ts", TsTimeStamp.MinValue, TsTimeStamp.MaxValue, aggregation: Aggregation.MIN, timeBucket: 50);
+            await db.TimeSeriesRangeAsync("my_ts", TsTimeStamp.MinValue, TsTimeStamp.MaxValue, aggregation: Aggregation.MIN, timeBucket: new TsTimeBucket(50));
             redis.Close();
         }
     }
