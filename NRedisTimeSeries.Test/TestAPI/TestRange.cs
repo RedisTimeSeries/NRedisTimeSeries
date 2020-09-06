@@ -50,7 +50,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
             var tuples = CreateData(db, 50);
-            Assert.Equal(tuples, db.TimeSeriesRange(key, "-", "+", aggregation: Aggregation.MIN, timeBucket: 50));
+            Assert.Equal(tuples, db.TimeSeriesRange(key, "-", "+", aggregation: TsAggregation.Min, timeBucket: 50));
         }
 
         [Fact]
@@ -58,7 +58,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
             var tuples = CreateData(db, 50);
-            var ex = Assert.Throws<ArgumentException>(() => db.TimeSeriesRange(key, "-", "+", aggregation: Aggregation.AVG));
+            var ex = Assert.Throws<ArgumentException>(() => db.TimeSeriesRange(key, "-", "+", aggregation: TsAggregation.Avg));
             Assert.Equal("RANGE Aggregation should have timeBucket value", ex.Message);
 
         }

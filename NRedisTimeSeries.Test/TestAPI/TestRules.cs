@@ -11,25 +11,25 @@ namespace NRedisTimeSeries.Test.TestAPI
     {
         private string srcKey = "RULES_TEST_SRC";
 
-        private Dictionary<Aggregation, string> destKeys;
+        private Dictionary<TsAggregation, string> destKeys;
 
         public TestRules(RedisFixture redisFixture) : base(redisFixture)
         {
 
-            destKeys = new Dictionary<Aggregation, string>
+            destKeys = new Dictionary<TsAggregation, string>
             {
-                { Aggregation.AVG, "RULES_DEST_" + Aggregation.AVG },
-                { Aggregation.COUNT, "RULES_DEST_" + Aggregation.COUNT },
-                { Aggregation.FIRST, "RULES_DEST_" + Aggregation.FIRST },
-                { Aggregation.LAST, "RULES_DEST_" + Aggregation.LAST },
-                { Aggregation.MAX, "RULES_DEST_" + Aggregation.MAX },
-                { Aggregation.MIN, "RULES_DEST_" + Aggregation.MIN },
-                { Aggregation.RANGE, "RULES_DEST_" + Aggregation.RANGE },
-                { Aggregation.STDP, "RULES_DEST_" + Aggregation.STDP },
-                { Aggregation.STDS, "RULES_DEST_" + Aggregation.STDS },
-                { Aggregation.SUM, "RULES_DEST_" + Aggregation.SUM },
-                { Aggregation.VARP, "RULES_DEST_" + Aggregation.VARP },
-                { Aggregation.VARS, "RULES_DEST_" + Aggregation.VARS }
+                { TsAggregation.Avg, "RULES_DEST_" + TsAggregation.Avg },
+                { TsAggregation.Count, "RULES_DEST_" + TsAggregation.Count },
+                { TsAggregation.First, "RULES_DEST_" + TsAggregation.First },
+                { TsAggregation.Last, "RULES_DEST_" + TsAggregation.Last },
+                { TsAggregation.Max, "RULES_DEST_" + TsAggregation.Max },
+                { TsAggregation.Min, "RULES_DEST_" + TsAggregation.Min },
+                { TsAggregation.Range, "RULES_DEST_" + TsAggregation.Range },
+                { TsAggregation.StdP, "RULES_DEST_" + TsAggregation.StdP },
+                { TsAggregation.StdS, "RULES_DEST_" + TsAggregation.StdS },
+                { TsAggregation.Sum, "RULES_DEST_" + TsAggregation.Sum },
+                { TsAggregation.VarP, "RULES_DEST_" + TsAggregation.VarP },
+                { TsAggregation.VarS, "RULES_DEST_" + TsAggregation.VarS }
             };
         }
 
@@ -53,7 +53,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
             long timeBucket = 50;
             var rules = new List<TimeSeriesRule>();
-            var rulesMap = new Dictionary<Aggregation, TimeSeriesRule>();
+            var rulesMap = new Dictionary<TsAggregation, TimeSeriesRule>();
             foreach(var aggregation in destKeys.Keys)
             {
                 var rule = new TimeSeriesRule(destKeys[aggregation], timeBucket, aggregation);
@@ -77,9 +77,9 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestNonExistingSrc()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            string destKey = "RULES_DEST_" + Aggregation.AVG;
+            string destKey = "RULES_DEST_" + TsAggregation.Avg;
             db.TimeSeriesCreate(destKey);
-            TimeSeriesRule rule = new TimeSeriesRule(destKey, 50, Aggregation.AVG);
+            TimeSeriesRule rule = new TimeSeriesRule(destKey, 50, TsAggregation.Avg);
             var ex = Assert.Throws<RedisServerException>(() => db.TimeSeriesCreateRule(srcKey, rule));
             Assert.Equal("ERR TSDB: the key does not exist", ex.Message);
             ex = Assert.Throws<RedisServerException>(() => db.TimeSeriesDeleteRule(srcKey, destKey));
@@ -90,9 +90,9 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestNonExisitingDestinaion()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            string destKey = "RULES_DEST_" + Aggregation.AVG;
+            string destKey = "RULES_DEST_" + TsAggregation.Avg;
             db.TimeSeriesCreate(srcKey);
-            TimeSeriesRule rule = new TimeSeriesRule(destKey, 50, Aggregation.AVG);
+            TimeSeriesRule rule = new TimeSeriesRule(destKey, 50, TsAggregation.Avg);
             var ex = Assert.Throws<RedisServerException>(() => db.TimeSeriesCreateRule(srcKey, rule));
             Assert.Equal("ERR TSDB: the key does not exist", ex.Message);
             ex = Assert.Throws<RedisServerException>(() => db.TimeSeriesDeleteRule(srcKey, destKey));
