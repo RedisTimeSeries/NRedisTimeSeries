@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.DataTypes;
+using NRedisTimeSeries.Extensions;
 
 namespace NRedisTimeSeries
 {
@@ -55,12 +56,12 @@ namespace NRedisTimeSeries
             }
         }
 
-        private static void AddAggregation(this IList<object> args, Aggregation aggregation, long? timeBucket)
+        private static void AddAggregation(this IList<object> args, TsAggregation? aggregation, long? timeBucket)
         {
             if(aggregation != null)
             {
                 args.Add(CommandArgs.AGGREGATION);
-                args.Add(aggregation.Name);
+                args.Add(aggregation.Value.AsArg());
                 if (!timeBucket.HasValue)
                 {
                     throw new ArgumentException("RANGE Aggregation should have timeBucket value");
@@ -103,7 +104,7 @@ namespace NRedisTimeSeries
         {
             args.Add(rule.DestKey);
             args.Add(CommandArgs.AGGREGATION);
-            args.Add(rule.Aggregation.Name);
+            args.Add(rule.Aggregation.AsArg());
             args.Add(rule.TimeBucket);
         }
         
@@ -171,7 +172,7 @@ namespace NRedisTimeSeries
         }
         
         private static List<object> BuildRangeArgs(string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, long? count,
-            Aggregation aggregation, long? timeBucket)
+            TsAggregation? aggregation, long? timeBucket)
         {
             var args = new List<object>()
                 {key, fromTimeStamp.Value, toTimeStamp.Value};
@@ -181,7 +182,7 @@ namespace NRedisTimeSeries
         }
         
         private static List<object> BuildMultiRangeArgs(TimeStamp fromTimeStamp, TimeStamp toTimeStamp, IReadOnlyCollection<string> filter,
-            long? count, Aggregation aggregation, long? timeBucket, bool? withLabels)
+            long? count, TsAggregation? aggregation, long? timeBucket, bool? withLabels)
         {
             var args = new List<object>() {fromTimeStamp.Value, toTimeStamp.Value};
             args.AddCount(count);

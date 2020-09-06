@@ -128,7 +128,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = await CreateData(db, keys, 50);
-            var results = await db.TimeSeriesMRevRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, aggregation: Aggregation.MIN, timeBucket: 50);
+            var results = await db.TimeSeriesMRevRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, aggregation: TsAggregation.Min, timeBucket: 50);
             Assert.Equal(keys.Length, results.Count);
             for (var i = 0; i < results.Count; i++)
             {
@@ -172,7 +172,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             {
                 await db.TimeSeriesMRevRangeAsync("-", "+",
                     filter: new List<string>() { $"key=value" },
-                    aggregation: Aggregation.AVG);
+                    aggregation: TsAggregation.Avg);
             });
             Assert.Equal("RANGE Aggregation should have timeBucket value", ex.Message);
         }

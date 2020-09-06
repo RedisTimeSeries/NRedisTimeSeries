@@ -1,131 +1,73 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace NRedisTimeSeries.Commands
+﻿namespace NRedisTimeSeries.Commands
 {
     /// <summary>
-    /// A wrapper class around aggregation name. Each static member of the class is a wrapper around RedisTimerSeries aggregation.
-    /// This class can be cast to and from string.
+    /// An aggregation type to be used with a time bucket.
     /// </summary>
-    public class Aggregation
+    public enum TsAggregation
     {
-        private Aggregation(string name) => this.Name = name;
+        /// <summary>
+        /// The average of all samples in the aggregation
+        /// </summary>
+        Avg,
 
         /// <summary>
-        /// String property with the aggregation name.
+        /// A sum of all samples in the aggregation
         /// </summary>
-        public string Name { get; private set; }
+        Sum,
 
         /// <summary>
-        /// AVG Aggregation
+        /// A minimum sample of all samples in the aggregation
         /// </summary>
-        public static Aggregation AVG { get { return new Aggregation("avg"); } }
+        Min,
 
         /// <summary>
-        /// SUM Aggregation
+        /// A maximum sample of all samples in the aggregation
         /// </summary>
-        public static Aggregation SUM { get { return new Aggregation("sum"); } }
+        Max,
 
         /// <summary>
-        /// MIN Aggregation
+        /// A range of the min and max sample of all samples in the aggregation (range r = max-min)
+        /// For example if the min sample was 100 and the max was 400, the range aggregation would return 300
         /// </summary>
-        public static Aggregation MIN { get { return new Aggregation("min"); } }
+        Range,
 
         /// <summary>
-        /// MAX Aggregation
+        /// The total number of all samples in the aggregation
         /// </summary>
-        public static Aggregation MAX { get { return new Aggregation("max"); } }
+        Count,
 
         /// <summary>
-        /// RANGE Aggregation
+        /// The first sample in the aggregation
         /// </summary>
-        public static Aggregation RANGE { get { return new Aggregation("range"); } }
+        First,
 
         /// <summary>
-        /// COUNT Aggregation
+        /// The last sample in the aggregation
         /// </summary>
-        public static Aggregation COUNT { get { return new Aggregation("count"); } }
+        Last,
 
         /// <summary>
-        /// FIRST Aggregarion
+        /// The standard deviation based on the entire population
+        /// The standard deviation is a measure of how widely values are dispersed from the average sample in the aggregation
         /// </summary>
-        public static Aggregation FIRST { get { return new Aggregation("first"); } }
+        StdP,
 
         /// <summary>
-        /// LAST Aggregation
+        /// The standard deviation based on a sample of the population
+        /// The standard deviation is a measure of how widely values are dispersed from the average sample in the aggregation
         /// </summary>
-        public static Aggregation LAST { get { return new Aggregation("last"); } }
+        StdS,
 
         /// <summary>
-        /// STD.P Aggregation
+        /// The variance based on the entire population
+        /// The variance is the average of the squared differences from the mean
         /// </summary>
-        public static Aggregation STDP { get { return new Aggregation("std.p"); } }
+        VarP,
 
         /// <summary>
-        /// STD.S Aggregation
+        /// The variance based on a sample of the population
+        /// The variance is the average of the squared differences from the mean
         /// </summary>
-        public static Aggregation STDS { get { return new Aggregation("std.s"); } }
-
-        /// <summary>
-        /// VAR.P Aggregation
-        /// </summary>
-        public static Aggregation VARP { get { return new Aggregation("var.p"); } }
-
-        /// <summary>
-        /// VAR.S Aggregation
-        /// </summary>
-        public static Aggregation VARS { get { return new Aggregation("var.s"); } }
-
-        /// <summary>
-        /// Implicit cast to string.
-        /// </summary>
-        /// <param name="aggregation">Aggregation object</param>
-        public static implicit operator string(Aggregation aggregation) => aggregation.Name;
-
-        /// <summary>
-        /// Implicit cast from string.
-        /// </summary>
-        /// <param name="s">string</param>
-        public static implicit operator Aggregation(string s) => new Aggregation(s);
-
-        /// <summary>
-        /// Enumerator of all possible Aggregation types
-        /// </summary>
-        /// <returns>An Enumerator of all Aggregation types. i.e. AVG, SUM, MIN etc...</returns>
-        public static IEnumerable<Aggregation> GetEnumerator()
-        {
-            yield return AVG;
-            yield return SUM;
-            yield return MIN;
-            yield return MAX;
-            yield return RANGE;
-            yield return COUNT;
-            yield return FIRST;
-            yield return LAST;
-            yield return STDP;
-            yield return STDS;
-            yield return VARP;
-            yield return VARS;
-        }
-
-        /// <summary>
-        /// Equality of Aggregation objects. Case Insensitive for the Name property string.
-        /// </summary>
-        /// <param name="obj">Object to compare</param>
-        /// <returns>If two Aggregation objects are equal.</returns>
-        public override bool Equals(object obj)
-        {
-            return obj is Aggregation aggregation &&
-                   Name.Equals(aggregation.Name, StringComparison.OrdinalIgnoreCase);
-        }
-
-        /// <summary>
-        /// Aggregation object hash code.
-        /// </summary>
-        /// <returns>Aggregation object hash code.</returns>
-        public override int GetHashCode()
-        {
-            return 539060726 + EqualityComparer<string>.Default.GetHashCode(Name);
-        }
+        VarS,
     }
 }
