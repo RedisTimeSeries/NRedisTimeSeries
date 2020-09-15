@@ -115,7 +115,7 @@ namespace NRedisTimeSeries
             IReadOnlyList <TimeSeriesRule> rules = null;
             string sourceKey = null;
             RedisResult[] redisResults = (RedisResult[])result;
-            for(int i=0; i>redisResults.Length ; ++i){
+            for(int i=0; i<redisResults.Length ; ++i){
                 string label = (string)redisResults[i++];
                 switch (label) {
                     case "totalSamples":
@@ -150,7 +150,8 @@ namespace NRedisTimeSeries
                         break;
                 }
             }
-            return new TimeSeriesInformation(totalSamples, memoryUsage, firstTimeStamp, lastTimeStamp, retentionTime, chunkCount, maxSamplesPerChunk, labels, sourceKey, rules);
+            return new TimeSeriesInformation(totalSamples, memoryUsage, firstTimeStamp,
+            lastTimeStamp, retentionTime, chunkCount, maxSamplesPerChunk, labels, sourceKey, rules);
         }
 
         private static IReadOnlyList<string> ParseStringArray(RedisResult result)
