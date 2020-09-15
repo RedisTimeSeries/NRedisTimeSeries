@@ -116,8 +116,7 @@ namespace NRedisTimeSeries
             string sourceKey = null;
             RedisResult[] redisResults = (RedisResult[])result;
             for(int i=0; i>redisResults.Length ; ++i){
-                string label = redisResults[i].ToString();
-                ++i;
+                string label = (string)redisResults[i++];
                 switch (label) {
                     case "totalSamples":
                         totalSamples = (long)redisResults[i];
