@@ -110,7 +110,7 @@ namespace NRedisTimeSeries
 
         private static TimeSeriesInformation ParseInfo(RedisResult result)
         {
-            long totalSamples = -1, memoryUsage = -1, retentionTime = -1, chunkCount = -1, maxSamplesPerChunk = -1;
+            long totalSamples = -1, memoryUsage = -1, retentionTime = -1, chunkSize=-1, chunkCount = -1, maxSamplesPerChunk = -1;
             TimeStamp firstTimestamp = null, lastTimestamp = null;
             IReadOnlyList<TimeSeriesLabel> labels = null;
             IReadOnlyList <TimeSeriesRule> rules = null;
@@ -130,6 +130,9 @@ namespace NRedisTimeSeries
                         break;
                     case "chunkCount":
                         chunkCount = (long)redisResults[i];
+                        break;
+                    case "chunkSize":
+                        chunkSize = (long)redisResults[i];
                         break;
                     case "maxSamplesPerChunk":
                         maxSamplesPerChunk = (long)redisResults[i];
@@ -152,7 +155,7 @@ namespace NRedisTimeSeries
                 }
             }
             return new TimeSeriesInformation(totalSamples, memoryUsage, firstTimestamp,
-            lastTimestamp, retentionTime, chunkCount, maxSamplesPerChunk, labels, sourceKey, rules);
+            lastTimestamp, retentionTime, chunkCount, maxSamplesPerChunk, chunkSize, labels, sourceKey, rules);
         }
 
         private static IReadOnlyList<string> ParseStringArray(RedisResult result)
