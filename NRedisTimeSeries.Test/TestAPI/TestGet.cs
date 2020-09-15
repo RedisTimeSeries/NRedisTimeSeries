@@ -22,7 +22,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
             var ex = Assert.Throws<RedisServerException>(()=>db.TimeSeriesGet(key));
-            Assert.Equal("TSDB: the key does not exist", ex.Message);
+            Assert.Equal("ERR TSDB: the key does not exist", ex.Message);
         }
 
         [Fact]

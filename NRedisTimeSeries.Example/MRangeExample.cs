@@ -17,7 +17,7 @@ namespace NRedisTimeSeries.Example
         /// In this case, the strings are implicitly casted into TimeStamp objects.
         /// The TimeSeriesMRange command returns an IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)>collection.
         /// </summary>
-        public static void  BasicMRangeExample()
+        public static void BasicMRangeExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
@@ -43,7 +43,7 @@ namespace NRedisTimeSeries.Example
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
             var filter = new List<string> { "MRANGEkey=MRANGEvalue" };
-            var results = db.TimeSeriesMRange("-", "+", filter, count:50);
+            var results = db.TimeSeriesMRange("-", "+", filter, count: 50);
             // Values extraction example. No lables in this case.
             foreach (var result in results)
             {
@@ -64,7 +64,7 @@ namespace NRedisTimeSeries.Example
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
             var filter = new List<string> { "MRANGEkey=MRANGEvalue" };
-            var results = db.TimeSeriesMRange("-", "+", filter, aggregation:Aggregation.MIN, timeBucket:50);
+            var results = db.TimeSeriesMRange("-", "+", filter, aggregation: TsAggregation.Min, timeBucket: 50);
             // Values extraction example. No lables in this case.
             foreach (var result in results)
             {
@@ -85,7 +85,7 @@ namespace NRedisTimeSeries.Example
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
             var filter = new List<string> { "MRANGEkey=MRANGEvalue" };
-            var results = db.TimeSeriesMRange("-", "+", filter,withLabels:true);
+            var results = db.TimeSeriesMRange("-", "+", filter, withLabels: true);
             // Values extraction example.
             foreach (var result in results)
             {

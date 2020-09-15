@@ -1,36 +1,35 @@
-﻿using NRedisTimeSeries.Commands;
+﻿using System;
+using System.Collections.Generic;
+using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace NRedisTimeSeries.Test.TestAPI
 {
-    public class TestMRangeAsync : AbstractTimeSeriesTest
+    public class TestMRevRange : AbstractTimeSeriesTest
     {
-        public TestMRangeAsync(RedisFixture redisFixture) : base(redisFixture) { }
+        public TestMRevRange(RedisFixture redisFixture) : base(redisFixture) { }
 
-        private async Task<List<TimeSeriesTuple>> CreateData(IDatabase db, string[] keys, int timeBucket)
+        private List<TimeSeriesTuple> CreateData(IDatabase db, string[] keys, int timeBucket)
         {
             var tuples = new List<TimeSeriesTuple>();
 
             for (var i = 0; i < 10; i++)
             {
-                var ts = new TimeStamp(i * timeBucket);
+                var ts = new TimeStamp(i*timeBucket);
                 foreach (var key in keys)
                 {
-                    await db.TimeSeriesAddAsync(key, ts, i);
+                    db.TimeSeriesAdd(key, ts, i);
+
                 }
                 tuples.Add(new TimeSeriesTuple(ts, i));
             }
-
             return tuples;
         }
 
         [Fact]
-        public async Task TestSimpleMRange()
+        public void TestSimpleMRevRange()
         {
             var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
@@ -38,22 +37,22 @@ namespace NRedisTimeSeries.Test.TestAPI
             var labels = new List<TimeSeriesLabel> { label };
             foreach (var key in keys)
             {
-                await db.TimeSeriesCreateAsync(key, labels: labels);
+                db.TimeSeriesCreate(key, labels: labels);
             }
 
-            var tuples = await CreateData(db, keys, 50);
-            var results = db.TimeSeriesMRange("-", "+", new List<string> { $"{keys[0]}=value" });
+            var tuples = CreateData(db, keys, 50);
+            var results = db.TimeSeriesMRevRange("-", "+", new List<string>{ $"{keys[0]}=value" });
             Assert.Equal(keys.Length, results.Count);
             for (var i = 0; i < results.Count; i++)
             {
                 Assert.Equal(keys[i], results[i].key);
                 Assert.Equal(0, results[i].labels.Count);
-                Assert.Equal(tuples, results[i].values);
+                Assert.Equal(ReverseData(tuples), results[i].values);
             }
         }
 
         [Fact]
-        public async Task TestMRangeWithLabels()
+        public void TestMRevRangeWithLabels()
         {
             var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
@@ -61,38 +60,39 @@ namespace NRedisTimeSeries.Test.TestAPI
             var labels = new List<TimeSeriesLabel> { label };
             foreach (var key in keys)
             {
-                await db.TimeSeriesCreateAsync(key, labels: labels);
+                db.TimeSeriesCreate(key, labels: labels);
             }
 
-            var tuples = await CreateData(db, keys, 50);
-            var results = await db.TimeSeriesMRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, withLabels: true);
+            var tuples = CreateData(db, keys, 50);
+            var results = db.TimeSeriesMRevRange("-", "+", new List<string> { $"{keys[0]}=value" }, withLabels: true);
+
             Assert.Equal(keys.Length, results.Count);
             for (var i = 0; i < results.Count; i++)
             {
                 Assert.Equal(keys[i], results[i].key);
                 Assert.Equal(labels, results[i].labels);
-                Assert.Equal(tuples, results[i].values);
+                Assert.Equal(ReverseData(tuples), results[i].values);
             }
         }
 
         [Fact]
-        public async Task TestMRangeFilter()
+        public void TestMRevRangeFilter()
         {
             var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
             var label = new TimeSeriesLabel(keys[0], "value");
             var labels = new List<TimeSeriesLabel> { label };
-            await db.TimeSeriesCreateAsync(keys[0], labels: labels);
-            var tuples = await CreateData(db, keys, 50);
-            var results = await db.TimeSeriesMRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" });
+            db.TimeSeriesCreateAsync(keys[0], labels: labels);
+            var tuples = CreateData(db, keys, 50);
+            var results = db.TimeSeriesMRevRange("-", "+", new List<string> { $"{keys[0]}=value" });
             Assert.Equal(1, results.Count);
             Assert.Equal(keys[0], results[0].key);
             Assert.Equal(0, results[0].labels.Count);
-            Assert.Equal(tuples, results[0].values);
+            Assert.Equal(ReverseData(tuples), results[0].values);
         }
 
         [Fact]
-        public async Task TestMRangeCount()
+        public void TestMRevRangeCount()
         {
             var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
@@ -100,23 +100,23 @@ namespace NRedisTimeSeries.Test.TestAPI
             var labels = new List<TimeSeriesLabel> { label };
             foreach (var key in keys)
             {
-                await db.TimeSeriesCreateAsync(key, labels: labels);
+                db.TimeSeriesCreate(key, labels: labels);
             }
 
-            var tuples = await CreateData(db, keys, 50);
+            var tuples = CreateData(db, keys, 50);
             var count = 5L;
-            var results = await db.TimeSeriesMRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, count: count);
+            var results = db.TimeSeriesMRevRange("-", "+", new List<string> { $"{keys[0]}=value" }, count: count);
             Assert.Equal(keys.Length, results.Count);
             for (var i = 0; i < results.Count; i++)
             {
                 Assert.Equal(keys[i], results[i].key);
                 Assert.Equal(0, results[i].labels.Count);
-                Assert.Equal(tuples.GetRange(0, (int)count), results[i].values);
+                Assert.Equal(ReverseData(tuples).GetRange(0, (int)count), results[i].values);
             }
         }
 
         [Fact]
-        public async Task TestMRangeAggregation()
+        public void TestMRevRangeAggregation()
         {
             var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
@@ -124,22 +124,22 @@ namespace NRedisTimeSeries.Test.TestAPI
             var labels = new List<TimeSeriesLabel> { label };
             foreach (var key in keys)
             {
-                await db.TimeSeriesCreateAsync(key, labels: labels);
+                db.TimeSeriesCreateAsync(key, labels: labels);
             }
 
-            var tuples = await CreateData(db, keys, 50);
-            var results = await db.TimeSeriesMRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, aggregation: TsAggregation.Min, timeBucket: 50);
+            var tuples = CreateData(db, keys, 50);
+            var results = db.TimeSeriesMRevRange("-", "+", new List<string> { $"{keys[0]}=value" }, aggregation: TsAggregation.Min, timeBucket: 50);
             Assert.Equal(keys.Length, results.Count);
             for (var i = 0; i < results.Count; i++)
             {
                 Assert.Equal(keys[i], results[i].key);
                 Assert.Equal(0, results[i].labels.Count);
-                Assert.Equal(tuples, results[i].values);
+                Assert.Equal(ReverseData(tuples), results[i].values);
             }
         }
 
         [Fact]
-        public async Task TestMissingFilter()
+        public void TestMissingFilter()
         {
             var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
@@ -147,16 +147,16 @@ namespace NRedisTimeSeries.Test.TestAPI
             var labels = new List<TimeSeriesLabel> { label };
             foreach (var key in keys)
             {
-                await db.TimeSeriesCreateAsync(key, labels: labels);
+                db.TimeSeriesCreateAsync(key, labels: labels);
             }
 
-            var tuples = await CreateData(db, keys, 50);
-            var ex = await Assert.ThrowsAsync<ArgumentException>(async () => await db.TimeSeriesMRangeAsync("-", "+", new List<string>()));
+            var tuples = CreateData(db, keys, 50);
+            var ex = Assert.Throws<ArgumentException>(() => db.TimeSeriesMRevRange("-", "+", new List<string>()));
             Assert.Equal("There should be at least one filter on MRANGE/MREVRANGE", ex.Message);
         }
 
         [Fact]
-        public async Task TestMissingTimeBucket()
+        public void TestMissingTimeBucket()
         {
             var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
@@ -164,17 +164,13 @@ namespace NRedisTimeSeries.Test.TestAPI
             var labels = new List<TimeSeriesLabel> { label };
             foreach (var key in keys)
             {
-                await db.TimeSeriesCreateAsync(key, labels: labels);
+                db.TimeSeriesCreateAsync(key, labels: labels);
             }
 
-            var tuples = await CreateData(db, keys, 50);
-            var ex = await Assert.ThrowsAsync<ArgumentException>(async () =>
-            {
-                await db.TimeSeriesMRangeAsync("-", "+",
-                    filter: new List<string>() { $"key=value" },
-                    aggregation: TsAggregation.Avg);
-            });
+            var tuples = CreateData(db, keys, 50);
+            var ex = Assert.Throws<ArgumentException>(() => db.TimeSeriesMRevRange("-", "+", new List<string> { "key=MissingTimeBucket" }, aggregation: TsAggregation.Avg));
             Assert.Equal("RANGE Aggregation should have timeBucket value", ex.Message);
+
         }
     }
 }

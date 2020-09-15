@@ -11,6 +11,37 @@ namespace NRedisTimeSeries.Test.TestAPI
     {
         public TestMAddAsync(RedisFixture redisFixture) : base(redisFixture) { }
 
+
+        [Fact]
+        public async Task TestStarMADD()
+        {
+            var keys = CreateKeyNames(2);
+
+            IDatabase db = redisFixture.Redis.GetDatabase();
+
+            foreach (string key in keys)
+            {
+                await db.TimeSeriesCreateAsync(key);
+            }
+
+            List<(string, TimeStamp, double)> sequence = new List<(string, TimeStamp, double)>(keys.Length);
+            foreach (var keyname in keys)
+            {
+                sequence.Add((keyname, "*", 1.1));
+            }
+            var response = await db.TimeSeriesMAddAsync(sequence);
+
+            Assert.Equal(keys.Length, response.Count);
+
+            foreach (var key in keys)
+            {
+                TimeSeriesInformation info = await db.TimeSeriesInfoAsync(key);
+                Assert.True(info.FirstTimeStamp > 0);
+                Assert.Equal(info.FirstTimeStamp, info.LastTimeStamp);
+            }
+        }
+
+
         [Fact]
         public async Task TestSuccessfulMAdd()
         {

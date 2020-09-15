@@ -21,7 +21,7 @@ namespace NRedisTimeSeries.DataTypes
         /// <summary>
         /// Rule's aggregation type.
         /// </summary>
-        public Aggregation Aggregation { get; private set; }
+        public TsAggregation Aggregation { get; private set; }
 
         /// <summary>
         /// Builds a time-series aggregation rule
@@ -29,7 +29,7 @@ namespace NRedisTimeSeries.DataTypes
         /// <param name="destKey">Rule's destination key.</param>
         /// <param name="timeBucket">Rule's aggregation time bucket.</param>
         /// <param name="aggregation">Rule's aggregation type.</param>
-        public TimeSeriesRule(string destKey, long timeBucket, Aggregation aggregation) =>
+        public TimeSeriesRule(string destKey, long timeBucket, TsAggregation aggregation) =>
             (DestKey, TimeBucket, Aggregation) = (destKey, timeBucket, aggregation);
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace NRedisTimeSeries.DataTypes
             obj is TimeSeriesRule rule &&
             DestKey == rule.DestKey &&
             TimeBucket == rule.TimeBucket &&
-            EqualityComparer<Aggregation>.Default.Equals(Aggregation, rule.Aggregation);
+            Aggregation == rule.Aggregation;
 
         /// <summary>
         /// TimeSeriesRule object hash code.
@@ -52,7 +52,7 @@ namespace NRedisTimeSeries.DataTypes
             var hashCode = 1554951643;
             hashCode = (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(DestKey);
             hashCode = (hashCode * -1521134295) + TimeBucket.GetHashCode();
-            hashCode = (hashCode * -1521134295) + EqualityComparer<Aggregation>.Default.GetHashCode(Aggregation);
+            hashCode = (hashCode * -1521134295) + ((int)Aggregation).GetHashCode();
             return hashCode;
         }
     }
