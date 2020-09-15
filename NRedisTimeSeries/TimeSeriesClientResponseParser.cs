@@ -135,7 +135,9 @@ namespace NRedisTimeSeries
                         chunkSize = (long)redisResults[i];
                         break;
                     case "maxSamplesPerChunk":
-                        maxSamplesPerChunk = (long)redisResults[i];
+                        // If the property name is maxSamplesPerChunk then this is an old
+                        // version of RedisTimeSeries and we used the number of samples before ( now Bytes )
+                        chunkSize = chunkSize * 16;
                         break;
                     case "firstTimestamp":
                         firstTimestamp = ParseTimeStamp(redisResults[i]);
@@ -155,7 +157,7 @@ namespace NRedisTimeSeries
                 }
             }
             return new TimeSeriesInformation(totalSamples, memoryUsage, firstTimestamp,
-            lastTimestamp, retentionTime, chunkCount, maxSamplesPerChunk, chunkSize, labels, sourceKey, rules);
+            lastTimestamp, retentionTime, chunkCount, chunkSize, labels, sourceKey, rules);
         }
 
         private static IReadOnlyList<string> ParseStringArray(RedisResult result)
