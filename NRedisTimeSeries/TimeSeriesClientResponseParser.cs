@@ -109,18 +109,49 @@ namespace NRedisTimeSeries
 
         private static TimeSeriesInformation ParseInfo(RedisResult result)
         {
+            long totalSamples = -1, memoryUsage = -1, retentionTime = -1, chunkCount = -1, maxSamplesPerChunk = -1;
+            TimeStamp firstTimeStamp = null, lastTimeStamp = null;
+            IReadOnlyList<TimeSeriesLabel> labels = null;
+            IReadOnlyList <TimeSeriesRule> rules = null;
+            string sourceKey = null;
             RedisResult[] redisResults = (RedisResult[])result;
-            long totalSamples = (long)redisResults[1];
-            long memoryUsage = (long)redisResults[3];
-            TimeStamp firstTimeStamp = ParseTimeStamp(redisResults[5]);
-            TimeStamp lastTimeStamp = ParseTimeStamp(redisResults[7]);
-            long retentionTime = (long)redisResults[9];
-            long chunkCount = (long)redisResults[11];
-            long maxSamplesPerChunk = (long)redisResults[13];
-            IReadOnlyList<TimeSeriesLabel> labels = ParseLabelArray(redisResults[15]);
-            string destKey = (string)redisResults[17];
-            IReadOnlyList <TimeSeriesRule> rules = ParseRuleArray(redisResults[19]);
-            return new TimeSeriesInformation(totalSamples, memoryUsage, firstTimeStamp, lastTimeStamp, retentionTime, chunkCount, maxSamplesPerChunk, labels, destKey, rules);
+            for(int i=0; i>redisResults.Length ; ++i){
+                string label = redisResults[i].ToString();
+                ++i;
+                switch (label) {
+                    case "totalSamples":
+                        totalSamples = (long)redisResults[i];
+                        break;
+                    case "memoryUsage":
+                        memoryUsage = (long)redisResults[i];
+                        break;
+                    case "retentionTime":
+                        retentionTime = (long)redisResults[i];
+                        break;
+                    case "chunkCount":
+                        chunkCount = (long)redisResults[i];
+                        break;
+                    case "maxSamplesPerChunk":
+                        maxSamplesPerChunk = (long)redisResults[i];
+                        break;
+                    case "firstTimeStamp":
+                        firstTimeStamp = ParseTimeStamp(redisResults[i]);
+                        break;
+                    case "lastTimeStamp":
+                        lastTimeStamp = ParseTimeStamp(redisResults[i]);
+                        break;
+                    case "labels":
+                        labels = ParseLabelArray(redisResults[i]);
+                        break;
+                    case "sourceKey":
+                        sourceKey = (string)redisResults[i];
+                        break;
+                    case "rules":
+                        rules = ParseRuleArray(redisResults[i]);
+                        break;
+                }
+            }
+            return new TimeSeriesInformation(totalSamples, memoryUsage, firstTimeStamp, lastTimeStamp, retentionTime, chunkCount, maxSamplesPerChunk, labels, sourceKey, rules);
         }
 
         private static IReadOnlyList<string> ParseStringArray(RedisResult result)
