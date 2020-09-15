@@ -79,6 +79,19 @@ namespace NRedisTimeSeries.Test.TestAPI
             Assert.Equal(timeStamp, info.LastTimeStamp);
             Assert.Equal(labels, info.Labels);
         }
+        
+        [Fact]
+        public async Task TestAddWithChunkSize()
+        {
+            var key = CreateKeyName();
+            var db = redisFixture.Redis.GetDatabase();
+            TimeStamp timeStamp = DateTime.UtcNow;
+            Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.1, chunkSizeBytes: 128));
+            var info = await db.TimeSeriesInfoAsync(key);
+            Assert.Equal(timeStamp, info.FirstTimeStamp);
+            Assert.Equal(timeStamp, info.LastTimeStamp);
+            Assert.Equal(128, info.ChunkSize);
+        }
 
         [Fact]
         public async Task TestAddWithUncompressed()
@@ -116,10 +129,10 @@ namespace NRedisTimeSeries.Test.TestAPI
             var value = 1.1;
             var db = redisFixture.Redis.GetDatabase();
             var ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesAddAsync(key, "+", value));
-            Assert.Equal("TSDB: invalid timestamp", ex.Message);
+            Assert.Equal("ERR TSDB: invalid timestamp", ex.Message);
 
             ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesAddAsync(key, "-", value));
-            Assert.Equal("TSDB: invalid timestamp", ex.Message);
+            Assert.Equal("ERR TSDB: invalid timestamp", ex.Message);
         }
     }
 }

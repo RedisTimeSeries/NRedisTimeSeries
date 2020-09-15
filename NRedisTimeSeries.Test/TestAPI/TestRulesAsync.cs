@@ -1,6 +1,7 @@
 ﻿using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,18 +19,19 @@ namespace NRedisTimeSeries.Test.TestAPI
             var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             await db.TimeSeriesCreateAsync(key);
+            var aggregations = (TsAggregation[])Enum.GetValues(typeof(TsAggregation));
 
-            foreach (var aggregation in Aggregation.GetEnumerator())
+            foreach (var aggregation in aggregations)
             {
-                await db.TimeSeriesCreateAsync($"{key}:{aggregation.Name}");
+                await db.TimeSeriesCreateAsync($"{key}:{aggregation}");
             }
 
             var timeBucket = 50L;
             var rules = new List<TimeSeriesRule>();
-            var rulesMap = new Dictionary<Aggregation, TimeSeriesRule>();
-            foreach (var aggregation in Aggregation.GetEnumerator())
+            var rulesMap = new Dictionary<TsAggregation, TimeSeriesRule>();
+            foreach (var aggregation in aggregations)
             {
-                var rule = new TimeSeriesRule($"{key}:{aggregation.Name}", timeBucket, aggregation);
+                var rule = new TimeSeriesRule($"{key}:{aggregation}", timeBucket, aggregation);
                 rules.Add(rule);
                 rulesMap[aggregation] = rule;
                 Assert.True(await db.TimeSeriesCreateRuleAsync(key, rule));
@@ -38,7 +40,7 @@ namespace NRedisTimeSeries.Test.TestAPI
                 Assert.Equal(rules, info.Rules);
             }
 
-            foreach (var aggregation in Aggregation.GetEnumerator())
+            foreach (var aggregation in aggregations)
             {
                 var rule = rulesMap[aggregation];
                 rules.Remove(rule);
@@ -48,22 +50,22 @@ namespace NRedisTimeSeries.Test.TestAPI
                 Assert.Equal(rules, info.Rules);
             }
 
-            await db.KeyDeleteAsync(Aggregation.GetEnumerator().Select(i => (RedisKey)$"{key}:{i.Name}").ToArray());
+            await db.KeyDeleteAsync(aggregations.Select(i => (RedisKey)$"{key}:{i}").ToArray());
         }
 
         [Fact]
         public async Task TestNonExistingSrc()
         {
             var key = CreateKeyName();
-            var aggKey = $"{key}:{Aggregation.AVG}";
+            var aggKey = $"{key}:{TsAggregation.Avg}";
             var db = redisFixture.Redis.GetDatabase();
             await db.TimeSeriesCreateAsync(aggKey);
-            var rule = new TimeSeriesRule(aggKey, 50, Aggregation.AVG);
+            var rule = new TimeSeriesRule(aggKey, 50, TsAggregation.Avg);
             var ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesCreateRuleAsync(key, rule));
-            Assert.Equal("TSDB: the key does not exist", ex.Message);
+            Assert.Equal("ERR TSDB: the key does not exist", ex.Message);
 
             ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesDeleteRuleAsync(key, aggKey));
-            Assert.Equal("TSDB: the key does not exist", ex.Message);
+            Assert.Equal("ERR TSDB: the key does not exist", ex.Message);
 
             await db.KeyDeleteAsync(aggKey);
         }
@@ -72,15 +74,15 @@ namespace NRedisTimeSeries.Test.TestAPI
         public async Task TestNonExisitingDestinaion()
         {
             var key = CreateKeyName();
-            var aggKey = $"{key}:{Aggregation.AVG}";
+            var aggKey = $"{key}:{TsAggregation.Avg}";
             var db = redisFixture.Redis.GetDatabase();
             await db.TimeSeriesCreateAsync(key);
-            var rule = new TimeSeriesRule(aggKey, 50, Aggregation.AVG);
+            var rule = new TimeSeriesRule(aggKey, 50, TsAggregation.Avg);
             var ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesCreateRuleAsync(key, rule));
-            Assert.Equal("TSDB: the key does not exist", ex.Message);
+            Assert.Equal("ERR TSDB: the key does not exist", ex.Message);
 
             ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesDeleteRuleAsync(key, aggKey));
-            Assert.Equal("TSDB: compaction rule does not exist", ex.Message);
+            Assert.Equal("ERR TSDB: compaction rule does not exist", ex.Message);
         }
     }
 }

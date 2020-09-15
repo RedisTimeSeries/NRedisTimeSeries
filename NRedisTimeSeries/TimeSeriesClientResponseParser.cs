@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.DataTypes;
+using NRedisTimeSeries.Extensions;
 using StackExchange.Redis;
 
 namespace NRedisTimeSeries
@@ -94,7 +95,7 @@ namespace NRedisTimeSeries
             RedisResult[] redisResults = (RedisResult[])result;
             string destKey = (string)redisResults[0];
             long bucketTime = (long)redisResults[1];
-            Aggregation aggregation = (string)redisResults[2];
+            var aggregation = AggregationExtensions.AsAggregation((string)redisResults[2]);
             return new TimeSeriesRule(destKey, bucketTime, aggregation);
         }
 
