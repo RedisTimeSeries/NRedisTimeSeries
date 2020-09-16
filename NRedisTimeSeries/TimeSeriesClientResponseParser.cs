@@ -110,7 +110,7 @@ namespace NRedisTimeSeries
 
         private static TimeSeriesInformation ParseInfo(RedisResult result)
         {
-            long totalSamples = -1, memoryUsage = -1, retentionTime = -1, chunkSize=-1, chunkCount = -1, maxSamplesPerChunk = -1;
+            long totalSamples = -1, memoryUsage = -1, retentionTime = -1, chunkSize=-1, chunkCount = -1;
             TimeStamp firstTimestamp = null, lastTimestamp = null;
             IReadOnlyList<TimeSeriesLabel> labels = null;
             IReadOnlyList <TimeSeriesRule> rules = null;
