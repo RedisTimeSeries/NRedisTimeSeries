@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace NRedisTimeSeries.DataTypes
@@ -42,11 +42,11 @@ namespace NRedisTimeSeries.DataTypes
         /// <summary>
         /// Maximum Number of samples per Memory Chunk.
         /// </summary>
-        [ObsoleteAttribute("This method has been deprecated. Use ChunkSize instead.")] 
+        [ObsoleteAttribute("This method has been deprecated. Use ChunkSize instead.")]
         public long MaxSamplesPerChunk { get; private set; }
-
+        
         /// <summary>
-        /// Memory Chunk size in Bytes. 
+        /// Memory Chunk size in Bytes.
         /// </summary>
         public long ChunkSize { get; private set; }
 
@@ -64,6 +64,7 @@ namespace NRedisTimeSeries.DataTypes
         /// A readonly list of TimeSeriesRules that represent compaction Rules of the time-series.
         /// </summary>
         public IReadOnlyList<TimeSeriesRule> Rules { get; private set; }
+
         internal TimeSeriesInformation(long totalSamples, long memoryUsage, TimeStamp firstTimeStamp, TimeStamp lastTimeStamp, long retentionTime, long chunkCount, long chunkSize, IReadOnlyList<TimeSeriesLabel> labels, string sourceKey, IReadOnlyList<TimeSeriesRule> rules)
         {
             TotalSamples = totalSamples;
