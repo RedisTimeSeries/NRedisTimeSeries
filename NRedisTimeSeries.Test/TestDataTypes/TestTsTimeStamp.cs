@@ -54,6 +54,9 @@ namespace NRedisTimeSeries.Test
 
             DateTime dtMax = tsMax;
             Assert.Equal((DateTime)TsTimeStamp.MaxValue, dtMax);
+
+            TsTimeStamp tsOne = 1;
+            Assert.Equal(1, tsOne.UnixMilliseconds);
         }
 
         [Fact]

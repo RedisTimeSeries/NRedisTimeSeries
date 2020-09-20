@@ -81,7 +81,7 @@ namespace NRedisTimeSeries
         /// <returns>The timestamp value of the new sample</returns>
         public static async Task<TsTimeStamp> TimeSeriesAddAsync(this IDatabase db, string key, double value, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null)
         {
-            var args = BuildTsAddArgs(key,  value, retentionTime, labels, uncompressed, chunkSizeBytes);
+            var args = BuildTsAddArgs(key, value, retentionTime, labels, uncompressed, chunkSizeBytes);
             return ParseTimeStamp(await db.ExecuteAsync(TS.ADD, args));
         }
 
@@ -133,14 +133,14 @@ namespace NRedisTimeSeries
         /// <param name="db">StackExchange.Redis IDatabase instance</param>
         /// <param name="key">Key name for timeseries</param>
         /// <param name="value">Delta to add</param>
-        /// <param name="timestamp">Optional: TimeStamp to add. UNIX timestamp of the sample. * can be used for automatic timestamp (using the system clock)</param>
+        /// <param name="timestamp">TimeStamp to add</param>
         /// <param name="retentionTime">Optional: Maximum age for samples compared to last event time (in milliseconds)</param>
         /// <param name="labels">Optional: Collaction of label-value pairs that represent metadata labels of the key</param>
         /// <param name="uncompressed">Optional: Adding this flag will keep data in an uncompressed form</param>
         /// <param name="chunkSizeBytes">Optional: Each time-series uses chunks of memory of fixed size for time series samples.
         /// You can alter the default TSDB chunk size by passing the chunk_size argument (in Bytes)</param>
         /// <returns>The latests sample timestamp (updated sample)</returns>
-        public static async Task<TsTimeStamp> TimeSeriesIncrByAsync(this IDatabase db, string key, TsTimeStamp timestamp, double value, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null)
+        public static async Task<TsTimeStamp> TimeSeriesIncrByAsync(this IDatabase db, string key, double value, TsTimeStamp timestamp, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null)
         {
             var args = BuildTsIncrDecrByArgs(key, value, timestamp, retentionTime, labels, uncompressed, chunkSizeBytes);
             return ParseTimeStamp(await db.ExecuteAsync(TS.INCRBY, args));
@@ -170,14 +170,14 @@ namespace NRedisTimeSeries
         /// <param name="db">StackExchange.Redis IDatabase instance</param>
         /// <param name="key">Key name for timeseries</param>
         /// <param name="value">Delta to substract</param>
-        /// <param name="timestamp">Optional: TimeStamp to add. UNIX timestamp of the sample. * can be used for automatic timestamp (using the system clock)</param>
+        /// <param name="timestamp">TimeStamp to add</param>
         /// <param name="retentionTime">Optional: Maximum age for samples compared to last event time (in milliseconds)</param>
         /// <param name="labels">Optional: Collaction of label-value pairs that represent metadata labels of the key</param>
         /// <param name="uncompressed">Optional: Adding this flag will keep data in an uncompressed form</param>
         /// <param name="chunkSizeBytes">Optional: Each time-series uses chunks of memory of fixed size for time series samples.
         /// You can alter the default TSDB chunk size by passing the chunk_size argument (in Bytes)</param>
         /// <returns>The latests sample timestamp (updated sample)</returns>
-        public static async Task<TsTimeStamp> TimeSeriesDecrByAsync(this IDatabase db, string key, TsTimeStamp timestamp, double value, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null)
+        public static async Task<TsTimeStamp> TimeSeriesDecrByAsync(this IDatabase db, string key, double value, TsTimeStamp timestamp, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null)
         {
             var args = BuildTsIncrDecrByArgs(key, value, timestamp, retentionTime, labels, uncompressed, chunkSizeBytes);
             return ParseTimeStamp(await db.ExecuteAsync(TS.DECRBY, args));

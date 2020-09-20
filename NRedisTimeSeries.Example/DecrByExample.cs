@@ -1,5 +1,6 @@
 ﻿using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
+using System;
 using System.Collections.Generic;
 
 namespace NRedisTimeSeries.Example
@@ -10,20 +11,9 @@ namespace NRedisTimeSeries.Example
     internal class DecrByExample
     {
         /// <summary>
-        /// Example for decreasing the value of the last sample by 5. 
+        /// Example for decreasing the value of the last sample by 5 using the system timestamp. 
         /// </summary>
         public static void DefaultIncrByExample()
-        {
-            ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
-            IDatabase db = redis.GetDatabase();
-            db.TimeSeriesDecrBy("my_ts", 5);
-            redis.Close();
-        }
-
-        /// <summary>
-        /// Example for setting the last sample timestamp to system time and its value to -5, with DECRBY. 
-        /// </summary>
-        public static void SystemTimeIncrByExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
@@ -38,7 +28,7 @@ namespace NRedisTimeSeries.Example
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            db.TimeSeriesDecrBy("my_ts", 5);
+            db.TimeSeriesDecrBy("my_ts", 5, timestamp: DateTime.UtcNow);
             redis.Close();
         }
 
@@ -49,7 +39,7 @@ namespace NRedisTimeSeries.Example
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            db.TimeSeriesDecrBy("my_ts", 5);
+            db.TimeSeriesDecrBy("my_ts", 5, timestamp: 1000);
             redis.Close();
         }
 

@@ -22,24 +22,13 @@ namespace NRedisTimeSeries.Example
         }
 
         /// <summary>
-        /// Example for setting the last sample timestamp to system time and its value to 5, with INCRBY. 
-        /// </summary>
-        public static void SystemTimeIncrByExample()
-        {
-            ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
-            IDatabase db = redis.GetDatabase();
-            db.TimeSeriesIncrBy("my_ts", 5);
-            redis.Close();
-        }
-
-        /// <summary>
         /// Example for setting the last sample timestamp to DateTime.UtcNow and its value to 5, with INCRBY. 
         /// </summary>
         public static void DateTimeIncrByExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            db.TimeSeriesIncrBy("my_ts", 5);
+            db.TimeSeriesIncrBy("my_ts", 5, timestamp: DateTime.UtcNow);
             redis.Close();
         }
 
@@ -50,7 +39,7 @@ namespace NRedisTimeSeries.Example
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            db.TimeSeriesIncrBy("my_ts", 5);
+            db.TimeSeriesIncrBy("my_ts", 5, timestamp: 1000);
             redis.Close();
         }
 

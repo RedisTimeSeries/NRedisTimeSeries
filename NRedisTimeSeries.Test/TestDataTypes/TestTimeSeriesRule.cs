@@ -1,5 +1,4 @@
-﻿using System;
-using NRedisTimeSeries.Commands;
+﻿using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.DataTypes;
 using Xunit;
 

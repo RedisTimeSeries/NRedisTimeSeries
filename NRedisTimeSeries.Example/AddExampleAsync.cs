@@ -33,7 +33,7 @@ namespace NRedisTimeSeries.Example
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            var timestamp = new TsTimeStamp(1);
+            TsTimeStamp timestamp = 1;
             await db.TimeSeriesAddAsync("my_ts", timestamp, 0.0);
             redis.Close();
         }
@@ -47,7 +47,7 @@ namespace NRedisTimeSeries.Example
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            var timestamp = DateTime.UtcNow;
+            TsTimeStamp timestamp = DateTime.UtcNow;
             await db.TimeSeriesAddAsync("my_ts", timestamp, 0.0);
             redis.Close();
         }

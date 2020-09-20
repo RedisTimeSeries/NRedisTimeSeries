@@ -33,16 +33,6 @@ namespace NRedisTimeSeries.DataTypes
             UnixMilliseconds = unixMilliseconds;
         }
 
-        public TsTimeBucket(long fromUnixMilliseconds, long toUnixMilliseconds)
-        {
-            UnixMilliseconds = new TsTimeBucket(new TsTimeStamp(fromUnixMilliseconds), new TsTimeStamp(toUnixMilliseconds)).UnixMilliseconds;
-        }
-
-        public TsTimeBucket(DateTime fromDateTime, DateTime toDateTime)
-        {
-            UnixMilliseconds = new TsTimeBucket(new TsTimeStamp(fromDateTime), new TsTimeStamp(toDateTime)).UnixMilliseconds;
-        }
-
         public static bool operator ==(TsTimeBucket left, TsTimeBucket right) => Equals(left, right);
 
         public static bool operator !=(TsTimeBucket left, TsTimeBucket right) => !Equals(left, right);

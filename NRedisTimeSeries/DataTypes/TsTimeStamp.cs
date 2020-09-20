@@ -17,6 +17,7 @@ namespace NRedisTimeSeries.DataTypes
 
         public TsTimeStamp(long unixMilliseconds)
         {
+            //TODO: Remove when module allows negative timestamps
             if (unixMilliseconds < _minUnixMilliseconds)
                 throw new ArgumentOutOfRangeException(nameof(unixMilliseconds), $"Must be {_minUnixMilliseconds}ms or greater");
 
@@ -30,12 +31,17 @@ namespace NRedisTimeSeries.DataTypes
         {
             if (dateTime.Kind != DateTimeKind.Utc)
                 throw new ArgumentException("DateTime Kind must be UTC", nameof(dateTime));
-
+            
+            //TODO: Remove when module allows negative timestamps
             if (dateTime.Ticks < _epochTicks)
                 throw new ArgumentOutOfRangeException(nameof(dateTime), $"Must be Unix Epoch time or greater");
 
             UnixMilliseconds = new DateTimeOffset(dateTime).ToUnixTimeMilliseconds();
         }
+
+        public static implicit operator long(TsTimeStamp timeStamp) => timeStamp.UnixMilliseconds;
+        
+        public static implicit operator TsTimeStamp(long unixMilliseconds) => new TsTimeStamp(unixMilliseconds);
 
         public static implicit operator DateTime(TsTimeStamp timeStamp) => timeStamp.UtcDateTime;
 

@@ -9,18 +9,18 @@ namespace NRedisTimeSeries.Test
         public void TestConstruction()
         {
             // Test default and empty constructors
-            var tsDefault = default(TsTimeBucket);
-            Assert.Equal(new TsTimeBucket(), tsDefault);
+            var tsTimeBucketDefault = default(TsTimeBucket);
+            Assert.Equal(new TsTimeBucket(), tsTimeBucketDefault);
 
             // Test DateTime constructor
             var now = DateTime.UtcNow;
             var nowPlus1Day = now.AddDays(1);
-            var tsDateTime = new TsTimeBucket(now, nowPlus1Day);
-            Assert.True(tsDateTime.UnixMilliseconds > 0);
+            var tsTimeBucketDateTime = new TsTimeBucket(now, nowPlus1Day);
+            Assert.True(tsTimeBucketDateTime.UnixMilliseconds > 0);
 
             // Test UnixMs long constructor
-            var tsUnixMs = new TsTimeBucket(1000);
-            Assert.Equal(1000, tsUnixMs.UnixMilliseconds);
+            var tsTimeBucketsUnixMs = new TsTimeBucket(1000);
+            Assert.Equal(1000, tsTimeBucketsUnixMs.UnixMilliseconds);
         }
 
         [Fact]
