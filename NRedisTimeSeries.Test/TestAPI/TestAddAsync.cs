@@ -115,7 +115,6 @@ namespace NRedisTimeSeries.Test.TestAPI
 
             var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
-            await db.TimeSeriesCreateAsync(key);
             TimeStamp timeStamp = DateTime.UtcNow;
             Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.1, policy: TsDuplicatePolicy.MIN));
 

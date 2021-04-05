@@ -111,11 +111,11 @@ namespace NRedisTimeSeries
         private static TsDuplicatePolicy? ParsePolicy(RedisResult result)
         {
             var policyStatus = (string) result;
-            if (policyStatus == "(nil)" || String.IsNullOrEmpty(policyStatus)) {
+            if (String.IsNullOrEmpty(policyStatus) || policyStatus == "(nil)") {
                 return null;
             }
 
-            return DuplicatePolicyExtensions.AsPolicy(policyStatus);
+            return DuplicatePolicyExtensions.AsPolicy(policyStatus.ToUpper());
         }
 
         private static TimeSeriesInformation ParseInfo(RedisResult result)
@@ -123,9 +123,9 @@ namespace NRedisTimeSeries
             long totalSamples = -1, memoryUsage = -1, retentionTime = -1, chunkSize=-1, chunkCount = -1;
             TimeStamp firstTimestamp = null, lastTimestamp = null;
             IReadOnlyList<TimeSeriesLabel> labels = null;
+            string sourceKey = null;
             IReadOnlyList <TimeSeriesRule> rules = null;
             TsDuplicatePolicy? policy = null;
-            string sourceKey = null;
             RedisResult[] redisResults = (RedisResult[])result;
             for(int i=0; i<redisResults.Length ; ++i){
                 string label = (string)redisResults[i++];
@@ -166,6 +166,7 @@ namespace NRedisTimeSeries
                         rules = ParseRuleArray(redisResults[i]);
                         break;
                     case "duplicatePolicy":
+                        // Avalible for > v1.4
                         policy = ParsePolicy(redisResults[i]);
                         break;
                 }

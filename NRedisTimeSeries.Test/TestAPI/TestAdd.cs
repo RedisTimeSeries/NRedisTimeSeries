@@ -109,7 +109,6 @@ namespace NRedisTimeSeries.Test.TestAPI
             // TODO: add TestAddWithDuplicatePolicy
 
             IDatabase db = redisFixture.Redis.GetDatabase();
-            db.TimeSeriesCreate(key);
             TimeStamp now = DateTime.UtcNow;
             Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1, policy: TsDuplicatePolicy.MIN));
             TimeSeriesInformation info = db.TimeSeriesInfo(key);
