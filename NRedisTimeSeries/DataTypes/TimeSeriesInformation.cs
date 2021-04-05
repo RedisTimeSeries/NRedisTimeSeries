@@ -66,9 +66,9 @@ namespace NRedisTimeSeries.DataTypes
         /// </summary>
         public IReadOnlyList<TimeSeriesRule> Rules { get; private set; }
 
-        public TsDuplicatePolicy DuplicatePolicy {  get; private set; }
+        public TsDuplicatePolicy? DuplicatePolicy {  get; private set; }
 
-        internal TimeSeriesInformation(long totalSamples, long memoryUsage, TimeStamp firstTimeStamp, TimeStamp lastTimeStamp, long retentionTime, long chunkCount, long chunkSize, IReadOnlyList<TimeSeriesLabel> labels, string sourceKey, IReadOnlyList<TimeSeriesRule> rules, TsDuplicatePolicy policy)
+        internal TimeSeriesInformation(long totalSamples, long memoryUsage, TimeStamp firstTimeStamp, TimeStamp lastTimeStamp, long retentionTime, long chunkCount, long chunkSize, IReadOnlyList<TimeSeriesLabel> labels, string sourceKey, IReadOnlyList<TimeSeriesRule> rules, TsDuplicatePolicy? policy)
         {
             TotalSamples = totalSamples;
             MemoryUsage = memoryUsage;

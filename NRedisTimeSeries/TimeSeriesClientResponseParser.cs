@@ -108,9 +108,14 @@ namespace NRedisTimeSeries
             return list;
         }
 
-        private static TsDuplicatePolicy ParsePolicy(RedisResult result)
+        private static TsDuplicatePolicy? ParsePolicy(RedisResult result)
         {
-            return DuplicatePolicyExtensions.AsPolicy((string)result);
+            var policyStatus = (string) result;
+            if (policyStatus == "(nil)") {
+                return null;
+            }
+
+            return DuplicatePolicyExtensions.AsPolicy(policyStatus);
         }
 
         private static TimeSeriesInformation ParseInfo(RedisResult result)
@@ -119,7 +124,7 @@ namespace NRedisTimeSeries
             TimeStamp firstTimestamp = null, lastTimestamp = null;
             IReadOnlyList<TimeSeriesLabel> labels = null;
             IReadOnlyList <TimeSeriesRule> rules = null;
-            TsDuplicatePolicy policy = TsDuplicatePolicy.BLOCK;
+            TsDuplicatePolicy? policy = null;
             string sourceKey = null;
             RedisResult[] redisResults = (RedisResult[])result;
             for(int i=0; i<redisResults.Length ; ++i){
