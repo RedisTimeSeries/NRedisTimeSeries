@@ -111,7 +111,7 @@ namespace NRedisTimeSeries
         private static TsDuplicatePolicy? ParsePolicy(RedisResult result)
         {
             var policyStatus = (string) result;
-            if (policyStatus == "(nil)" || String.IsNullOrEmpty(ispolicyStatus)) {
+            if (policyStatus == "(nil)" || String.IsNullOrEmpty(policyStatus)) {
                 return null;
             }
 
