@@ -70,10 +70,10 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
             Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.FIRST));
-            Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.LAST));
-            Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.MIN));
-            Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.MAX));
-            Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.SUM));
+            //Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.LAST));
+            //Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.MIN));
+            //Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.MAX));
+            //Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.SUM));
         }
     }
 }

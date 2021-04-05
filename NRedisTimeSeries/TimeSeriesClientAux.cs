@@ -61,7 +61,7 @@ namespace NRedisTimeSeries
             if (policy.HasValue)
             {
                 args.Add(CommandArgs.DUPLICATE_POLICY);
-                args.Add(policy.Value);
+                args.Add(policy.Value.AsArg());
             }
         }
 
