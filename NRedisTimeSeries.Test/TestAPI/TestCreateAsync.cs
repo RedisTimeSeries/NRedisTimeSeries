@@ -1,4 +1,5 @@
 ﻿using NRedisTimeSeries.DataTypes;
+using NRedisTimeSeries.Commands;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
@@ -60,6 +61,18 @@ namespace NRedisTimeSeries.Test.TestAPI
             var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             Assert.True(await db.TimeSeriesCreateAsync(key, uncompressed: true));
+        }
+
+        [Fact]
+        public async void TestCreatehDuplicatePolicy()
+        {
+            var key = CreateKeyName();
+            var db = redisFixture.Redis.GetDatabase();
+            Assert.True(await db.TimeSeriesCreateAsync(key, policy: TsPolicy.FIRST));
+            Assert.True(await db.TimeSeriesCreateAsync(key, policy: TsPolicy.LAST));
+            Assert.True(await db.TimeSeriesCreateAsync(key, policy: TsPolicy.MIN));
+            Assert.True(await db.TimeSeriesCreateAsync(key, policy: TsPolicy.MAX));
+            Assert.True(await db.TimeSeriesCreateAsync(key, policy: TsPolicy.SUM));
         }
     }
 }

@@ -56,6 +56,25 @@ namespace NRedisTimeSeries
             }
         }
 
+        private static void AddDuplicatePolicy(this IList<object> args, TsPolicy? policy)
+        {
+            if (policy.HasValue)
+            {
+                args.Add(CommandArgs.DUPLICATE_POLICY);
+                args.Add(policy.Value);
+            }
+        }
+
+        
+        private static void AddOnDuplicate(this IList<object> args, TsPolicy? policy)
+        {
+            if (policy.HasValue)
+            {
+                args.Add(CommandArgs.ON_DUPLICATE);
+                args.Add(policy.Value);
+            }
+        }
+
         private static void AddAggregation(this IList<object> args, TsAggregation? aggregation, long? timeBucket)
         {
             if(aggregation != null)
@@ -109,13 +128,14 @@ namespace NRedisTimeSeries
         }
         
         private static List<object> BuildTsCreateArgs(string key, long? retentionTime, IReadOnlyCollection<TimeSeriesLabel> labels, bool? uncompressed,
-            long? chunkSizeBytes)
+            long? chunkSizeBytes, TsPolicy? policy)
         {
             var args = new List<object> {key};
             args.AddRetentionTime(retentionTime);
             args.AddChunkSize(chunkSizeBytes);
             args.AddLabels(labels);
             args.AddUncompressed(uncompressed);
+            args.AddDuplicatePolicy(policy);
             return args;
         }
         
@@ -128,13 +148,14 @@ namespace NRedisTimeSeries
         }
         
         private static List<object> BuildTsAddArgs(string key, TimeStamp timestamp, double value, long? retentionTime,
-            IReadOnlyCollection<TimeSeriesLabel> labels, bool? uncompressed, long? chunkSizeBytes)
+            IReadOnlyCollection<TimeSeriesLabel> labels, bool? uncompressed, long? chunkSizeBytes, TsPolicy? policy)
         {
             var args = new List<object> {key, timestamp.Value, value};
-            AddRetentionTime(args, retentionTime);
-            AddChunkSize(args, chunkSizeBytes);
-            AddLabels(args, labels);
-            AddUncompressed(args, uncompressed);
+            args.AddRetentionTime(retentionTime);
+            args.AddChunkSize(chunkSizeBytes);
+            args.AddLabels(labels);
+            args.AddUncompressed(uncompressed);
+            args.AddOnDuplicate(policy);
             return args;
         }
         

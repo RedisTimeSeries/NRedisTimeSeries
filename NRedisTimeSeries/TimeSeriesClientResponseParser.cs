@@ -108,12 +108,18 @@ namespace NRedisTimeSeries
             return list;
         }
 
+        private static TsPolicy ParsePolicy(RedisResult result)
+        {
+            return PolicyExtensions.AsPolicy((string)result);
+        }
+
         private static TimeSeriesInformation ParseInfo(RedisResult result)
         {
             long totalSamples = -1, memoryUsage = -1, retentionTime = -1, chunkSize=-1, chunkCount = -1;
             TimeStamp firstTimestamp = null, lastTimestamp = null;
             IReadOnlyList<TimeSeriesLabel> labels = null;
             IReadOnlyList <TimeSeriesRule> rules = null;
+            TsPolicy policy = TsPolicy.BLOCK;
             string sourceKey = null;
             RedisResult[] redisResults = (RedisResult[])result;
             for(int i=0; i<redisResults.Length ; ++i){
@@ -154,10 +160,14 @@ namespace NRedisTimeSeries
                     case "rules":
                         rules = ParseRuleArray(redisResults[i]);
                         break;
+                    case "duplicatePolicy":
+                        policy = ParsePolicy(redisResults[i]);
+                        break;
                 }
             }
+
             return new TimeSeriesInformation(totalSamples, memoryUsage, firstTimestamp,
-            lastTimestamp, retentionTime, chunkCount, chunkSize, labels, sourceKey, rules);
+            lastTimestamp, retentionTime, chunkCount, chunkSize, labels, sourceKey, rules, policy);
         }
 
         private static IReadOnlyList<string> ParseStringArray(RedisResult result)

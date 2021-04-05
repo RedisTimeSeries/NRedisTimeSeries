@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using NRedisTimeSeries.DataTypes;
+using NRedisTimeSeries.Commands;
 using StackExchange.Redis;
 using Xunit;
 
@@ -102,6 +103,20 @@ namespace NRedisTimeSeries.Test.TestAPI
             Assert.Equal(128, info.ChunkSize);
         }
 
+        [Fact]
+        public void TestAddWithDuplicatePolicy()
+        { 
+            // TODO: add TestAddWithDuplicatePolicy
+
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            db.TimeSeriesCreate(key);
+            TimeStamp now = DateTime.UtcNow;
+            Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1, policy: TsPolicy.MIN));
+            TimeSeriesInformation info = db.TimeSeriesInfo(key);
+            Assert.Equal(now, info.FirstTimeStamp);
+            Assert.Equal(now, info.LastTimeStamp);
+            Assert.Equal(TsPolicy.MIN, info.Policy);
+        }
 
         [Fact]
         public void TestOldAdd()

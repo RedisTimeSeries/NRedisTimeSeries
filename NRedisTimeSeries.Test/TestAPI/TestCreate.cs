@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NRedisTimeSeries;
 using NRedisTimeSeries.DataTypes;
+using NRedisTimeSeries.Commands;
 using StackExchange.Redis;
 using Xunit;
 
@@ -62,6 +63,17 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
             Assert.True(db.TimeSeriesCreate(key, uncompressed: true));
+        }
+
+        [Fact]
+        public void TestCreatehDuplicatePolicy()
+        {
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            Assert.True(db.TimeSeriesCreate(key, policy: TsPolicy.FIRST));
+            Assert.True(db.TimeSeriesCreate(key, policy: TsPolicy.LAST));
+            Assert.True(db.TimeSeriesCreate(key, policy: TsPolicy.MIN));
+            Assert.True(db.TimeSeriesCreate(key, policy: TsPolicy.MAX));
+            Assert.True(db.TimeSeriesCreate(key, policy: TsPolicy.SUM));
         }
     }
 }

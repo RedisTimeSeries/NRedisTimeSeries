@@ -20,12 +20,14 @@ namespace NRedisTimeSeries
         /// <param name="retentionTime">Optional: Maximum age for samples compared to last event time (in milliseconds)</param>
         /// <param name="labels">Optional: Collaction of label-value pairs that represent metadata labels of the key</param>
         /// <param name="uncompressed">Optional: Adding this flag will keep data in an uncompressed form</param>
+        /// <param nams="policy">Optinal: Define handling of duplicate samples behavior (avalible for RedisTimeseries >= 1.4)</param>
         /// <param name="chunkSizeBytes">Optional: Each time-series uses chunks of memory of fixed size for time series samples.
         /// You can alter the default TSDB chunk size by passing the chunk_size argument (in Bytes)</param>
+        /// <param name="policy">Optional: configure what to do on duplicate sample. When this is not set, the server-wide default will be used</param>
         /// <returns>If the operation executed successfully</returns>
-        public static bool TimeSeriesCreate(this IDatabase db, string key, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null)
+        public static bool TimeSeriesCreate(this IDatabase db, string key, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null, TsPolicy? policy = null)
         {
-            var args = BuildTsCreateArgs(key, retentionTime, labels, uncompressed, chunkSizeBytes);
+            var args = BuildTsCreateArgs(key, retentionTime, labels, uncompressed, chunkSizeBytes, policy);
             return ParseBoolean(db.Execute(TS.CREATE, args));
         }
 
@@ -59,10 +61,11 @@ namespace NRedisTimeSeries
         /// <param name="uncompressed">Optional: Adding this flag will keep data in an uncompressed form</param>
         /// <param name="chunkSizeBytes">Optional: Each time-series uses chunks of memory of fixed size for time series samples.
         /// You can alter the default TSDB chunk size by passing the chunk_size argument (in Bytes)</param>
+        /// <param name="policy">Optioal: overwrite key and database configuration for DUPLICATE_POLICY</param>
         /// <returns>The timestamp value of the new sample</returns>
-        public static TimeStamp TimeSeriesAdd(this IDatabase db, string key, TimeStamp timestamp, double value, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null)
+        public static TimeStamp TimeSeriesAdd(this IDatabase db, string key, TimeStamp timestamp, double value, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null, TsPolicy? policy = null)
         {
-            var args = BuildTsAddArgs(key, timestamp, value, retentionTime, labels, uncompressed, chunkSizeBytes);
+            var args = BuildTsAddArgs(key, timestamp, value, retentionTime, labels, uncompressed, chunkSizeBytes, policy);
             return ParseTimeStamp(db.Execute(TS.ADD, args));
         }
 

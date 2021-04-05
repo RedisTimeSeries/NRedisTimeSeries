@@ -1,4 +1,5 @@
 ﻿using NRedisTimeSeries.DataTypes;
+using NRedisTimeSeries.Commands;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
@@ -107,6 +108,22 @@ namespace NRedisTimeSeries.Test.TestAPI
             Assert.Equal(timeStamp, info.LastTimeStamp);
         }
 
+        [Fact]
+        public async void TestAddWithDuplicatePolicy()
+        { 
+            // TODO: add TestAddWithDuplicatePolicy
+
+            var key = CreateKeyName();
+            var db = redisFixture.Redis.GetDatabase();
+            await db.TimeSeriesCreateAsync(key);
+            TimeStamp timeStamp = DateTime.UtcNow;
+            Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.1, policy: TsPolicy.MIN));
+
+            TimeSeriesInformation info = await db.TimeSeriesInfoAsync(key);
+            Assert.Equal(timeStamp, info.FirstTimeStamp);
+            Assert.Equal(timeStamp, info.LastTimeStamp);
+            Assert.Equal(TsPolicy.MIN, info.Policy);
+        }
 
         [Fact]
         public async Task TestOldAdd()
