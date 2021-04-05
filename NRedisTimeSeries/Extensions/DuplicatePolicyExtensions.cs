@@ -3,7 +3,7 @@ using System;
 
 namespace NRedisTimeSeries.Extensions
 {
-    internal static class PolicyExtensions
+    internal static class DuplicatePolicyExtensions
     {
         public static string AsArg(this TsPolicy policy) => policy switch
         {
