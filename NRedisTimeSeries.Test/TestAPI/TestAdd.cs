@@ -111,11 +111,11 @@ namespace NRedisTimeSeries.Test.TestAPI
             IDatabase db = redisFixture.Redis.GetDatabase();
             db.TimeSeriesCreate(key);
             TimeStamp now = DateTime.UtcNow;
-            Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1, policy: TsPolicy.MIN));
+            Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1, policy: TsDuplicatePolicy.MIN));
             TimeSeriesInformation info = db.TimeSeriesInfo(key);
             Assert.Equal(now, info.FirstTimeStamp);
             Assert.Equal(now, info.LastTimeStamp);
-            Assert.Equal(TsPolicy.MIN, info.Policy);
+            Assert.Equal(TsDuplicatePolicy.MIN, info.DuplicatePolicy);
         }
 
         [Fact]

@@ -117,12 +117,12 @@ namespace NRedisTimeSeries.Test.TestAPI
             var db = redisFixture.Redis.GetDatabase();
             await db.TimeSeriesCreateAsync(key);
             TimeStamp timeStamp = DateTime.UtcNow;
-            Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.1, policy: TsPolicy.MIN));
+            Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.1, policy: TsDuplicatePolicy.MIN));
 
             TimeSeriesInformation info = await db.TimeSeriesInfoAsync(key);
             Assert.Equal(timeStamp, info.FirstTimeStamp);
             Assert.Equal(timeStamp, info.LastTimeStamp);
-            Assert.Equal(TsPolicy.MIN, info.Policy);
+            Assert.Equal(TsDuplicatePolicy.MIN, info.DuplicatePolicy);
         }
 
         [Fact]

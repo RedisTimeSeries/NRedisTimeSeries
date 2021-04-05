@@ -56,7 +56,7 @@ namespace NRedisTimeSeries
             }
         }
 
-        private static void AddDuplicatePolicy(this IList<object> args, TsPolicy? policy)
+        private static void AddDuplicatePolicy(this IList<object> args, TsDuplicatePolicy? policy)
         {
             if (policy.HasValue)
             {
@@ -66,7 +66,7 @@ namespace NRedisTimeSeries
         }
 
         
-        private static void AddOnDuplicate(this IList<object> args, TsPolicy? policy)
+        private static void AddOnDuplicate(this IList<object> args, TsDuplicatePolicy? policy)
         {
             if (policy.HasValue)
             {
@@ -128,7 +128,7 @@ namespace NRedisTimeSeries
         }
         
         private static List<object> BuildTsCreateArgs(string key, long? retentionTime, IReadOnlyCollection<TimeSeriesLabel> labels, bool? uncompressed,
-            long? chunkSizeBytes, TsPolicy? policy)
+            long? chunkSizeBytes, TsDuplicatePolicy? policy)
         {
             var args = new List<object> {key};
             args.AddRetentionTime(retentionTime);
@@ -148,7 +148,7 @@ namespace NRedisTimeSeries
         }
         
         private static List<object> BuildTsAddArgs(string key, TimeStamp timestamp, double value, long? retentionTime,
-            IReadOnlyCollection<TimeSeriesLabel> labels, bool? uncompressed, long? chunkSizeBytes, TsPolicy? policy)
+            IReadOnlyCollection<TimeSeriesLabel> labels, bool? uncompressed, long? chunkSizeBytes, TsDuplicatePolicy? policy)
         {
             var args = new List<object> {key, timestamp.Value, value};
             args.AddRetentionTime(retentionTime);

@@ -66,9 +66,9 @@ namespace NRedisTimeSeries.DataTypes
         /// </summary>
         public IReadOnlyList<TimeSeriesRule> Rules { get; private set; }
 
-        public TsPolicy Policy {  get; private set; }
+        public TsDuplicatePolicy DuplicatePolicy {  get; private set; }
 
-        internal TimeSeriesInformation(long totalSamples, long memoryUsage, TimeStamp firstTimeStamp, TimeStamp lastTimeStamp, long retentionTime, long chunkCount, long chunkSize, IReadOnlyList<TimeSeriesLabel> labels, string sourceKey, IReadOnlyList<TimeSeriesRule> rules, TsPolicy policy)
+        internal TimeSeriesInformation(long totalSamples, long memoryUsage, TimeStamp firstTimeStamp, TimeStamp lastTimeStamp, long retentionTime, long chunkCount, long chunkSize, IReadOnlyList<TimeSeriesLabel> labels, string sourceKey, IReadOnlyList<TimeSeriesRule> rules, TsDuplicatePolicy policy)
         {
             TotalSamples = totalSamples;
             MemoryUsage = memoryUsage;
@@ -83,7 +83,7 @@ namespace NRedisTimeSeries.DataTypes
             //MaxSamplesPerChunk = chunkSize/16;
             ChunkSize = chunkSize;
             // configure what to do on duplicate sample > v1.4
-            Policy = policy;
+            DuplicatePolicy = policy;
         }
     }
 }

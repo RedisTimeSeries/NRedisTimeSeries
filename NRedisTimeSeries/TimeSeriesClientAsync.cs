@@ -25,7 +25,7 @@ namespace NRedisTimeSeries
         /// You can alter the default TSDB chunk size by passing the chunk_size argument (in Bytes)</param>
         /// <param name="policy">Optional: configure what to do on duplicate sample. When this is not set, the server-wide default will be used</param>
         /// <returns>If the operation executed successfully</returns>
-        public static async Task<bool> TimeSeriesCreateAsync(this IDatabase db, string key, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null, TsPolicy? policy = null)
+        public static async Task<bool> TimeSeriesCreateAsync(this IDatabase db, string key, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null, TsDuplicatePolicy? policy = null)
         {
             var args = BuildTsCreateArgs(key, retentionTime, labels, uncompressed, chunkSizeBytes, policy);
             return ParseBoolean(await db.ExecuteAsync(TS.CREATE, args));
@@ -63,7 +63,7 @@ namespace NRedisTimeSeries
         /// You can alter the default TSDB chunk size by passing the chunk_size argument (in Bytes)</param>
         /// <param name="policy">Optioal: overwrite key and database configuration for DUPLICATE_POLICY</param>
         /// <returns>The timestamp value of the new sample</returns>
-        public static async Task<TimeStamp> TimeSeriesAddAsync(this IDatabase db, string key, TimeStamp timestamp, double value, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null, TsPolicy? policy = null)
+        public static async Task<TimeStamp> TimeSeriesAddAsync(this IDatabase db, string key, TimeStamp timestamp, double value, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null, TsDuplicatePolicy? policy = null)
         {
             var args = BuildTsAddArgs(key, timestamp, value, retentionTime, labels, uncompressed, chunkSizeBytes, policy);
             return ParseTimeStamp(await db.ExecuteAsync(TS.ADD, args));

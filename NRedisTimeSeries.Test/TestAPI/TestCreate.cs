@@ -69,11 +69,11 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestCreatehDuplicatePolicy()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            Assert.True(db.TimeSeriesCreate(key, policy: TsPolicy.FIRST));
-            Assert.True(db.TimeSeriesCreate(key, policy: TsPolicy.LAST));
-            Assert.True(db.TimeSeriesCreate(key, policy: TsPolicy.MIN));
-            Assert.True(db.TimeSeriesCreate(key, policy: TsPolicy.MAX));
-            Assert.True(db.TimeSeriesCreate(key, policy: TsPolicy.SUM));
+            Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.FIRST));
+            Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.LAST));
+            Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.MIN));
+            Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.MAX));
+            Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.SUM));
         }
     }
 }

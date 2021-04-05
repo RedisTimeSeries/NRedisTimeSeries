@@ -4,7 +4,7 @@ namespace NRedisTimeSeries.Commands
     /// Policy to handle duplicate samples. 
     /// The default policy for database-wide is BLOCK
     /// </summary>
-    public enum TsPolicy
+    public enum TsDuplicatePolicy
     {
         /// <summary>
         /// an error will occur for any out of order sample
