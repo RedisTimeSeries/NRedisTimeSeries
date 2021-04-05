@@ -64,15 +64,43 @@ namespace NRedisTimeSeries.Test.TestAPI
         }
 
         [Fact]
-        public async void TestCreatehDuplicatePolicy()
+        public async void TestCreatehDuplicatePolicyFirst()
         {
             var key = CreateKeyName();
             var db = redisFixture.Redis.GetDatabase();
             Assert.True(await db.TimeSeriesCreateAsync(key, policy: TsDuplicatePolicy.FIRST));
-            //Assert.True(await db.TimeSeriesCreateAsync(key, policy: TsDuplicatePolicy.LAST));
-            //Assert.True(await db.TimeSeriesCreateAsync(key, policy: TsDuplicatePolicy.MIN));
-            //Assert.True(await db.TimeSeriesCreateAsync(key, policy: TsDuplicatePolicy.MAX));
-            //Assert.True(await db.TimeSeriesCreateAsync(key, policy: TsDuplicatePolicy.SUM));
         }
+
+        [Fact]
+        public async void TestCreatehDuplicatePolicyLast()
+        {
+            var key = CreateKeyName();
+            var db = redisFixture.Redis.GetDatabase();
+            Assert.True(await db.TimeSeriesCreateAsync(key, policy: TsDuplicatePolicy.LAST));
+        }
+
+        [Fact]
+        public async void TestCreatehDuplicatePolicyMin()
+        {
+            var key = CreateKeyName();
+            var db = redisFixture.Redis.GetDatabase();
+            Assert.True(await db.TimeSeriesCreateAsync(key, policy: TsDuplicatePolicy.MIN));
+        }
+
+        [Fact]
+        public async void TestCreatehDuplicatePolicyMax()
+        {
+            var key = CreateKeyName();
+            var db = redisFixture.Redis.GetDatabase();
+            Assert.True(await db.TimeSeriesCreateAsync(key, policy: TsDuplicatePolicy.MAX));
+        }
+
+        [Fact]
+        public async void TestCreatehDuplicatePolicySum()
+        {
+            var key = CreateKeyName();
+            var db = redisFixture.Redis.GetDatabase();
+            Assert.True(await db.TimeSeriesCreateAsync(key, policy: TsDuplicatePolicy.SUM));
+        }        
     }
 }

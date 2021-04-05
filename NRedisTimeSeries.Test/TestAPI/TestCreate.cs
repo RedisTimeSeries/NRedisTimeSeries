@@ -66,14 +66,38 @@ namespace NRedisTimeSeries.Test.TestAPI
         }
 
         [Fact]
-        public void TestCreatehDuplicatePolicy()
+        public void TestCreatehDuplicatePolicyFirst()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
             Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.FIRST));
-            //Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.LAST));
-            //Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.MIN));
-            //Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.MAX));
-            //Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.SUM));
+        }
+
+        [Fact]
+        public void TestCreatehDuplicatePolicyLast()
+        {
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.LAST));
+        }
+
+        [Fact]
+        public void TestCreatehDuplicatePolicyMin()
+        {
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.MIN));
+        }
+
+        [Fact]
+        public void TestCreatehDuplicatePolicyMax()
+        {
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.MAX));
+        }
+
+        [Fact]
+        public void TestCreatehDuplicatePolicySum()
+        {
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.SUM));
         }
     }
 }
