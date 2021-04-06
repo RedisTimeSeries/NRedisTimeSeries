@@ -65,6 +65,16 @@ namespace NRedisTimeSeries
             }
         }
 
+        
+        private static void AddOnDuplicate(this IList<object> args, TsDuplicatePolicy? policy)
+        {
+            if (policy.HasValue)
+            {
+                args.Add(CommandArgs.ON_DUPLICATE);
+                args.Add(policy.Value.AsArg());
+            }
+        }
+
         private static void AddAggregation(this IList<object> args, TsAggregation? aggregation, long? timeBucket)
         {
             if(aggregation != null)
@@ -145,7 +155,7 @@ namespace NRedisTimeSeries
             args.AddChunkSize(chunkSizeBytes);
             args.AddLabels(labels);
             args.AddUncompressed(uncompressed);
-            args.AddDuplicatePolicy(policy);
+            args.AddOnDuplicate(policy);
             return args;
         }
         
