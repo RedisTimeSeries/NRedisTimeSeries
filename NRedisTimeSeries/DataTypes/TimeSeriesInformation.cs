@@ -80,7 +80,7 @@ namespace NRedisTimeSeries.DataTypes
             SourceKey = sourceKey;
             Rules = rules;
             // backwards compatible with RedisTimeSeries < v1.4
-            //MaxSamplesPerChunk = chunkSize/16;
+            MaxSamplesPerChunk = chunkSize/16;
             ChunkSize = chunkSize;
             // configure what to do on duplicate sample > v1.4
             DuplicatePolicy = policy;
