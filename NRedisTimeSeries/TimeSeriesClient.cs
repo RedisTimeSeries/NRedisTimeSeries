@@ -1,4 +1,4 @@
-﻿using NRedisTimeSeries.Commands;
+using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
 using System.Collections.Generic;

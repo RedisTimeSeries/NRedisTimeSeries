@@ -1,4 +1,4 @@
-﻿using NRedisTimeSeries.DataTypes;
+using NRedisTimeSeries.DataTypes;
 using NRedisTimeSeries.Commands;
 using System.Collections.Generic;
 using System.Threading.Tasks;
