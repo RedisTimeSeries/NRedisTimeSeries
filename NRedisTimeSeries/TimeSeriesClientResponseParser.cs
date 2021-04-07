@@ -123,8 +123,8 @@ namespace NRedisTimeSeries
             long totalSamples = -1, memoryUsage = -1, retentionTime = -1, chunkSize=-1, chunkCount = -1;
             TimeStamp firstTimestamp = null, lastTimestamp = null;
             IReadOnlyList<TimeSeriesLabel> labels = null;
-            string sourceKey = null;
             IReadOnlyList <TimeSeriesRule> rules = null;
+            string sourceKey = null;
             TsDuplicatePolicy? policy = null;
             RedisResult[] redisResults = (RedisResult[])result;
             for(int i=0; i<redisResults.Length ; ++i){
