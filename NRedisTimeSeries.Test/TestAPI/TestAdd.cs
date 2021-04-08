@@ -23,11 +23,11 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestAddNotExistingTimeSeries()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeStamp timeStamp = DateTime.UtcNow;
-            Assert.Equal(timeStamp, db.TimeSeriesAdd(key, timeStamp, 1.1));
+            TimeStamp now = DateTime.UtcNow;
+            Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1));
             TimeSeriesInformation info = db.TimeSeriesInfo(key);
-            Assert.Equal(timeStamp, info.FirstTimeStamp);
-            Assert.Equal(timeStamp, info.LastTimeStamp);
+            Assert.Equal(now, info.FirstTimeStamp);
+            Assert.Equal(now, info.LastTimeStamp);
         }
 
         [Fact]
@@ -35,11 +35,11 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
             db.TimeSeriesCreate(key);
-            TimeStamp timeStamp = DateTime.UtcNow;
-            Assert.Equal(timeStamp, db.TimeSeriesAdd(key, timeStamp, 1.1));
+            TimeStamp now = DateTime.UtcNow;
+            Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1));
             TimeSeriesInformation info = db.TimeSeriesInfo(key);
-            Assert.Equal(timeStamp, info.FirstTimeStamp);
-            Assert.Equal(timeStamp, info.LastTimeStamp);
+            Assert.Equal(now, info.FirstTimeStamp);
+            Assert.Equal(now, info.LastTimeStamp);
         }
 
         [Fact]
@@ -56,12 +56,12 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestAddWithRetentionTime()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeStamp timeStamp = DateTime.UtcNow;
+            TimeStamp now = DateTime.UtcNow;
             long retentionTime = 5000;
-            Assert.Equal(timeStamp, db.TimeSeriesAdd(key, timeStamp, 1.1, retentionTime: retentionTime));
+            Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1, retentionTime: retentionTime));
             TimeSeriesInformation info = db.TimeSeriesInfo(key);
-            Assert.Equal(timeStamp, info.FirstTimeStamp);
-            Assert.Equal(timeStamp, info.LastTimeStamp);
+            Assert.Equal(now, info.FirstTimeStamp);
+            Assert.Equal(now, info.LastTimeStamp);
             Assert.Equal(retentionTime, info.RetentionTime);
         }
 
@@ -69,13 +69,13 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestAddWithLabels()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeStamp timeStamp = DateTime.UtcNow;
+            TimeStamp now = DateTime.UtcNow;
             TimeSeriesLabel label = new TimeSeriesLabel("key", "value");
             var labels = new List<TimeSeriesLabel> { label };
-            Assert.Equal(timeStamp, db.TimeSeriesAdd(key, timeStamp, 1.1, labels: labels));
+            Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1, labels: labels));
             TimeSeriesInformation info = db.TimeSeriesInfo(key);
-            Assert.Equal(timeStamp, info.FirstTimeStamp);
-            Assert.Equal(timeStamp, info.LastTimeStamp);
+            Assert.Equal(now, info.FirstTimeStamp);
+            Assert.Equal(now, info.LastTimeStamp);
             Assert.Equal(labels, info.Labels);
         }
 
@@ -84,22 +84,22 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
             db.TimeSeriesCreate(key);
-            TimeStamp timeStamp = DateTime.UtcNow;
-            Assert.Equal(timeStamp, db.TimeSeriesAdd(key, timeStamp, 1.1, uncompressed: true));
+            TimeStamp now = DateTime.UtcNow;
+            Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1, uncompressed: true));
             TimeSeriesInformation info = db.TimeSeriesInfo(key);
-            Assert.Equal(timeStamp, info.FirstTimeStamp);
-            Assert.Equal(timeStamp, info.LastTimeStamp);
+            Assert.Equal(now, info.FirstTimeStamp);
+            Assert.Equal(now, info.LastTimeStamp);
         }
         
         [Fact]
         public void TestAddWithChunkSize()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeStamp timeStamp = DateTime.UtcNow;
-            Assert.Equal(timeStamp, db.TimeSeriesAdd(key, timeStamp, 1.1, chunkSizeBytes: 128));
+            TimeStamp now = DateTime.UtcNow;
+            Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1, chunkSizeBytes: 128));
             TimeSeriesInformation info = db.TimeSeriesInfo(key);
-            Assert.Equal(timeStamp, info.FirstTimeStamp);
-            Assert.Equal(timeStamp, info.LastTimeStamp);
+            Assert.Equal(now, info.FirstTimeStamp);
+            Assert.Equal(now, info.LastTimeStamp);
             Assert.Equal(128, info.ChunkSize);
         }
 
@@ -107,10 +107,10 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestAddWithDuplicatePolicyBlock() 
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeStamp timeStamp = DateTime.UtcNow;
-            Assert.Equal(timeStamp, db.TimeSeriesAdd(key, timeStamp, 1.1));
+            TimeStamp now = DateTime.UtcNow;
+            Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1));
 
-            var ex = Assert.Throws<RedisServerException>(() => db.TimeSeriesAdd(key, timeStamp, 1.2));
+            var ex = Assert.Throws<RedisServerException>(() => db.TimeSeriesAdd(key, now, 1.2));
             Assert.Equal("ERR TSDB: Error at upsert, update is not supported in BLOCK mode", ex.Message);
         }
 
@@ -118,60 +118,60 @@ namespace NRedisTimeSeries.Test.TestAPI
         public void TestAddWithDuplicatePolicyMin()
         { 
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeStamp timeStamp = DateTime.UtcNow;
-            Assert.Equal(timeStamp, db.TimeSeriesAdd(key, timeStamp, 1.1));
+            TimeStamp now = DateTime.UtcNow;
+            Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1));
 
             // Insert a bigger number and check that it did not change the value
-            Assert.Equal(timeStamp, db.TimeSeriesAdd(key, timeStamp, 1.2, policy: TsDuplicatePolicy.MIN));
-            Assert.Equal(1.1, db.TimeSeriesRange(key, timeStamp, timeStamp)[0].Val);
+            Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.2, policy: TsDuplicatePolicy.MIN));
+            Assert.Equal(1.1, db.TimeSeriesRange(key, now, now)[0].Val);
             // Insert a smaller number and check that it changed
-            Assert.Equal(timeStamp, db.TimeSeriesAdd(key, timeStamp, 1.0, policy: TsDuplicatePolicy.MIN));
-            Assert.Equal(1.0, db.TimeSeriesRange(key, timeStamp, timeStamp)[0].Val);
+            Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.0, policy: TsDuplicatePolicy.MIN));
+            Assert.Equal(1.0, db.TimeSeriesRange(key, now, now)[0].Val);
         }
 
         [Fact]
         public void TestAddWithDuplicatePolicyMax()
         { 
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeStamp timeStamp = DateTime.UtcNow;
-            Assert.Equal(timeStamp, db.TimeSeriesAdd(key, timeStamp, 1.1));
+            TimeStamp now = DateTime.UtcNow;
+            Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1));
 
             // Insert a smaller number and check that it did not change the value
-            Assert.Equal(timeStamp, db.TimeSeriesAdd(key, timeStamp, 1.0, policy: TsDuplicatePolicy.MAX));
-            Assert.Equal(1.1, db.TimeSeriesRange(key, timeStamp, timeStamp)[0].Val);
+            Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.0, policy: TsDuplicatePolicy.MAX));
+            Assert.Equal(1.1, db.TimeSeriesRange(key, now, now)[0].Val);
             // Insert a bigger number and check that it changed
-            Assert.Equal(timeStamp, db.TimeSeriesAdd(key, timeStamp, 1.2, policy: TsDuplicatePolicy.MAX));
-            Assert.Equal(1.2, db.TimeSeriesRange(key, timeStamp, timeStamp)[0].Val);
+            Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.2, policy: TsDuplicatePolicy.MAX));
+            Assert.Equal(1.2, db.TimeSeriesRange(key, now, now)[0].Val);
         }
 
         [Fact]
         public void TestAddWithDuplicatePolicySum()
         { 
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeStamp timeStamp = DateTime.UtcNow;
-            Assert.Equal(timeStamp, db.TimeSeriesAdd(key, timeStamp, 1.1));
-            Assert.Equal(timeStamp, db.TimeSeriesAdd(key, timeStamp, 1.0, policy: TsDuplicatePolicy.SUM));
-            Assert.Equal(2.1, db.TimeSeriesRange(key, timeStamp, timeStamp)[0].Val);
+            TimeStamp now = DateTime.UtcNow;
+            Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1));
+            Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.0, policy: TsDuplicatePolicy.SUM));
+            Assert.Equal(2.1, db.TimeSeriesRange(key, now, now)[0].Val);
         }
 
         [Fact]
         public void TestAddWithDuplicatePolicyFirst()
         { 
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeStamp timeStamp = DateTime.UtcNow;
-            Assert.Equal(timeStamp, db.TimeSeriesAdd(key, timeStamp, 1.1));
-            Assert.Equal(timeStamp, db.TimeSeriesAdd(key, timeStamp, 1.0, policy: TsDuplicatePolicy.FIRST));
-            Assert.Equal(1.1, db.TimeSeriesRange(key, timeStamp, timeStamp)[0].Val);
+            TimeStamp now = DateTime.UtcNow;
+            Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1));
+            Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.0, policy: TsDuplicatePolicy.FIRST));
+            Assert.Equal(1.1, db.TimeSeriesRange(key, now, now)[0].Val);
         }
 
         [Fact]
         public void TestAddWithDuplicatePolicyLast()
         { 
             IDatabase db = redisFixture.Redis.GetDatabase();
-            TimeStamp timeStamp = DateTime.UtcNow;
-            Assert.Equal(timeStamp, db.TimeSeriesAdd(key, timeStamp, 1.1));
-            Assert.Equal(timeStamp, db.TimeSeriesAdd(key, timeStamp, 1.0, policy: TsDuplicatePolicy.LAST));
-            Assert.Equal(1.0, db.TimeSeriesRange(key, timeStamp, timeStamp)[0].Val);
+            TimeStamp now = DateTime.UtcNow;
+            Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.1));
+            Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.0, policy: TsDuplicatePolicy.LAST));
+            Assert.Equal(1.0, db.TimeSeriesRange(key, now, now)[0].Val);
         }      
 
         [Fact]
