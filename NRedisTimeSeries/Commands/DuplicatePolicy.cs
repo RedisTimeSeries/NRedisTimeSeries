@@ -1,4 +1,3 @@
-
 namespace NRedisTimeSeries.Commands
 { 
     /// <summary>
