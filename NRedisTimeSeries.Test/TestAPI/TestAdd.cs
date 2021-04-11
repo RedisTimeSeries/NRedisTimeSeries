@@ -124,7 +124,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             // Insert a bigger number and check that it did not change the value.
             Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.2, policy: TsDuplicatePolicy.MIN));
             Assert.Equal(1.1, db.TimeSeriesRange(key, now, now)[0].Val);
-            // Insert a smaller number and check that it changed
+            // Insert a smaller number and check that it changed.
             Assert.Equal(now, db.TimeSeriesAdd(key, now, 1.0, policy: TsDuplicatePolicy.MIN));
             Assert.Equal(1.0, db.TimeSeriesRange(key, now, now)[0].Val);
         }
