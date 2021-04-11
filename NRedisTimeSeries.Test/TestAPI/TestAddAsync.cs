@@ -151,7 +151,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.0, policy: TsDuplicatePolicy.MAX));
             IReadOnlyList<TimeSeriesTuple> results = await db.TimeSeriesRangeAsync(key, timeStamp, timeStamp);
             Assert.Equal(1.1, results[0].Val);
-            // Insert a bigger number and check that it changed
+            // Insert a bigger number and check that it changed.
             Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.2, policy: TsDuplicatePolicy.MAX));
             results = await db.TimeSeriesRangeAsync(key, timeStamp, timeStamp);
             Assert.Equal(1.2, results[0].Val);
