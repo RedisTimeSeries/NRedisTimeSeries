@@ -13,7 +13,7 @@ namespace NRedisTimeSeries.Example
         /// <summary>
         /// Example for decreasing the value of the last sample by 5. 
         /// </summary>
-        public static void DefaultIncrByExample()
+        public static void DefaultDecrByExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
@@ -24,7 +24,7 @@ namespace NRedisTimeSeries.Example
         /// <summary>
         /// Example for setting the last sample timestamp to system time and its value to -5, with DECRBY. 
         /// </summary>
-        public static void SystemTimeIncrByExample()
+        public static void SystemTimeDecrByExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
@@ -35,7 +35,7 @@ namespace NRedisTimeSeries.Example
         /// <summary>
         /// Example for setting the last sample timestamp to DateTime.UtcNow and its value to -5, with DECRBY. 
         /// </summary>
-        public static void DateTimeIncrByExample()
+        public static void DateTimeDecrByExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
@@ -46,7 +46,7 @@ namespace NRedisTimeSeries.Example
         /// <summary>
         /// Example for setting the last sample timestamp to long value and its value to -5, with DECRBY. 
         /// </summary>
-        public static void LongIncrByExample()
+        public static void LongDecrByExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
@@ -58,7 +58,7 @@ namespace NRedisTimeSeries.Example
         /// Example for setting the last sample timestamp to system time and its value to -5, with DECRBY.
         /// The parameters retentionTime, uncompressed and labels are optional and can be set in any order when used as named argument.
         /// </summary>
-        public static void ParameterizedIncrByExample()
+        public static void ParameterizedDecrByExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
