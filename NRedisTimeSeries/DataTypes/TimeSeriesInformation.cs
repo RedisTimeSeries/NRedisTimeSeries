@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using NRedisTimeSeries.Commands;
+using NRedisTimeSeries.Enums;
 
 namespace NRedisTimeSeries.DataTypes
 {

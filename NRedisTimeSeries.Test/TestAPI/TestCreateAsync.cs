@@ -1,4 +1,5 @@
 using NRedisTimeSeries.DataTypes;
+using NRedisTimeSeries.Enums;
 using NRedisTimeSeries.Commands;
 using System.Collections.Generic;
 using System.Threading.Tasks;

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
+using NRedisTimeSeries.DataTypes;
+using NRedisTimeSeries.Enums;
 
 namespace NRedisTimeSeries.Example
 {

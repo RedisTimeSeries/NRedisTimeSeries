@@ -1,4 +1,4 @@
-namespace NRedisTimeSeries.Commands
+namespace NRedisTimeSeries.Enums
 { 
     /// <summary>
     /// Policy to handle duplicate samples. 
