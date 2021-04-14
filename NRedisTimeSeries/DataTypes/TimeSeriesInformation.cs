@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NRedisTimeSeries.Commands;
 
 namespace NRedisTimeSeries.DataTypes
 {
@@ -65,7 +66,9 @@ namespace NRedisTimeSeries.DataTypes
         /// </summary>
         public IReadOnlyList<TimeSeriesRule> Rules { get; private set; }
 
-        internal TimeSeriesInformation(long totalSamples, long memoryUsage, TimeStamp firstTimeStamp, TimeStamp lastTimeStamp, long retentionTime, long chunkCount, long chunkSize, IReadOnlyList<TimeSeriesLabel> labels, string sourceKey, IReadOnlyList<TimeSeriesRule> rules)
+        public TsDuplicatePolicy? DuplicatePolicy {  get; private set; }
+
+        internal TimeSeriesInformation(long totalSamples, long memoryUsage, TimeStamp firstTimeStamp, TimeStamp lastTimeStamp, long retentionTime, long chunkCount, long chunkSize, IReadOnlyList<TimeSeriesLabel> labels, string sourceKey, IReadOnlyList<TimeSeriesRule> rules, TsDuplicatePolicy? policy)
         {
             TotalSamples = totalSamples;
             MemoryUsage = memoryUsage;
@@ -79,6 +82,8 @@ namespace NRedisTimeSeries.DataTypes
             // backwards compatible with RedisTimeSeries < v1.4
             MaxSamplesPerChunk = chunkSize/16;
             ChunkSize = chunkSize;
+            // configure what to do on duplicate sample > v1.4
+            DuplicatePolicy = policy;
         }
     }
 }

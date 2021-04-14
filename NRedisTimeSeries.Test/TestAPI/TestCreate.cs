@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NRedisTimeSeries;
 using NRedisTimeSeries.DataTypes;
+using NRedisTimeSeries.Commands;
 using StackExchange.Redis;
 using Xunit;
 
@@ -62,6 +63,41 @@ namespace NRedisTimeSeries.Test.TestAPI
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
             Assert.True(db.TimeSeriesCreate(key, uncompressed: true));
+        }
+
+        [Fact]
+        public void TestCreatehDuplicatePolicyFirst()
+        {
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.FIRST));
+        }
+
+        [Fact]
+        public void TestCreatehDuplicatePolicyLast()
+        {
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.LAST));
+        }
+
+        [Fact]
+        public void TestCreatehDuplicatePolicyMin()
+        {
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.MIN));
+        }
+
+        [Fact]
+        public void TestCreatehDuplicatePolicyMax()
+        {
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.MAX));
+        }
+
+        [Fact]
+        public void TestCreatehDuplicatePolicySum()
+        {
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            Assert.True(db.TimeSeriesCreate(key, policy: TsDuplicatePolicy.SUM));
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace NRedisTimeSeries.Commands
+namespace NRedisTimeSeries.Commands
 {
     internal class CommandArgs
     {
@@ -11,5 +11,7 @@
         public static string WITHLABELS => "WITHLABELS";
         public static string TIMESTAMP => "TIMESTAMP";
         public static string CHUNK_SIZE => "CHUNK_SIZE";
+        public static string DUPLICATE_POLICY => "DUPLICATE_POLICY";
+        public static string ON_DUPLICATE => "ON_DUPLICATE";
     }
 }

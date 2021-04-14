@@ -64,7 +64,8 @@ namespace NRedisTimeSeries.Example
             TimeStamp timestamp = "*";
             var label = new TimeSeriesLabel("key", "value");
             var labels = new List<TimeSeriesLabel> { label };
-            await db.TimeSeriesAddAsync("my_ts", timestamp, 0.0, retentionTime:5000, labels:labels, uncompressed:true);
+            var policy = TsDuplicatePolicy.SUM;
+            await db.TimeSeriesAddAsync("my_ts", timestamp, 0.0, retentionTime:5000, labels:labels, uncompressed:true, policy: policy);
             redis.Close();
         }
     }

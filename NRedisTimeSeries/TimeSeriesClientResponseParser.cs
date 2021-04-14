@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.DataTypes;
@@ -108,6 +108,16 @@ namespace NRedisTimeSeries
             return list;
         }
 
+        private static TsDuplicatePolicy? ParsePolicy(RedisResult result)
+        {
+            var policyStatus = (string) result;
+            if (String.IsNullOrEmpty(policyStatus) || policyStatus == "(nil)") {
+                return null;
+            }
+
+            return DuplicatePolicyExtensions.AsPolicy(policyStatus.ToUpper());
+        }
+
         private static TimeSeriesInformation ParseInfo(RedisResult result)
         {
             long totalSamples = -1, memoryUsage = -1, retentionTime = -1, chunkSize=-1, chunkCount = -1;
@@ -115,6 +125,7 @@ namespace NRedisTimeSeries
             IReadOnlyList<TimeSeriesLabel> labels = null;
             IReadOnlyList <TimeSeriesRule> rules = null;
             string sourceKey = null;
+            TsDuplicatePolicy? policy = null;
             RedisResult[] redisResults = (RedisResult[])result;
             for(int i=0; i<redisResults.Length ; ++i){
                 string label = (string)redisResults[i++];
@@ -154,10 +165,15 @@ namespace NRedisTimeSeries
                     case "rules":
                         rules = ParseRuleArray(redisResults[i]);
                         break;
+                    case "duplicatePolicy":
+                        // Avalible for > v1.4
+                        policy = ParsePolicy(redisResults[i]);
+                        break;
                 }
             }
+
             return new TimeSeriesInformation(totalSamples, memoryUsage, firstTimestamp,
-            lastTimestamp, retentionTime, chunkCount, chunkSize, labels, sourceKey, rules);
+            lastTimestamp, retentionTime, chunkCount, chunkSize, labels, sourceKey, rules, policy);
         }
 
         private static IReadOnlyList<string> ParseStringArray(RedisResult result)
