@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using NRedisTimeSeries.DataTypes;
+using NRedisTimeSeries.Commands;
 using StackExchange.Redis;
 
 namespace NRedisTimeSeries.Example
@@ -63,7 +64,8 @@ namespace NRedisTimeSeries.Example
             TimeStamp timestamp = "*";
             var label = new TimeSeriesLabel("key", "value");
             var labels = new List<TimeSeriesLabel> { label };
-            db.TimeSeriesAdd("my_ts", timestamp, 0.0, retentionTime:5000, labels:labels, uncompressed:true);
+            var policy = TsDuplicatePolicy.SUM;
+            db.TimeSeriesAdd("my_ts", timestamp, 0.0, retentionTime:5000, labels:labels, uncompressed:true, policy:policy);
             redis.Close();
         }
     }
