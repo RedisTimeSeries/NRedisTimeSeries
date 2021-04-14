@@ -1,4 +1,3 @@
-
 namespace NRedisTimeSeries.Commands
 { 
     /// <summary>
@@ -39,3 +38,4 @@ namespace NRedisTimeSeries.Commands
         SUM
     }
 }
+
