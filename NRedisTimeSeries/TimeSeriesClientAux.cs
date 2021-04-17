@@ -1,3 +1,5 @@
+using System.Diagnostics.Tracing;
+using System.ComponentModel.Design;
 using System;
 using System.Collections.Generic;
 using NRedisTimeSeries.Commands;
@@ -14,7 +16,6 @@ namespace NRedisTimeSeries
             if (retentionTime.HasValue)
             {
                 args.Add(CommandArgs.RETENTION);
-                args.Add(retentionTime);
             }
         }
 
@@ -111,6 +112,17 @@ namespace NRedisTimeSeries
             }
         }
 
+        private static void AddGroupby(this IList<object> args, string groupby, TsReduce? reduce) 
+        {
+            if (!String.IsNullOrEmpty(groupby)) 
+            {
+                args.Add(CommandArgs.GROPUBY);
+                args.Add(groupby);
+                args.Add(CommandArgs.REDUCE);
+                args.Add(reduce.Value.AsArg());
+            }
+        }
+
         private static void AddTimeStamp(this IList<object> args, TimeStamp timeStamp)
         {
             if(timeStamp != null)
@@ -204,13 +216,14 @@ namespace NRedisTimeSeries
         }
         
         private static List<object> BuildMultiRangeArgs(TimeStamp fromTimeStamp, TimeStamp toTimeStamp, IReadOnlyCollection<string> filter,
-            long? count, TsAggregation? aggregation, long? timeBucket, bool? withLabels)
+            long? count, TsAggregation? aggregation, long? timeBucket, bool? withLabels, string groupby, TsReduce? reduce)
         {
             var args = new List<object>() {fromTimeStamp.Value, toTimeStamp.Value};
             args.AddCount(count);
             args.AddAggregation(aggregation, timeBucket);
             args.AddWithLabels(withLabels);
             args.AddFilters(filter);
+            args.AddGroupby(groupby, reduce);
             return args;
         }
     }

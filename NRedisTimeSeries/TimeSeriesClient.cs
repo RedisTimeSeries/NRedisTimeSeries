@@ -227,9 +227,19 @@ namespace NRedisTimeSeries
         /// <param name="timeBucket">Optional: Time bucket for aggregation in milliseconds</param>
         /// <param name="withLabels">Optional: Include in the reply the label-value pairs that represent metadata labels of the time-series</param>
         /// <returns>A list of <(key, labels, values)> tuples. Each tuple contains the key name, its labels and the values which satisfies the given range and filters.</returns>
-        public static IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)> TimeSeriesMRange(this IDatabase db, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, IReadOnlyCollection<string> filter, long? count = null, TsAggregation? aggregation = null, long? timeBucket = null, bool? withLabels = null)
+        public static IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)> TimeSeriesMRange(
+            this IDatabase db, 
+            TimeStamp fromTimeStamp, 
+            TimeStamp toTimeStamp, 
+            IReadOnlyCollection<string> filter, 
+            long? count = null, 
+            TsAggregation? aggregation = null, 
+            long? timeBucket = null, 
+            bool? withLabels = null,
+            string groupby = null,
+            TsReduce? reduce = null)
         {
-            var args = BuildMultiRangeArgs(fromTimeStamp, toTimeStamp, filter, count, aggregation, timeBucket, withLabels);
+            var args = BuildMultiRangeArgs(fromTimeStamp, toTimeStamp, filter, count, aggregation, timeBucket, withLabels, groupby, reduce);
             return ParseMRangeResponse(db.Execute(TS.MRANGE, args));
         }
 
@@ -245,9 +255,10 @@ namespace NRedisTimeSeries
         /// <param name="timeBucket">Optional: Time bucket for aggregation in milliseconds</param>
         /// <param name="withLabels">Optional: Include in the reply the label-value pairs that represent metadata labels of the time-series</param>
         /// <returns>A list of <(key, labels, values)> tuples. Each tuple contains the key name, its labels and the values which satisfies the given range and filters.</returns>
-        public static IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)> TimeSeriesMRevRange(this IDatabase db, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, IReadOnlyCollection<string> filter, long? count = null, TsAggregation? aggregation = null, long? timeBucket = null, bool? withLabels = null)
+        public static IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)> TimeSeriesMRevRange(this IDatabase db, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, IReadOnlyCollection<string> filter, long? count = null, TsAggregation? aggregation = null, long? timeBucket = null, bool? withLabels = null, string groupby = null,
+            TsReduce? reduce = null)
         {
-            var args = BuildMultiRangeArgs(fromTimeStamp, toTimeStamp, filter, count, aggregation, timeBucket, withLabels);
+            var args = BuildMultiRangeArgs(fromTimeStamp, toTimeStamp, filter, count, aggregation, timeBucket, withLabels, groupby, reduce);
             return ParseMRangeResponse(db.Execute(TS.MREVRANGE, args));
         }
 
