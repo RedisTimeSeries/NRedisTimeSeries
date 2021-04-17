@@ -16,6 +16,7 @@ namespace NRedisTimeSeries
             if (retentionTime.HasValue)
             {
                 args.Add(CommandArgs.RETENTION);
+                args.Add(retentionTime);
             }
         }
 
