@@ -22,7 +22,7 @@ namespace NRedisTimeSeries
         /// <param name="uncompressed">Optional: Adding this flag will keep data in an uncompressed form</param>
         /// <param name="chunkSizeBytes">Optional: Each time-series uses chunks of memory of fixed size for time series samples.
         /// You can alter the default TSDB chunk size by passing the chunk_size argument (in Bytes)</param>
-        /// <param nams="policy">Optinal: Define handling of duplicate samples behavior (avalible for RedisTimeseries >= 1.4)</param>
+        /// <param name="policy">Optinal: Define handling of duplicate samples behavior (avalible for RedisTimeseries >= 1.4)</param>
         /// <returns>If the operation executed successfully</returns>
         public static bool TimeSeriesCreate(this IDatabase db, string key, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null, TsDuplicatePolicy? policy = null)
         {

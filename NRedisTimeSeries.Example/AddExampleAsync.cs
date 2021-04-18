@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
+using NRedisTimeSeries.Commands;
 
 namespace NRedisTimeSeries.Example
 {
