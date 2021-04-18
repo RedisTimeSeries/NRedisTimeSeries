@@ -228,7 +228,7 @@ namespace NRedisTimeSeries
         /// <param name="withLabels">Optional: Include in the reply the label-value pairs that represent metadata labels of the time-series</param>
         /// <param name="groupby">Optional: Grouping by fields the results</param>
         /// <param name="reduce">Optional: Applying reducer functions on each group</param>
-        /// <returns>A list of <(key, labels, values)> tuples. Each tuple contains the key name, its labels and the values which satisfies the given range and filters.</returns>
+        /// <returns>A list of (key, labels, values) tuples. Each tuple contains the key name, its labels and the values which satisfies the given range and filters.</returns>
         public static IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)> TimeSeriesMRange(this IDatabase db, 
             TimeStamp fromTimeStamp, 
             TimeStamp toTimeStamp, 
@@ -257,7 +257,7 @@ namespace NRedisTimeSeries
         /// <param name="withLabels">Optional: Include in the reply the label-value pairs that represent metadata labels of the time-series</param>
         /// <param name="groupby">Optional: Grouping by fields the results</param>
         /// <param name="reduce">Optional: Applying reducer functions on each group</param>
-        /// <returns>A list of <(key, labels, values)> tuples. Each tuple contains the key name, its labels and the values which satisfies the given range and filters.</returns>
+        /// <returns>A list of (key, labels, values) tuples. Each tuple contains the key name, its labels and the values which satisfies the given range and filters.</returns>
         public static IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)> TimeSeriesMRevRange(this IDatabase db, 
             TimeStamp fromTimeStamp, 
             TimeStamp toTimeStamp, 

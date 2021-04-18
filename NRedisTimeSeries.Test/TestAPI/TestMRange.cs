@@ -174,7 +174,53 @@ namespace NRedisTimeSeries.Test.TestAPI
             var tuples = CreateData(db, 50);
             var ex = Assert.Throws<ArgumentException>(() => db.TimeSeriesMRange("-", "+", new List<string> { "key=MissingTimeBucket" }, aggregation: TsAggregation.Avg));
             Assert.Equal("RANGE Aggregation should have timeBucket value", ex.Message);
+        }
 
+        [Fact]
+        public void TestMRangeGroupby()
+        {
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            for(int i = 0; i < keys.Length; i++) 
+            {
+                var label1 = new TimeSeriesLabel("key", "MRangeGroupby");
+                var label2 = new TimeSeriesLabel("group", i.ToString());
+                db.TimeSeriesCreate(keys[i], labels: new List<TimeSeriesLabel> { label1, label2 });
+            }
+
+            var tuples = CreateData(db, 50);
+            var results = db.TimeSeriesMRange("-", "+", new List<string> { "key=MRangeGroupby" }, withLabels: true, groupby: "group", reduce: TsReduce.Min);
+            Assert.Equal(keys.Length, results.Count);
+            for (int i = 0; i < results.Count; i++)
+            {
+                Assert.Equal("group=" + i, results[i].key);
+                Assert.Equal(new TimeSeriesLabel("group", i.ToString()), results[i].labels[0]);
+                Assert.Equal(new TimeSeriesLabel("__reducer__", "min"), results[i].labels[1]);
+                Assert.Equal(new TimeSeriesLabel("__source__", keys[i]), results[i].labels[2]);
+                Assert.Equal(tuples, results[i].values);
+            }
+        }
+
+        [Fact]
+        public void TestMRangeReduce()
+        {
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            foreach(var key in keys)
+            {
+                var label = new TimeSeriesLabel("key", "MRangeReduce");
+                db.TimeSeriesCreate(key, labels: new List<TimeSeriesLabel> { label });
+            }
+
+            var tuples = CreateData(db, 50);
+            var results = db.TimeSeriesMRange("-", "+", new List<string> { "key=MRangeReduce" }, withLabels: true, groupby: "key", reduce: TsReduce.Sum);
+            Assert.Equal(1, results.Count);
+            Assert.Equal("key=MRangeReduce", results[0].key);
+            Assert.Equal(new TimeSeriesLabel("key", "MRangeReduce"), results[0].labels[0]);
+            Assert.Equal(new TimeSeriesLabel("__reducer__", "sum"), results[0].labels[1]);
+            Assert.Equal(new TimeSeriesLabel("__source__", string.Join(",", keys)), results[0].labels[2]);
+            for(int i = 0; i < results[0].values.Count; i++)
+            {
+                Assert.Equal(tuples[i].Val * 2, results[0].values[i].Val);
+            }
         }
     }
 }

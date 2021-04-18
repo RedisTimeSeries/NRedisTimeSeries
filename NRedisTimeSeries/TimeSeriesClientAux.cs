@@ -115,7 +115,7 @@ namespace NRedisTimeSeries
 
         private static void AddGroupby(this IList<object> args, string groupby, TsReduce? reduce) 
         {
-            if (!String.IsNullOrEmpty(groupby)) 
+            if (!String.IsNullOrEmpty(groupby) && reduce.HasValue) 
             {
                 args.Add(CommandArgs.GROPUBY);
                 args.Add(groupby);
