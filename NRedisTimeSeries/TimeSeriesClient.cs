@@ -229,8 +229,7 @@ namespace NRedisTimeSeries
         /// <param name="groupby">Optional: Grouping by fields the results</param>
         /// <param name="reduce">Optional: Applying reducer functions on each group</param>
         /// <returns>A list of <(key, labels, values)> tuples. Each tuple contains the key name, its labels and the values which satisfies the given range and filters.</returns>
-        public static IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)> TimeSeriesMRange(
-            this IDatabase db, 
+        public static IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)> TimeSeriesMRange(this IDatabase db, 
             TimeStamp fromTimeStamp, 
             TimeStamp toTimeStamp, 
             IReadOnlyCollection<string> filter, 
@@ -259,7 +258,15 @@ namespace NRedisTimeSeries
         /// <param name="groupby">Optional: Grouping by fields the results</param>
         /// <param name="reduce">Optional: Applying reducer functions on each group</param>
         /// <returns>A list of <(key, labels, values)> tuples. Each tuple contains the key name, its labels and the values which satisfies the given range and filters.</returns>
-        public static IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)> TimeSeriesMRevRange(this IDatabase db, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, IReadOnlyCollection<string> filter, long? count = null, TsAggregation? aggregation = null, long? timeBucket = null, bool? withLabels = null, string groupby = null,
+        public static IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)> TimeSeriesMRevRange(this IDatabase db, 
+            TimeStamp fromTimeStamp, 
+            TimeStamp toTimeStamp, 
+            IReadOnlyCollection<string> filter, 
+            long? count = null, 
+            TsAggregation? aggregation = null, 
+            long? timeBucket = null, 
+            bool? withLabels = null, 
+            string groupby = null,
             TsReduce? reduce = null)
         {
             var args = BuildMultiRangeArgs(fromTimeStamp, toTimeStamp, filter, count, aggregation, timeBucket, withLabels, groupby, reduce);
