@@ -1,5 +1,5 @@
 ﻿using NRedisTimeSeries.Commands;
-using NRedisTimeSeries.Enums;
+using NRedisTimeSeries.Commands.Enums;
 using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
 using System.Collections.Generic;

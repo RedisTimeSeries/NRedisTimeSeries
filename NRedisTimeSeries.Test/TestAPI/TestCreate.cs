@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using StackExchange.Redis;
 using NRedisTimeSeries;
 using NRedisTimeSeries.DataTypes;
-using NRedisTimeSeries.Enums;
+using NRedisTimeSeries.Commands.Enums;
 using NRedisTimeSeries.Commands;
 using Xunit;
 

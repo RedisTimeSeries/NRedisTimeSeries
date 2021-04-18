@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using StackExchange.Redis;
 using NRedisTimeSeries.Commands;
-using NRedisTimeSeries.Enums;
+using NRedisTimeSeries.Commands.Enums;
 using NRedisTimeSeries.DataTypes;
 
 namespace NRedisTimeSeries.Example

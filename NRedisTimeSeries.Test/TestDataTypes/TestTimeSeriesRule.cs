@@ -1,6 +1,6 @@
 ﻿using System;
 using NRedisTimeSeries.Commands;
-using NRedisTimeSeries.Enums;
+using NRedisTimeSeries.Commands.Enums;
 using NRedisTimeSeries.DataTypes;
 using Xunit;
 

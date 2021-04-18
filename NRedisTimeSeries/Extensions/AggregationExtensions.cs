@@ -1,5 +1,5 @@
 ﻿using System;
-using NRedisTimeSeries.Enums;
+using NRedisTimeSeries.Commands.Enums;
 
 namespace NRedisTimeSeries.Extensions
 {
