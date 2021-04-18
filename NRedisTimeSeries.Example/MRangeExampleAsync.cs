@@ -96,5 +96,27 @@ namespace NRedisTimeSeries.Example
             }
             redis.Close();
         }
+
+        /// <summary>
+        /// Example for basic usage of RedisTimeSeries RANGE command with "-" and "+" as range boundreis, a filter and a Groupby concept.
+        /// NRedisTimeSeris MRange is expecting two TimeStamps objects as the range boundries.
+        /// In this case, the strings are implicitly casted into TimeStamp objects.
+        /// The TimeSeriesMRange command returns an IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)>collection.
+        /// </summary>
+        public static async Task MRangeWithGroupbyAsyncExample()
+        {
+            ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
+            IDatabase db = redis.GetDatabase();
+            var filter = new List<string> { "MRANGEkey=MRANGEvalue" };
+            var results = await db.TimeSeriesMRangeAsync("-", "+", filter, withLabels: true, groupby: "labelName", reduce: TsReduce.Max);
+            // Values extraction example.
+            foreach (var result in results)
+            {
+                string group = result.key;
+                IReadOnlyList<TimeSeriesLabel> labels = result.labels;
+                IReadOnlyList<TimeSeriesTuple> values = result.values;
+            }
+            redis.Close();
+        }
     }
 }
