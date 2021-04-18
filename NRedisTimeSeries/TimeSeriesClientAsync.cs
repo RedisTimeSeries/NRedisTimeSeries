@@ -225,6 +225,8 @@ namespace NRedisTimeSeries
         /// <param name="aggregation">Optional: Aggregation type</param>
         /// <param name="timeBucket">Optional: Time bucket for aggregation in milliseconds</param>
         /// <param name="withLabels">Optional: Include in the reply the label-value pairs that represent metadata labels of the time-series</param>
+        /// <param name="groupby">Optional: Grouping by fields the results</param>
+        /// <param name="reduce">Optional: Applying reducer functions on each group</param>        
         /// <returns>A list of <(key, labels, values)> tuples. Each tuple contains the key name, its labels and the values which satisfies the given range and filters.</returns>
         public static async Task<IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)>> TimeSeriesMRangeAsync(this IDatabase db, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, IReadOnlyCollection<string> filter, long? count = null, TsAggregation? aggregation = null, long? timeBucket = null, bool? withLabels = null, string groupby = null, TsReduce? reduce = null)
         {
@@ -243,6 +245,8 @@ namespace NRedisTimeSeries
         /// <param name="aggregation">Optional: Aggregation type</param>
         /// <param name="timeBucket">Optional: Time bucket for aggregation in milliseconds</param>
         /// <param name="withLabels">Optional: Include in the reply the label-value pairs that represent metadata labels of the time-series</param>
+        /// <param name="groupby">Optional: Grouping by fields the results</param>
+        /// <param name="reduce">Optional: Applying reducer functions on each group</param>
         /// <returns>A list of <(key, labels, values)> tuples. Each tuple contains the key name, its labels and the values which satisfies the given range and filters.</returns>
         public static async Task<IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)>> TimeSeriesMRevRangeAsync(this IDatabase db, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, IReadOnlyCollection<string> filter, long? count = null, TsAggregation? aggregation = null, long? timeBucket = null, bool? withLabels = null, string groupby = null, TsReduce? reduce = null)
         {
