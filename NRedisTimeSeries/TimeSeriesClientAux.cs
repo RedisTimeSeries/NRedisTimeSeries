@@ -1,5 +1,3 @@
-using System.Diagnostics.Tracing;
-using System.ComponentModel.Design;
 using System;
 using System.Collections.Generic;
 using NRedisTimeSeries.Commands;
@@ -113,14 +111,14 @@ namespace NRedisTimeSeries
             }
         }
 
-        private static void AddGroupby(this IList<object> args, string groupby, TsReduce? reduce) 
+        private static void AddGroupby(this IList<object> args, (string groupby, TsReduce reduce)? groupbyTuple) 
         {
-            if (!String.IsNullOrEmpty(groupby) && reduce.HasValue) 
+            if (groupbyTuple.HasValue) 
             {
                 args.Add(CommandArgs.GROPUBY);
-                args.Add(groupby);
+                args.Add(groupbyTuple.Value.groupby);
                 args.Add(CommandArgs.REDUCE);
-                args.Add(reduce.Value.AsArg());
+                args.Add(groupbyTuple.Value.reduce.AsArg());
             }
         }
 
@@ -217,14 +215,14 @@ namespace NRedisTimeSeries
         }
         
         private static List<object> BuildMultiRangeArgs(TimeStamp fromTimeStamp, TimeStamp toTimeStamp, IReadOnlyCollection<string> filter,
-            long? count, TsAggregation? aggregation, long? timeBucket, bool? withLabels, string groupby, TsReduce? reduce)
+            long? count, TsAggregation? aggregation, long? timeBucket, bool? withLabels, (string, TsReduce)? groupbyTuple)
         {
             var args = new List<object>() {fromTimeStamp.Value, toTimeStamp.Value};
             args.AddCount(count);
             args.AddAggregation(aggregation, timeBucket);
             args.AddWithLabels(withLabels);
             args.AddFilters(filter);
-            args.AddGroupby(groupby, reduce);
+            args.AddGroupby(groupbyTuple);
             return args;
         }
     }
