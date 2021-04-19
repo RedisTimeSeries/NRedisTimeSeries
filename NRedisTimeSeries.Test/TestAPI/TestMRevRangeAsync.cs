@@ -191,7 +191,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = await CreateData(db, keys, 50);
-            var results = await db.TimeSeriesMRevRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, withLabels: true, groupby: "group", reduce: TsReduce.Min);
+            var results = await db.TimeSeriesMRevRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, withLabels: true, groupbyTuple: ("group", TsReduce.Min));
             Assert.Equal(keys.Length, results.Count);
             for (var i = 0; i < results.Count; i++)
             {
@@ -215,7 +215,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = await CreateData(db, keys, 50);
-            var results = await db.TimeSeriesMRevRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, withLabels: true, groupby: keys[0], reduce: TsReduce.Sum);
+            var results = await db.TimeSeriesMRevRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, withLabels: true, groupbyTuple: (keys[0], TsReduce.Sum));
             Assert.Equal(1, results.Count);
             Assert.Equal($"{keys[0]}=value", results[0].key);
             Assert.Equal(new TimeSeriesLabel(keys[0], "value"), results[0].labels[0]);

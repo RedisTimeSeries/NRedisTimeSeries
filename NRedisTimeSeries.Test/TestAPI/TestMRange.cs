@@ -188,7 +188,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = CreateData(db, 50);
-            var results = db.TimeSeriesMRange("-", "+", new List<string> { "key=MRangeGroupby" }, withLabels: true, groupby: "group", reduce: TsReduce.Min);
+            var results = db.TimeSeriesMRange("-", "+", new List<string> { "key=MRangeGroupby" }, withLabels: true, groupbyTuple: ("group", TsReduce.Min));
             Assert.Equal(keys.Length, results.Count);
             for (int i = 0; i < results.Count; i++)
             {
@@ -211,7 +211,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = CreateData(db, 50);
-            var results = db.TimeSeriesMRange("-", "+", new List<string> { "key=MRangeReduce" }, withLabels: true, groupby: "key", reduce: TsReduce.Sum);
+            var results = db.TimeSeriesMRange("-", "+", new List<string> { "key=MRangeReduce" }, withLabels: true, groupbyTuple: ("key", TsReduce.Sum));
             Assert.Equal(1, results.Count);
             Assert.Equal("key=MRangeReduce", results[0].key);
             Assert.Equal(new TimeSeriesLabel("key", "MRangeReduce"), results[0].labels[0]);

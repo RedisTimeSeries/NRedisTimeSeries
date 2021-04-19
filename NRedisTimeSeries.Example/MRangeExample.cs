@@ -108,7 +108,7 @@ namespace NRedisTimeSeries.Example
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
             var filter = new List<string> { "MRANGEkey=MRANGEvalue" };
-            var results = db.TimeSeriesMRange("-", "+", filter, withLabels: true, groupby: "labelName", reduce: TsReduce.Max);
+            var results = db.TimeSeriesMRange("-", "+", filter, withLabels: true, groupbyTuple: ("labelName", TsReduce.Max));
             // Values extraction example.
             foreach (var result in results)
             {
