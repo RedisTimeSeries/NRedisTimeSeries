@@ -1,4 +1,4 @@
-﻿namespace NRedisTimeSeries.Commands
+﻿namespace NRedisTimeSeries.Commands.Enums
 {
     /// <summary>
     /// An aggregation type to be used with a time bucket.

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using NRedisTimeSeries.Commands;
+using NRedisTimeSeries.Commands.Enums;
 using NRedisTimeSeries.DataTypes;
 using NRedisTimeSeries.Extensions;
 
