@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.Commands.Enums;
 using NRedisTimeSeries.DataTypes;
