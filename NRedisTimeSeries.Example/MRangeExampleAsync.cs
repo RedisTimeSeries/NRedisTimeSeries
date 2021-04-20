@@ -16,7 +16,7 @@ namespace NRedisTimeSeries.Example
         /// Example for basic usage of RedisTimeSeries RANGE command with "-" and "+" as range boundreis and a filter.
         /// NRedisTimeSeris MRange is expecting two TimeStamps objects as the range boundries.
         /// In this case, the strings are implicitly casted into TimeStamp objects.
-        /// The TimeSeriesMRange command returns an IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)>collection.
+        /// The TimeSeriesMRange command returns an IReadOnlyList (collection) of (string key, IReadOnlyList(TimeSeriesLabel) labels, IReadOnlyList(TimeSeriesTuple) values).
         /// </summary>
         public static async Task BasicMRangeAsyncExample()
         {
@@ -37,7 +37,7 @@ namespace NRedisTimeSeries.Example
         /// Example for basic usage of RedisTimeSeries RANGE command with "-" and "+" as range boundreis, a filter and the COUNT parameter.
         /// NRedisTimeSeris MRange is expecting two TimeStamps objects as the range boundries.
         /// In this case, the strings are implicitly casted into TimeStamp objects.
-        /// The TimeSeriesMRange command returns an IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)>collection.
+        /// The TimeSeriesMRange command returns an IReadOnlyList (collection) of (string key, IReadOnlyList(TimeSeriesLabel) labels, IReadOnlyList(TimeSeriesTuple) values).
         /// </summary>
         public static async Task CountMRangeAsyncExample()
         {
@@ -58,7 +58,7 @@ namespace NRedisTimeSeries.Example
         /// Example for basic usage of RedisTimeSeries RANGE command with "-" and "+" as range boundreis, a filter and MIN aggregation.
         /// NRedisTimeSeris MRange is expecting two TimeStamps objects as the range boundries.
         /// In this case, the strings are implicitly casted into TimeStamp objects.
-        /// The TimeSeriesMRange command returns an IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)>collection.
+        /// The TimeSeriesMRange command returns an IReadOnlyList (collection) of (string key, IReadOnlyList(TimeSeriesLabel) labels, IReadOnlyList(TimeSeriesTuple) values).
         /// </summary>
         public static async Task MRangeAggregationAsyncExample()
         {
@@ -79,7 +79,7 @@ namespace NRedisTimeSeries.Example
         /// Example for basic usage of RedisTimeSeries RANGE command with "-" and "+" as range boundreis, a filter and WITHLABELS flag.
         /// NRedisTimeSeris MRange is expecting two TimeStamps objects as the range boundries.
         /// In this case, the strings are implicitly casted into TimeStamp objects.
-        /// The TimeSeriesMRange command returns an IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)>collection.
+        /// The TimeSeriesMRange command returns an IReadOnlyList (collection) of (string key, IReadOnlyList(TimeSeriesLabel) labels, IReadOnlyList(TimeSeriesTuple) values).
         /// </summary>
         public static async Task MRangeWithLabelsAsyncExample()
         {
@@ -101,7 +101,7 @@ namespace NRedisTimeSeries.Example
         /// Example for basic usage of RedisTimeSeries RANGE command with "-" and "+" as range boundreis, a filter and a Groupby concept.
         /// NRedisTimeSeris MRange is expecting two TimeStamps objects as the range boundries.
         /// In this case, the strings are implicitly casted into TimeStamp objects.
-        /// The TimeSeriesMRange command returns an IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)>collection.
+        /// The TimeSeriesMRange command returns an IReadOnlyList (collection) of (string key, IReadOnlyList(TimeSeriesLabel) labels, IReadOnlyList(TimeSeriesTuple) values).
         /// </summary>
         public static async Task MRangeWithGroupbyAsyncExample()
         {
