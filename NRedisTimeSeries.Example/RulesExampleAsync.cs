@@ -1,7 +1,8 @@
-﻿using NRedisTimeSeries.Commands;
-using NRedisTimeSeries.DataTypes;
+﻿using System.Threading.Tasks;
 using StackExchange.Redis;
-using System.Threading.Tasks;
+using NRedisTimeSeries.Commands;
+using NRedisTimeSeries.Commands.Enums;
+using NRedisTimeSeries.DataTypes;
 
 namespace NRedisTimeSeries.Example
 {
