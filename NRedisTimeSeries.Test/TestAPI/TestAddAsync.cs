@@ -1,10 +1,10 @@
-﻿using NRedisTimeSeries.DataTypes;
-using NRedisTimeSeries.Commands.Enums;
-using NRedisTimeSeries.Commands;
-using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using StackExchange.Redis;
+using NRedisTimeSeries.DataTypes;
+using NRedisTimeSeries.Commands.Enums;
+using NRedisTimeSeries.Commands;
 using Xunit;
 
 namespace NRedisTimeSeries.Test.TestAPI
