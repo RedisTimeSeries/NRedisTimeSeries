@@ -13,5 +13,7 @@ namespace NRedisTimeSeries.Commands
         public static string CHUNK_SIZE => "CHUNK_SIZE";
         public static string DUPLICATE_POLICY => "DUPLICATE_POLICY";
         public static string ON_DUPLICATE => "ON_DUPLICATE";
+        public static string GROPUBY => "GROUPBY";
+        public static string REDUCE => "REDUCE";
     }
 }

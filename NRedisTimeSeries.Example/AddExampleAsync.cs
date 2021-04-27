@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
 using NRedisTimeSeries.Commands;
+using NRedisTimeSeries.Commands.Enums;
+using NRedisTimeSeries.DataTypes;
 
 namespace NRedisTimeSeries.Example
 {
