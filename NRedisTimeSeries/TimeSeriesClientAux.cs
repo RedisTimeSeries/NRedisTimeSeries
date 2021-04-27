@@ -111,6 +111,17 @@ namespace NRedisTimeSeries
             }
         }
 
+        private static void AddGroupby(this IList<object> args, (string groupby, TsReduce reduce)? groupbyTuple) 
+        {
+            if (groupbyTuple.HasValue) 
+            {
+                args.Add(CommandArgs.GROPUBY);
+                args.Add(groupbyTuple.Value.groupby);
+                args.Add(CommandArgs.REDUCE);
+                args.Add(groupbyTuple.Value.reduce.AsArg());
+            }
+        }
+
         private static void AddTimeStamp(this IList<object> args, TimeStamp timeStamp)
         {
             if(timeStamp != null)
@@ -204,13 +215,14 @@ namespace NRedisTimeSeries
         }
         
         private static List<object> BuildMultiRangeArgs(TimeStamp fromTimeStamp, TimeStamp toTimeStamp, IReadOnlyCollection<string> filter,
-            long? count, TsAggregation? aggregation, long? timeBucket, bool? withLabels)
+            long? count, TsAggregation? aggregation, long? timeBucket, bool? withLabels, (string, TsReduce)? groupbyTuple)
         {
             var args = new List<object>() {fromTimeStamp.Value, toTimeStamp.Value};
             args.AddCount(count);
             args.AddAggregation(aggregation, timeBucket);
             args.AddWithLabels(withLabels);
             args.AddFilters(filter);
+            args.AddGroupby(groupbyTuple);
             return args;
         }
     }

@@ -177,5 +177,55 @@ namespace NRedisTimeSeries.Test.TestAPI
             });
             Assert.Equal("RANGE Aggregation should have timeBucket value", ex.Message);
         }
+
+        [Fact]
+        public async Task TestMRevRangeGroupby()
+        {
+            var keys = CreateKeyNames(2);
+            var db = redisFixture.Redis.GetDatabase();
+            for(int i = 0; i < keys.Length; i++) 
+            {
+                var label1 = new TimeSeriesLabel(keys[0], "value");
+                var label2 = new TimeSeriesLabel("group", i.ToString());
+                await db.TimeSeriesCreateAsync(keys[i], labels: new List<TimeSeriesLabel> { label1, label2 });
+            }
+
+            var tuples = await CreateData(db, keys, 50);
+            var results = await db.TimeSeriesMRevRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, withLabels: true, groupbyTuple: ("group", TsReduce.Min));
+            Assert.Equal(keys.Length, results.Count);
+            for (var i = 0; i < results.Count; i++)
+            {
+                Assert.Equal("group=" + i, results[i].key);
+                Assert.Equal(new TimeSeriesLabel("group", i.ToString()), results[i].labels[0]);
+                Assert.Equal(new TimeSeriesLabel("__reducer__", "min"), results[i].labels[1]);
+                Assert.Equal(new TimeSeriesLabel("__source__", keys[i]), results[i].labels[2]);
+                Assert.Equal(ReverseData(tuples), results[i].values);
+            }
+        }
+
+        [Fact]
+        public async Task TestMRevRangeReduce()
+        {
+            var keys = CreateKeyNames(2);
+            var db = redisFixture.Redis.GetDatabase();
+            foreach(var key in keys)
+            {
+                var label = new TimeSeriesLabel(keys[0], "value");
+                await db.TimeSeriesCreateAsync(key, labels: new List<TimeSeriesLabel> { label });
+            }
+
+            var tuples = await CreateData(db, keys, 50);
+            var results = await db.TimeSeriesMRevRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, withLabels: true, groupbyTuple: (keys[0], TsReduce.Sum));
+            Assert.Equal(1, results.Count);
+            Assert.Equal($"{keys[0]}=value", results[0].key);
+            Assert.Equal(new TimeSeriesLabel(keys[0], "value"), results[0].labels[0]);
+            Assert.Equal(new TimeSeriesLabel("__reducer__", "sum"), results[0].labels[1]);
+            Assert.Equal(new TimeSeriesLabel("__source__", string.Join(",", keys)), results[0].labels[2]);
+            tuples = ReverseData(tuples);
+            for(int i = 0; i < results[0].values.Count; i++)
+            {
+                Assert.Equal(tuples[i].Val * 2, results[0].values[i].Val);
+            }
+        }           
     }
 }
