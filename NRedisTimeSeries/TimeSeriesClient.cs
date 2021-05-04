@@ -26,9 +26,9 @@ namespace NRedisTimeSeries
         /// You can alter the default TSDB chunk size by passing the chunk_size argument (in Bytes)</param>
         /// <param name="policy">Optinal: Define handling of duplicate samples behavior (avalible for RedisTimeseries >= 1.4)</param>
         /// <returns>If the operation executed successfully</returns>
-        public static bool TimeSeriesCreate(this IDatabase db, string key, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null, TsDuplicatePolicy? policy = null)
+        public static bool TimeSeriesCreate(this IDatabase db, string key, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null, TsDuplicatePolicy? duplicatePolicy = null)
         {
-            var args = BuildTsCreateArgs(key, retentionTime, labels, uncompressed, chunkSizeBytes, policy);
+            var args = BuildTsCreateArgs(key, retentionTime, labels, uncompressed, chunkSizeBytes, duplicatePolicy);
             return ParseBoolean(db.Execute(TS.CREATE, args));
         }
 
@@ -64,9 +64,9 @@ namespace NRedisTimeSeries
         /// You can alter the default TSDB chunk size by passing the chunk_size argument (in Bytes)</param>
         /// <param name="policy">Optioal: overwrite key and database configuration for DUPLICATE_POLICY</param>
         /// <returns>The timestamp value of the new sample</returns>
-        public static TimeStamp TimeSeriesAdd(this IDatabase db, string key, TimeStamp timestamp, double value, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null, TsDuplicatePolicy? policy = null)
+        public static TimeStamp TimeSeriesAdd(this IDatabase db, string key, TimeStamp timestamp, double value, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null, TsDuplicatePolicy? duplicatePolicy = null)
         {
-            var args = BuildTsAddArgs(key, timestamp, value, retentionTime, labels, uncompressed, chunkSizeBytes, policy);
+            var args = BuildTsAddArgs(key, timestamp, value, retentionTime, labels, uncompressed, chunkSizeBytes, duplicatePolicy);
             return ParseTimeStamp(db.Execute(TS.ADD, args));
         }
 

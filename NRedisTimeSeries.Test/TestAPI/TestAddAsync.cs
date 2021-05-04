@@ -130,12 +130,12 @@ namespace NRedisTimeSeries.Test.TestAPI
             Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.1));
 
             // Insert a bigger number and check that it did not change the value.
-            Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.2, policy: TsDuplicatePolicy.MIN));
+            Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.2, duplicatePolicy: TsDuplicatePolicy.MIN));
             IReadOnlyList<TimeSeriesTuple> results = await db.TimeSeriesRangeAsync(key, timeStamp, timeStamp);
             Assert.Equal(1.1, results[0].Val);
 
             // Insert a smaller number and check that it changed.
-            Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.0, policy: TsDuplicatePolicy.MIN));
+            Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.0, duplicatePolicy: TsDuplicatePolicy.MIN));
             results = await db.TimeSeriesRangeAsync(key, timeStamp, timeStamp);
             Assert.Equal(1.0, results[0].Val);
         }
@@ -149,11 +149,11 @@ namespace NRedisTimeSeries.Test.TestAPI
             Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.1));
 
             // Insert a smaller number and check that it did not change the value.
-            Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.0, policy: TsDuplicatePolicy.MAX));
+            Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.0, duplicatePolicy: TsDuplicatePolicy.MAX));
             IReadOnlyList<TimeSeriesTuple> results = await db.TimeSeriesRangeAsync(key, timeStamp, timeStamp);
             Assert.Equal(1.1, results[0].Val);
             // Insert a bigger number and check that it changed.
-            Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.2, policy: TsDuplicatePolicy.MAX));
+            Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.2, duplicatePolicy: TsDuplicatePolicy.MAX));
             results = await db.TimeSeriesRangeAsync(key, timeStamp, timeStamp);
             Assert.Equal(1.2, results[0].Val);
         }
@@ -165,7 +165,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var db = redisFixture.Redis.GetDatabase();
             TimeStamp timeStamp = DateTime.UtcNow;
             Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.1));
-            Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.0, policy: TsDuplicatePolicy.SUM));
+            Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.0, duplicatePolicy: TsDuplicatePolicy.SUM));
             IReadOnlyList<TimeSeriesTuple> results = await db.TimeSeriesRangeAsync(key, timeStamp, timeStamp);
             Assert.Equal(2.1, results[0].Val);
         }
@@ -177,7 +177,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var db = redisFixture.Redis.GetDatabase();
             TimeStamp timeStamp = DateTime.UtcNow;
             Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.1));
-            Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.0, policy: TsDuplicatePolicy.FIRST));
+            Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.0, duplicatePolicy: TsDuplicatePolicy.FIRST));
             IReadOnlyList<TimeSeriesTuple> results = await db.TimeSeriesRangeAsync(key, timeStamp, timeStamp);
             Assert.Equal(1.1, results[0].Val);
         }
@@ -189,7 +189,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var db = redisFixture.Redis.GetDatabase();
             TimeStamp timeStamp = DateTime.UtcNow;
             Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.1));
-            Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.0, policy: TsDuplicatePolicy.LAST));
+            Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.0, duplicatePolicy: TsDuplicatePolicy.LAST));
             IReadOnlyList<TimeSeriesTuple> results = await db.TimeSeriesRangeAsync(key, timeStamp, timeStamp);
             Assert.Equal(1.0, results[0].Val);
         }

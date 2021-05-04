@@ -34,7 +34,7 @@ namespace NRedisTimeSeries.Example
             var label = new TimeSeriesLabel("key", "value");
             var labels = new List<TimeSeriesLabel> { label };
             await db.TimeSeriesCreateAsync("labeled_ts", labels: labels);
-            await db.TimeSeriesCreateAsync("parameterized_ts", labels: labels, uncompressed: true, retentionTime: 5000);
+            await db.TimeSeriesCreateAsync("parameterized_ts", labels: labels, uncompressed: true, retentionTime: 5000, duplicatePolicy: TsDuplicatePolicy.LAST);
             redis.Close();
         }
     }
