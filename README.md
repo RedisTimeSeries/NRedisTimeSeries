@@ -34,7 +34,6 @@ db.TimeSeriesAdd("test", 1, 1.12);
 db.TimeSeriesAdd("test", 1, 1.13, duplicatePolicy: TsDuplicatePolicy.LAST);
 
 // MAdd
-string[] keys = { "system_time_ts", "datetime_ts", "long_ts" };
 var sequence = new List<(string, TimeStamp, double)>(keys.Length);
 sequence.Add(("test", "*", 0.0));
 sequence.Add(("test", DateTime.UtcNow, 0.0));
