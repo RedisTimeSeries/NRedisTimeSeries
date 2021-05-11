@@ -68,7 +68,7 @@ db.KeyDelete("test");
 
 Since [RedisTimeSeries 1.4](https://github.com/RedisTimeSeries/RedisTimeSeries/releases/tag/v1.4.5) we've added the ability to back-fill time series, with different duplicate policies. 
 
-The default behavior is to block updates to the same timestamp, and you can control it via the `duplicate_policy` argument. You can check in detail the [duplicate policy documentation](https://oss.redislabs.com/redistimeseries/configuration/#duplicate_policy).
+The default behavior is to block updates to the same timestamp, and you can control it via the `duplicatePolicy` argument. You can check in detail the [duplicate policy documentation](https://oss.redislabs.com/redistimeseries/configuration/#duplicate_policy).
 
 
 See the [Example project](NRedisTimeSeries.Example) for commands reference
