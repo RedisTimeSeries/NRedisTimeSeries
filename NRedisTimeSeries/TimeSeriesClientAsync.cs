@@ -17,7 +17,7 @@ namespace NRedisTimeSeries
         /// <summary>
         /// Create a new time-series.
         /// </summary>
-        /// <param name="db">StackExchange.Redis IDatabase instance</param>
+        /// <param name="db">StackExchange.Redis IDatabaseAsync instance</param>
         /// <param name="key">Key name for timeseries</param>
         /// <param name="retentionTime">Optional: Maximum age for samples compared to last event time (in milliseconds)</param>
         /// <param name="labels">Optional: Collaction of label-value pairs that represent metadata labels of the key</param>
@@ -26,7 +26,7 @@ namespace NRedisTimeSeries
         /// You can alter the default TSDB chunk size by passing the chunk_size argument (in Bytes)</param>
         /// <param name="policy">Optional: configure what to do on duplicate sample. When this is not set, the server-wide default will be used</param>
         /// <returns>If the operation executed successfully</returns>
-        public static async Task<bool> TimeSeriesCreateAsync(this IDatabase db, string key, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null, TsDuplicatePolicy? policy = null)
+        public static async Task<bool> TimeSeriesCreateAsync(this IDatabaseAsync db, string key, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null, TsDuplicatePolicy? policy = null)
         {
             var args = BuildTsCreateArgs(key, retentionTime, labels, uncompressed, chunkSizeBytes, policy);
             return ParseBoolean(await db.ExecuteAsync(TS.CREATE, args));
@@ -39,12 +39,12 @@ namespace NRedisTimeSeries
         /// <summary>
         /// Update the retention, labels of an existing key.
         /// </summary>
-        /// <param name="db">StackExchange.Redis IDatabase instance</param>
+        /// <param name="db">StackExchange.Redis IDatabaseAsync instance</param>
         /// <param name="key">Key name for timeseries</param>
         /// <param name="retentionTime">Optional: Maximum age for samples compared to last event time (in milliseconds)</param>
         /// <param name="labels">Optional: Collaction of label-value pairs that represent metadata labels of the key</param>
         /// <returns>If the operation executed successfully</returns>
-        public static async Task<bool> TimeSeriesAlterAsync(this IDatabase db, string key, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null)
+        public static async Task<bool> TimeSeriesAlterAsync(this IDatabaseAsync db, string key, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null)
         {
             var args = BuildTsAlterArgs(key, retentionTime, labels);
             return ParseBoolean(await db.ExecuteAsync(TS.ALTER, args));
@@ -53,7 +53,7 @@ namespace NRedisTimeSeries
         /// <summary>
         /// Append (or create and append) a new sample to the series.
         /// </summary>
-        /// <param name="db">StackExchange.Redis IDatabase instance</param>
+        /// <param name="db">StackExchange.Redis IDatabaseAsync instance</param>
         /// <param name="key">Key name for timeseries</param>
         /// <param name="timestamp">TimeStamp to add. UNIX timestamp of the sample. * can be used for automatic timestamp (using the system clock)</param>
         /// <param name="value">Numeric data value of the sample.</param>
@@ -64,7 +64,7 @@ namespace NRedisTimeSeries
         /// You can alter the default TSDB chunk size by passing the chunk_size argument (in Bytes)</param>
         /// <param name="policy">Optioal: overwrite key and database configuration for DUPLICATE_POLICY</param>
         /// <returns>The timestamp value of the new sample</returns>
-        public static async Task<TimeStamp> TimeSeriesAddAsync(this IDatabase db, string key, TimeStamp timestamp, double value, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null, TsDuplicatePolicy? policy = null)
+        public static async Task<TimeStamp> TimeSeriesAddAsync(this IDatabaseAsync db, string key, TimeStamp timestamp, double value, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null, TsDuplicatePolicy? policy = null)
         {
             var args = BuildTsAddArgs(key, timestamp, value, retentionTime, labels, uncompressed, chunkSizeBytes, policy);
             return ParseTimeStamp(await db.ExecuteAsync(TS.ADD, args));
@@ -73,10 +73,10 @@ namespace NRedisTimeSeries
         /// <summary>
         /// Append new samples to multiple series.
         /// </summary>
-        /// <param name="db">StackExchange.Redis IDatabase instance</param>
+        /// <param name="db">StackExchange.Redis IDatabaseAsync instance</param>
         /// <param name="sequence">An Collection of (key, timestamp, value) tuples </param>
         /// <returns>List of timestamps of the new samples</returns>
-        public static async Task<IReadOnlyList<TimeStamp>> TimeSeriesMAddAsync(this IDatabase db, IReadOnlyCollection<(string key, TimeStamp timestamp, double value)> sequence)
+        public static async Task<IReadOnlyList<TimeStamp>> TimeSeriesMAddAsync(this IDatabaseAsync db, IReadOnlyCollection<(string key, TimeStamp timestamp, double value)> sequence)
         {
             var args = BuildTsMaddArgs(sequence);
             return ParseTimeStampArray(await db.ExecuteAsync(TS.MADD, args));
@@ -85,7 +85,7 @@ namespace NRedisTimeSeries
         /// <summary>
         /// Creates a new sample that increments the latest sample's value.
         /// </summary>
-        /// <param name="db">StackExchange.Redis IDatabase instance</param>
+        /// <param name="db">StackExchange.Redis IDatabaseAsync instance</param>
         /// <param name="key">Key name for timeseries</param>
         /// <param name="value">Delta to add</param>
         /// <param name="timestamp">Optional: TimeStamp to add. UNIX timestamp of the sample. * can be used for automatic timestamp (using the system clock)</param>
@@ -95,7 +95,7 @@ namespace NRedisTimeSeries
         /// <param name="chunkSizeBytes">Optional: Each time-series uses chunks of memory of fixed size for time series samples.
         /// You can alter the default TSDB chunk size by passing the chunk_size argument (in Bytes)</param>
         /// <returns>The latests sample timestamp (updated sample)</returns>
-        public static async Task<TimeStamp> TimeSeriesIncrByAsync(this IDatabase db, string key, double value, TimeStamp timestamp = null, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null)
+        public static async Task<TimeStamp> TimeSeriesIncrByAsync(this IDatabaseAsync db, string key, double value, TimeStamp timestamp = null, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null)
         {
             var args = BuildTsIncrDecrByArgs(key, value, timestamp, retentionTime, labels, uncompressed, chunkSizeBytes);
             return ParseTimeStamp(await db.ExecuteAsync(TS.INCRBY, args));
@@ -104,7 +104,7 @@ namespace NRedisTimeSeries
         /// <summary>
         /// Creates a new sample that decrements the latest sample's value.
         /// </summary>
-        /// <param name="db">StackExchange.Redis IDatabase instance</param>
+        /// <param name="db">StackExchange.Redis IDatabaseAsync instance</param>
         /// <param name="key">Key name for timeseries</param>
         /// <param name="value">Delta to substract</param>
         /// <param name="timestamp">Optional: TimeStamp to add. UNIX timestamp of the sample. * can be used for automatic timestamp (using the system clock)</param>
@@ -114,7 +114,7 @@ namespace NRedisTimeSeries
         /// <param name="chunkSizeBytes">Optional: Each time-series uses chunks of memory of fixed size for time series samples.
         /// You can alter the default TSDB chunk size by passing the chunk_size argument (in Bytes)</param>
         /// <returns>The latests sample timestamp (updated sample)</returns>
-        public static async Task<TimeStamp> TimeSeriesDecrByAsync(this IDatabase db, string key, double value, TimeStamp timestamp = null, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null)
+        public static async Task<TimeStamp> TimeSeriesDecrByAsync(this IDatabaseAsync db, string key, double value, TimeStamp timestamp = null, long? retentionTime = null, IReadOnlyCollection<TimeSeriesLabel> labels = null, bool? uncompressed = null, long? chunkSizeBytes = null)
         {
             var args = BuildTsIncrDecrByArgs(key, value, timestamp, retentionTime, labels, uncompressed, chunkSizeBytes);
             return ParseTimeStamp(await db.ExecuteAsync(TS.DECRBY, args));
@@ -127,12 +127,12 @@ namespace NRedisTimeSeries
         /// <summary>
         /// Create a compaction rule.
         /// </summary>
-        /// <param name="db">StackExchange.Redis IDatabase instance</param>
+        /// <param name="db">StackExchange.Redis IDatabaseAsync instance</param>
         /// <param name="sourceKey">Key name for source time series</param>
         /// <param name="rule">TimeSeries rule:
         /// Key name for destination time series, Aggregation type and Time bucket for aggregation in milliseconds</param>
         /// <returns>If the operation executed successfully</returns>
-        public static async Task<bool> TimeSeriesCreateRuleAsync(this IDatabase db, string sourceKey, TimeSeriesRule rule)
+        public static async Task<bool> TimeSeriesCreateRuleAsync(this IDatabaseAsync db, string sourceKey, TimeSeriesRule rule)
         {
             var args = new List<object> { sourceKey };
             args.AddRule(rule);
@@ -142,11 +142,11 @@ namespace NRedisTimeSeries
         /// <summary>
         /// Deletes a compaction rule.
         /// </summary>
-        /// <param name="db">StackExchange.Redis IDatabase instance</param>
+        /// <param name="db">StackExchange.Redis IDatabaseAsync instance</param>
         /// <param name="sourceKey">Key name for source time series</param>
         /// <param name="destKey">Key name for destination time series</param>
         /// <returns>If the operation executed successfully</returns>
-        public static async Task<bool> TimeSeriesDeleteRuleAsync(this IDatabase db, string sourceKey, string destKey)
+        public static async Task<bool> TimeSeriesDeleteRuleAsync(this IDatabaseAsync db, string sourceKey, string destKey)
         {
             var args = new List<object> { sourceKey, destKey };
             return ParseBoolean(await db.ExecuteAsync(TS.DELETERULE, args));
@@ -159,10 +159,10 @@ namespace NRedisTimeSeries
         /// <summary>
         /// Get the last sample.
         /// </summary>
-        /// <param name="db">StackExchange.Redis IDatabase instance</param>
+        /// <param name="db">StackExchange.Redis IDatabaseAsync instance</param>
         /// <param name="key">Key name for timeseries</param>
         /// <returns>TimeSeriesTuple that represents the last sample. Null if the series is empty. </returns>
-        public static async Task<TimeSeriesTuple> TimeSeriesGetAsync(this IDatabase db, string key)
+        public static async Task<TimeSeriesTuple> TimeSeriesGetAsync(this IDatabaseAsync db, string key)
         {
             return ParseTimeSeriesTuple(await db.ExecuteAsync(TS.GET, key));
         }
@@ -170,11 +170,11 @@ namespace NRedisTimeSeries
         /// <summary>
         /// Get the last samples matching the specific filter.
         /// </summary>
-        /// <param name="db">StackExchange.Redis IDatabase instance</param>
+        /// <param name="db">StackExchange.Redis IDatabaseAsync instance</param>
         /// <param name="filter">A sequence of filters</param>
         /// <param name="withLabels">Optional: Include in the reply the label-value pairs that represent metadata labels of the time-series</param>
         /// <returns>The command returns the last sample for entries with labels matching the specified filter.</returns>
-        public static async Task<IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, TimeSeriesTuple value)>> TimeSeriesMGetAsync(this IDatabase db, IReadOnlyCollection<string> filter, bool? withLabels = null)
+        public static async Task<IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, TimeSeriesTuple value)>> TimeSeriesMGetAsync(this IDatabaseAsync db, IReadOnlyCollection<string> filter, bool? withLabels = null)
         {
             var args = BuildTsMgetArgs(filter, withLabels);
             return ParseMGetesponse(await db.ExecuteAsync(TS.MGET, args));
@@ -183,7 +183,7 @@ namespace NRedisTimeSeries
         /// <summary>
         /// Query a range.
         /// </summary>
-        /// <param name="db">StackExchange.Redis IDatabase instance</param>
+        /// <param name="db">StackExchange.Redis IDatabaseAsync instance</param>
         /// <param name="key">Key name for timeseries</param>
         /// <param name="fromTimeStamp">Start timestamp for the range query. "-" can be used to express the minimum possible timestamp.</param>
         /// <param name="toTimeStamp">End timestamp for range query, + can be used to express the maximum possible timestamp.</param>
@@ -191,7 +191,7 @@ namespace NRedisTimeSeries
         /// <param name="aggregation">Optional: Aggregation type</param>
         /// <param name="timeBucket">Optional: Time bucket for aggregation in milliseconds</param>
         /// <returns>A list of TimeSeriesTuple</returns>
-        public static async Task<IReadOnlyList<TimeSeriesTuple>> TimeSeriesRangeAsync(this IDatabase db, string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, long? count = null, TsAggregation? aggregation = null, long? timeBucket = null)
+        public static async Task<IReadOnlyList<TimeSeriesTuple>> TimeSeriesRangeAsync(this IDatabaseAsync db, string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, long? count = null, TsAggregation? aggregation = null, long? timeBucket = null)
         {
             var args = BuildRangeArgs(key, fromTimeStamp, toTimeStamp, count, aggregation, timeBucket);
             return ParseTimeSeriesTupleArray(await db.ExecuteAsync(TS.RANGE, args));
@@ -200,7 +200,7 @@ namespace NRedisTimeSeries
         /// <summary>
         /// Query a range in reverse order.
         /// </summary>
-        /// <param name="db">StackExchange.Redis IDatabase instance</param>
+        /// <param name="db">StackExchange.Redis IDatabaseAsync instance</param>
         /// <param name="key">Key name for timeseries</param>
         /// <param name="fromTimeStamp">Start timestamp for the range query. "-" can be used to express the minimum possible timestamp.</param>
         /// <param name="toTimeStamp">End timestamp for range query, + can be used to express the maximum possible timestamp.</param>
@@ -208,7 +208,7 @@ namespace NRedisTimeSeries
         /// <param name="aggregation">Optional: Aggregation type</param>
         /// <param name="timeBucket">Optional: Time bucket for aggregation in milliseconds</param>
         /// <returns>A list of TimeSeriesTuple</returns>
-        public static async Task<IReadOnlyList<TimeSeriesTuple>> TimeSeriesRevRangeAsync(this IDatabase db, string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, long? count = null, TsAggregation? aggregation = null, long? timeBucket = null)
+        public static async Task<IReadOnlyList<TimeSeriesTuple>> TimeSeriesRevRangeAsync(this IDatabaseAsync db, string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, long? count = null, TsAggregation? aggregation = null, long? timeBucket = null)
         {
             var args = BuildRangeArgs(key, fromTimeStamp, toTimeStamp, count, aggregation, timeBucket);
             return ParseTimeSeriesTupleArray(await db.ExecuteAsync(TS.REVRANGE, args));
@@ -217,7 +217,7 @@ namespace NRedisTimeSeries
         /// <summary>
         /// Query a timestamp range across multiple time-series by filters.
         /// </summary>
-        /// <param name="db">StackExchange.Redis IDatabase instance</param>
+        /// <param name="db">StackExchange.Redis IDatabaseAsync instance</param>
         /// <param name="fromTimeStamp"> Start timestamp for the range query. - can be used to express the minimum possible timestamp.</param>
         /// <param name="toTimeStamp">End timestamp for range query, + can be used to express the maximum possible timestamp.</param>
         /// <param name="filter">A sequence of filters</param>
@@ -227,7 +227,7 @@ namespace NRedisTimeSeries
         /// <param name="withLabels">Optional: Include in the reply the label-value pairs that represent metadata labels of the time-series</param>
         /// <param name="groupbyTuple">Optional: Grouping by fields the results, and applying reducer functions on each group.</param>
         /// <returns>A list of (key, labels, values) tuples. Each tuple contains the key name, its labels and the values which satisfies the given range and filters.</returns>
-        public static async Task<IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)>> TimeSeriesMRangeAsync(this IDatabase db, 
+        public static async Task<IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)>> TimeSeriesMRangeAsync(this IDatabaseAsync db, 
             TimeStamp fromTimeStamp, 
             TimeStamp toTimeStamp, 
             IReadOnlyCollection<string> filter, 
@@ -244,7 +244,7 @@ namespace NRedisTimeSeries
         /// <summary>
         /// Query a timestamp range in reverse order across multiple time-series by filters.
         /// </summary>
-        /// <param name="db">StackExchange.Redis IDatabase instance</param>
+        /// <param name="db">StackExchange.Redis IDatabaseAsync instance</param>
         /// <param name="fromTimeStamp"> Start timestamp for the range query. - can be used to express the minimum possible timestamp.</param>
         /// <param name="toTimeStamp">End timestamp for range query, + can be used to express the maximum possible timestamp.</param>
         /// <param name="filter">A sequence of filters</param>
@@ -254,7 +254,7 @@ namespace NRedisTimeSeries
         /// <param name="withLabels">Optional: Include in the reply the label-value pairs that represent metadata labels of the time-series</param>
         /// <param name="groupbyTuple">Optional: Grouping by fields the results, and applying reducer functions on each group.</param>
         /// <returns>A list of (key, labels, values) tuples. Each tuple contains the key name, its labels and the values which satisfies the given range and filters.</returns>
-        public static async Task<IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)>> TimeSeriesMRevRangeAsync(this IDatabase db, 
+        public static async Task<IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)>> TimeSeriesMRevRangeAsync(this IDatabaseAsync db, 
             TimeStamp fromTimeStamp, 
             TimeStamp toTimeStamp, 
             IReadOnlyCollection<string> filter, 
@@ -275,10 +275,10 @@ namespace NRedisTimeSeries
         /// <summary>
         /// Returns the information for a specific time-series key.
         /// </summary>
-        /// <param name="db">StackExchange.Redis IDatabase instance</param>
+        /// <param name="db">StackExchange.Redis IDatabaseAsync instance</param>
         /// <param name="key">Key name for timeseries</param>
         /// <returns>TimeSeriesInformation for the specific key.</returns>
-        public static async Task<TimeSeriesInformation> TimeSeriesInfoAsync(this IDatabase db, string key)
+        public static async Task<TimeSeriesInformation> TimeSeriesInfoAsync(this IDatabaseAsync db, string key)
         {
             return ParseInfo(await db.ExecuteAsync(TS.INFO, key));
         }
@@ -286,10 +286,10 @@ namespace NRedisTimeSeries
         /// <summary>
         /// Get all the keys matching the filter list.
         /// </summary>
-        /// <param name="db">StackExchange.Redis IDatabase instance</param>
+        /// <param name="db">StackExchange.Redis IDatabaseAsync instance</param>
         /// <param name="filter">A sequence of filters</param>
         /// <returns>A list of keys with labels matching the filters.</returns>
-        public static async Task<IReadOnlyList<string>> TimeSeriesQueryIndexAsync(this IDatabase db, IReadOnlyCollection<string> filter)
+        public static async Task<IReadOnlyList<string>> TimeSeriesQueryIndexAsync(this IDatabaseAsync db, IReadOnlyCollection<string> filter)
         {
             var args = new List<object>(filter);
             return ParseStringArray(await db.ExecuteAsync(TS.QUERYINDEX, args));
