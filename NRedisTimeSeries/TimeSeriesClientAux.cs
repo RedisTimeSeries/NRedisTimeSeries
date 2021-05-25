@@ -103,6 +103,28 @@ namespace NRedisTimeSeries
             }
         }
 
+        private static void AddFilterByTs(this List<object> args, IReadOnlyCollection<TimeStamp> filter)
+        {
+            if (filter != null) 
+            {
+                args.Add(CommandArgs.FILTER_BY_TS);
+                foreach (var ts in filter)
+                {
+                    args.Add(ts.Value);
+                }
+            }
+        }
+
+        private static void AddFilterByValue(this List<object> args, (long, long)? filter)
+        {
+            if (filter != null) 
+            {
+                args.Add(CommandArgs.FILTER_BY_VALUE);
+                args.Add(filter.Value.Item1);
+                args.Add(filter.Value.Item2);
+            }
+        }
+
         private static void AddWithLabels(this IList<object> args, bool? withLabels)
         {
             if(withLabels.HasValue && withLabels.Value)
@@ -200,22 +222,25 @@ namespace NRedisTimeSeries
         {
             var args = new List<object>();
             args.AddWithLabels(withLabels);
-            AddFilters(args, filter);
+            args.AddFilters(filter);
             return args;
         }
         
         private static List<object> BuildRangeArgs(string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, long? count,
-            TsAggregation? aggregation, long? timeBucket)
+            TsAggregation? aggregation, long? timeBucket, IReadOnlyCollection<TimeStamp> filterByTs, (long, long)? filterByValue)
         {
             var args = new List<object>()
                 {key, fromTimeStamp.Value, toTimeStamp.Value};
             args.AddCount(count);
             args.AddAggregation(aggregation, timeBucket);
+            args.AddFilterByTs(filterByTs);
+            args.AddFilterByValue(filterByValue);
             return args;
         }
         
         private static List<object> BuildMultiRangeArgs(TimeStamp fromTimeStamp, TimeStamp toTimeStamp, IReadOnlyCollection<string> filter,
-            long? count, TsAggregation? aggregation, long? timeBucket, bool? withLabels, (string, TsReduce)? groupbyTuple)
+            long? count, TsAggregation? aggregation, long? timeBucket, bool? withLabels, (string, TsReduce)? groupbyTuple, 
+            IReadOnlyCollection<TimeStamp> filterByTs, (long, long)? filterByValue)
         {
             var args = new List<object>() {fromTimeStamp.Value, toTimeStamp.Value};
             args.AddCount(count);
@@ -223,6 +248,8 @@ namespace NRedisTimeSeries
             args.AddWithLabels(withLabels);
             args.AddFilters(filter);
             args.AddGroupby(groupbyTuple);
+            args.AddFilterByTs(filterByTs);
+            args.AddFilterByValue(filterByValue);            
             return args;
         }
     }
