@@ -15,5 +15,8 @@ namespace NRedisTimeSeries.Commands
         public static string ON_DUPLICATE => "ON_DUPLICATE";
         public static string GROPUBY => "GROUPBY";
         public static string REDUCE => "REDUCE";
+        public static string FILTER_BY_TS => "FILTER_BY_TS";
+        public static string FILTER_BY_VALUE => "FILTER_BY_VALUE";
+
     }
 }
