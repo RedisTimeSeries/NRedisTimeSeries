@@ -60,5 +60,24 @@ namespace NRedisTimeSeries.Test.TestAPI
             Assert.Equal("RANGE Aggregation should have timeBucket value", ex.Message);
 
         }
+
+        [Fact]
+        public void TestFilterBy()
+        {
+            var key = CreateKeyName();
+            var db = redisFixture.Redis.GetDatabase();
+            var tuples = CreateData(db, key, 50);
+
+            var res = db.TimeSeriesRevRange(key, "-", "+", filterByValue: (0,2)); 
+            Assert.Equal(res.Count, 3);
+            Assert.Equal(res, ReverseData(tuples.GetRange(0,3)));
+
+            var filterTs = new List<TimeStamp> {0, 50, 100}; 
+            res = db.TimeSeriesRevRange(key, "-", "+", filterByTs: filterTs); 
+            Assert.Equal(res, ReverseData(tuples.GetRange(0,3)));
+
+            res = db.TimeSeriesRevRange(key, "-", "+", filterByTs: filterTs, filterByValue: (2, 5));
+            Assert.Equal(res, tuples.GetRange(2,1));
+        }
     }
 }

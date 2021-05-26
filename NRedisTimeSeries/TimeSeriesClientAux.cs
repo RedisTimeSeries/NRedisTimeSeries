@@ -231,10 +231,10 @@ namespace NRedisTimeSeries
         {
             var args = new List<object>()
                 {key, fromTimeStamp.Value, toTimeStamp.Value};
-            args.AddCount(count);
-            args.AddAggregation(aggregation, timeBucket);
             args.AddFilterByTs(filterByTs);
             args.AddFilterByValue(filterByValue);
+            args.AddCount(count);
+            args.AddAggregation(aggregation, timeBucket);
             return args;
         }
         
@@ -243,13 +243,13 @@ namespace NRedisTimeSeries
             IReadOnlyCollection<TimeStamp> filterByTs, (long, long)? filterByValue)
         {
             var args = new List<object>() {fromTimeStamp.Value, toTimeStamp.Value};
+            args.AddFilterByTs(filterByTs);
+            args.AddFilterByValue(filterByValue);
             args.AddCount(count);
             args.AddAggregation(aggregation, timeBucket);
             args.AddWithLabels(withLabels);
             args.AddFilters(filter);
             args.AddGroupby(groupbyTuple);
-            args.AddFilterByTs(filterByTs);
-            args.AddFilterByValue(filterByValue);            
             return args;
         }
     }
