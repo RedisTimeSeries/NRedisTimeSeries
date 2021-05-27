@@ -33,7 +33,7 @@ namespace NRedisTimeSeries.Example
             var label = new TimeSeriesLabel("key", "value");
             var labels = new List<TimeSeriesLabel> { label };
             db.TimeSeriesCreate("labeled_ts", labels: labels);
-            db.TimeSeriesCreate("parameterized_ts", labels: labels, uncompressed: true, retentionTime: 5000);
+            db.TimeSeriesCreate("parameterized_ts", labels: labels, uncompressed: true, retentionTime: 5000, duplicatePolicy: TsDuplicatePolicy.LAST);
             redis.Close();
         }
     }

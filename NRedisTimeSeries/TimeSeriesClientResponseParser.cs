@@ -126,7 +126,7 @@ namespace NRedisTimeSeries
             IReadOnlyList<TimeSeriesLabel> labels = null;
             IReadOnlyList <TimeSeriesRule> rules = null;
             string sourceKey = null;
-            TsDuplicatePolicy? policy = null;
+            TsDuplicatePolicy? duplicatePolicy = null;
             RedisResult[] redisResults = (RedisResult[])result;
             for(int i=0; i<redisResults.Length ; ++i){
                 string label = (string)redisResults[i++];
@@ -168,13 +168,13 @@ namespace NRedisTimeSeries
                         break;
                     case "duplicatePolicy":
                         // Avalible for > v1.4
-                        policy = ParsePolicy(redisResults[i]);
+                        duplicatePolicy = ParsePolicy(redisResults[i]);
                         break;
                 }
             }
 
             return new TimeSeriesInformation(totalSamples, memoryUsage, firstTimestamp,
-            lastTimestamp, retentionTime, chunkCount, chunkSize, labels, sourceKey, rules, policy);
+            lastTimestamp, retentionTime, chunkCount, chunkSize, labels, sourceKey, rules, duplicatePolicy);
         }
 
         private static IReadOnlyList<string> ParseStringArray(RedisResult result)
