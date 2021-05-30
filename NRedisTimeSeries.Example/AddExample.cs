@@ -55,8 +55,22 @@ namespace NRedisTimeSeries.Example
         }
 
         /// <summary>
+        /// Example for back-fill time-series sample.
+        /// In order to avoid the BLOCK mode exeption must specify the duplicate policy.
+        /// </summary>
+        public static void DuplicatedAdd()
+        {
+            ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
+            IDatabase db = redis.GetDatabase();
+            TimeStamp timestamp = DateTime.UtcNow;
+            db.TimeSeriesAdd("my_ts", timestamp, 1);
+            db.TimeSeriesAdd("my_ts", timestamp, 0, duplicatePolicy: TsDuplicatePolicy.MIN);
+            redis.Close();
+        }
+
+        /// <summary>
         /// Example for time-series creation parameters with ADD.
-        /// Named arguments are used in the same manner of TimeSeriesCreate
+        /// Named arguments are used in the same manner of TimeSeriesCreate.
         /// </summary>
         public static void ParameterizedAdd()
         {
@@ -65,8 +79,7 @@ namespace NRedisTimeSeries.Example
             TimeStamp timestamp = "*";
             var label = new TimeSeriesLabel("key", "value");
             var labels = new List<TimeSeriesLabel> { label };
-            var policy = TsDuplicatePolicy.SUM;
-            db.TimeSeriesAdd("my_ts", timestamp, 0.0, retentionTime:5000, labels:labels, uncompressed:true, policy:policy);
+            db.TimeSeriesAdd("my_ts", timestamp, 0.0, retentionTime:5000, labels:labels, uncompressed:true);
             redis.Close();
         }
     }

@@ -18,10 +18,13 @@ namespace NRedisTimeSeries.Example
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            // Create you rule with destination key, time bucket and aggregation type.
+            // Create new timeseries for the sourceKey and the destKey.
+            db.TimeSeriesCreate("my_ts");
+            db.TimeSeriesCreate("dest_ts");
+            // Create your rule with destination key, time bucket and aggregation type.
             TimeSeriesRule rule = new TimeSeriesRule("dest_ts", 50, TsAggregation.Avg);
             db.TimeSeriesCreateRule("my_ts", rule);
-            db.TimeSeriesDeleteRule("my_ts", "dest");
+            db.TimeSeriesDeleteRule("my_ts", "dest_ts");
             redis.Close();
         }
     }
