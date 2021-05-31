@@ -20,8 +20,8 @@ namespace NRedisTimeSeries.Example
             TimeSeriesInformation info = db.TimeSeriesInfo("my_ts");
             // Now you can access to all the properties of TimeSeriesInformation
             Console.WriteLine(info.TotalSamples);
-            Console.WriteLine(info.FirstTimeStamp.ToString());
-            Console.WriteLine(info.LastTimeStamp.ToString());
+            Console.WriteLine((string)info.FirstTimeStamp);
+            Console.WriteLine((string)info.LastTimeStamp);
             redis.Close();
         }
 

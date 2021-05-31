@@ -64,7 +64,7 @@ namespace NRedisTimeSeries.DataTypes
         /// <returns>TimeSeriesRule string.</returns>
         public override string ToString()
         {
-            return string.Format("DestinationKey: {0}, TimeBucket:{1}, Aggregation: {2}", DestKey, TimeBucket, Aggregation.AsArg());
+            return string.Format("DestinationKey: {0}, TimeBucket: {1}, Aggregation: {2}", DestKey, TimeBucket, Aggregation.AsArg());
         }        
     }
 }

@@ -50,5 +50,12 @@ namespace NRedisTimeSeries.Test.TestDataTypes
             Assert.NotEqual(rule.GetHashCode(), rule3.GetHashCode());
             Assert.NotEqual(rule.GetHashCode(), rule4.GetHashCode());
         }
+
+        [Fact]
+        public void TestRuleToString()
+        {
+            TimeSeriesRule rule = new TimeSeriesRule("key", 50, TsAggregation.Avg);
+            Assert.Equal(rule.ToString(), "DestinationKey: key, TimeBucket: 50, Aggregation: AVG");
+        }
     }
 }

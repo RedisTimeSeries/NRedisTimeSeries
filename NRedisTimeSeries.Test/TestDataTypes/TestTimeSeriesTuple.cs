@@ -33,5 +33,12 @@ namespace NRedisTimeSeries.Test
             Assert.Equal(tuple1.GetHashCode(), tuple1_1.GetHashCode());
             Assert.NotEqual(tuple1.GetHashCode(), tuple1_2.GetHashCode());
         }
+
+        [Fact]
+        public void TestTimeSeriesTupleToString()
+        {
+            TimeSeriesTuple tuple = new TimeSeriesTuple(1, 1.1);
+            Assert.Equal(tuple.ToString(), "Time: 1, Val:1.1");
+        }
     }
 }

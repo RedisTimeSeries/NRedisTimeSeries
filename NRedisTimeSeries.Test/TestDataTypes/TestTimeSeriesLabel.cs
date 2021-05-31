@@ -40,5 +40,12 @@ namespace NRedisTimeSeries.Test.TestDataTypes
             Assert.NotEqual(label_ab.GetHashCode(), label2.GetHashCode());
             Assert.NotEqual(label_ab.GetHashCode(), label3.GetHashCode());
         }
+
+        [Fact]
+        public void TestLabelToString()
+        {
+            TimeSeriesLabel label = new TimeSeriesLabel("a", "b");
+            Assert.Equal(label.ToString(), "Key: a, Val:b");
+        }
     }
 }

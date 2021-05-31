@@ -52,7 +52,7 @@ namespace NRedisTimeSeries.DataTypes
         /// <returns>TimeSeriesTuple string.</returns>
         public override string ToString()
         {
-            return string.Format("Time: {0}, Val:{1}", Time, Val);
+            return string.Format("Time: {0}, Val:{1}", (string)Time, Val);
         }
     }
 }
