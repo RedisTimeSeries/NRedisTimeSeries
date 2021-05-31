@@ -45,5 +45,14 @@ namespace NRedisTimeSeries.DataTypes
             hashCode = (hashCode * -1521134295) + Val.GetHashCode();
             return hashCode;
         }
+
+        /// <summary>
+        /// TimeSeriesTuple object ToString.
+        /// </summary>
+        /// <returns>TimeSeriesTuple string.</returns>
+        public override string ToString()
+        {
+            return string.Format("Time: {0}, Val:{1}", Time, Val);
+        }
     }
 }

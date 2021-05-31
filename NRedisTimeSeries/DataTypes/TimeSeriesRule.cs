@@ -1,5 +1,6 @@
 ﻿using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.Commands.Enums;
+using NRedisTimeSeries.Extensions;
 using System.Collections.Generic;
 
 namespace NRedisTimeSeries.DataTypes
@@ -56,5 +57,14 @@ namespace NRedisTimeSeries.DataTypes
             hashCode = (hashCode * -1521134295) + ((int)Aggregation).GetHashCode();
             return hashCode;
         }
+
+        /// <summary>
+        /// TimeSeriesRule object ToString.
+        /// </summary>
+        /// <returns>TimeSeriesRule string.</returns>
+        public override string ToString()
+        {
+            return string.Format("DestinationKey: {0}, TimeBucket:{1}, Aggregation: {2}", DestKey, TimeBucket, Aggregation.AsArg());
+        }        
     }
 }

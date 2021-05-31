@@ -45,5 +45,14 @@ namespace NRedisTimeSeries.DataTypes
             hashCode = (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(Value);
             return hashCode;
         }
+
+        /// <summary>
+        /// TimeSeriesLabel object ToString.
+        /// </summary>
+        /// <returns>TimeSeriesLabel string.</returns>
+        public override string ToString()
+        {
+            return string.Format("Key: {0}, Val:{1}", Key, Value);
+        }
     }
 }

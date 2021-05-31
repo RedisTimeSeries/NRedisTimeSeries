@@ -1,4 +1,6 @@
+using System.Text;
 using System;
+using System.Reflection;
 using System.Collections.Generic;
 using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.Commands.Enums;
@@ -88,6 +90,18 @@ namespace NRedisTimeSeries.DataTypes
             ChunkSize = chunkSize;
             // configure what to do on duplicate sample > v1.4
             DuplicatePolicy = policy;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder str = new StringBuilder();
+            foreach (PropertyInfo property in this.GetType().GetProperties())
+            {
+                var Key = property.Name;
+                var Value = property.GetValue(this, null);
+                str.Append(string.Format("{0}: {1}\n", Key, Value));
+            }
+            return str.ToString();
         }
     }
 }
