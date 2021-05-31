@@ -18,6 +18,10 @@ namespace NRedisTimeSeries.Example
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
             TimeSeriesInformation info = db.TimeSeriesInfo("my_ts");
+            // Now you can access to all the properties of TimeSeriesInformation
+            Console.WriteLine(info.TotalSamples);
+            Console.WriteLine(info.FirstTimeStamp.ToString());
+            Console.WriteLine(info.LastTimeStamp.ToString());
             redis.Close();
         }
 
@@ -30,6 +34,9 @@ namespace NRedisTimeSeries.Example
             IDatabase db = redis.GetDatabase();
             var filter = new List<string> { "key=value" };
             IReadOnlyList<string> keys = db.TimeSeriesQueryIndex(filter);
+            foreach(var key in keys) {
+                Console.WriteLine(key);
+            }
             redis.Close();
         }
     }

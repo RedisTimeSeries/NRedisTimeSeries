@@ -23,8 +23,9 @@ namespace NRedisTimeSeries.Example
             // Values extraction example. No lables in this case.
             foreach (var result in results)
             {
-                string key = result.key;
+                Console.WriteLine(result.key);
                 TimeSeriesTuple value = result.value;
+                Console.WriteLine(value.ToString());
             }
             redis.Close();
         }
@@ -42,9 +43,13 @@ namespace NRedisTimeSeries.Example
             // Values extraction example.
             foreach (var result in results)
             {
-                string key = result.key;
+                Console.WriteLine(result.key);
                 IReadOnlyList<TimeSeriesLabel> labels = result.labels;
+                foreach(TimeSeriesLabel label in labels){
+                    Console.WriteLine(label.ToString());
+                }
                 TimeSeriesTuple value = result.value;
+                Console.WriteLine(value.ToString());
             }
             redis.Close();
         }

@@ -27,8 +27,11 @@ namespace NRedisTimeSeries.Example
             // Values extraction example. No lables in this case.
             foreach (var result in results)
             {
-                string key = result.key;
+                Console.WriteLine(result.key);
                 IReadOnlyList<TimeSeriesTuple> values = result.values;
+                foreach(TimeSeriesTuple val in values){
+                    Console.WriteLine(val.ToString());
+                }
             }
             redis.Close();
         }
@@ -48,8 +51,11 @@ namespace NRedisTimeSeries.Example
             // Values extraction example. No lables in this case.
             foreach (var result in results)
             {
-                string key = result.key;
+                Console.WriteLine(result.key);
                 IReadOnlyList<TimeSeriesTuple> values = result.values;
+                foreach(TimeSeriesTuple val in values){
+                    Console.WriteLine(val.ToString());
+                }
             }
             redis.Close();
         }
@@ -69,8 +75,11 @@ namespace NRedisTimeSeries.Example
             // Values extraction example. No lables in this case.
             foreach (var result in results)
             {
-                string key = result.key;
+                Console.WriteLine(result.key);
                 IReadOnlyList<TimeSeriesTuple> values = result.values;
+                foreach(TimeSeriesTuple val in values){
+                    Console.WriteLine(val.ToString());
+                }
             }
             redis.Close();
         }
@@ -90,9 +99,15 @@ namespace NRedisTimeSeries.Example
             // Values extraction example.
             foreach (var result in results)
             {
-                string key = result.key;
+                Console.WriteLine(result.key);
                 IReadOnlyList<TimeSeriesLabel> labels = result.labels;
+                foreach(TimeSeriesLabel label in labels){
+                    Console.WriteLine(label.ToString());
+                } 
                 IReadOnlyList<TimeSeriesTuple> values = result.values;
+                foreach(TimeSeriesTuple val in values){
+                    Console.WriteLine(val.ToString());
+                }                
             }
             redis.Close();
         }
@@ -112,9 +127,15 @@ namespace NRedisTimeSeries.Example
             // Values extraction example.
             foreach (var result in results)
             {
-                string group = result.key;
+                Console.WriteLine(result.key);
                 IReadOnlyList<TimeSeriesLabel> labels = result.labels;
+                foreach(TimeSeriesLabel label in labels){
+                    Console.WriteLine(label.ToString());
+                }                 
                 IReadOnlyList<TimeSeriesTuple> values = result.values;
+                foreach(TimeSeriesTuple val in values){
+                    Console.WriteLine(val.ToString());
+                }                  
             }
             redis.Close();
         }

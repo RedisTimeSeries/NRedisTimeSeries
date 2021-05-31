@@ -17,6 +17,7 @@ namespace NRedisTimeSeries.Example
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
             TimeSeriesTuple value = db.TimeSeriesGet("my_ts");
+            Console.WriteLine(value.ToString());
             redis.Close();
         }
     }
