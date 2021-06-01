@@ -35,6 +35,12 @@ namespace NRedisTimeSeries.DataTypes
             Value == label.Value;
 
         /// <summary>
+        /// Implicit cast from TimeSeriesLabel to string.
+        /// </summary>
+        /// <param name="tsl">TimeSeriesLabel</param>
+        public static implicit operator string(TimeSeriesLabel tsl) => string.Format("Key: {0}, Val:{1}", tsl.Key, tsl.Value);
+
+        /// <summary>
         /// TimeSeriesLabel object hash code.
         /// </summary>
         /// <returns>TimeSeriesLabel object hash code.</returns>

@@ -2,6 +2,7 @@
 using NRedisTimeSeries.Commands.Enums;
 using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -23,6 +24,9 @@ namespace NRedisTimeSeries.Example
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
             IReadOnlyList<TimeSeriesTuple> results = await db.TimeSeriesRangeAsync("my_ts", "-", "+");
+            foreach(TimeSeriesTuple res in results) {
+                Console.WriteLine(res);
+            }            
             redis.Close();
         }
 
@@ -37,6 +41,9 @@ namespace NRedisTimeSeries.Example
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
             IReadOnlyList<TimeSeriesTuple> results = await db.TimeSeriesRangeAsync("my_ts", "-", "+", count:50);
+            foreach(TimeSeriesTuple res in results) {
+                Console.WriteLine(res);
+            }            
             redis.Close();
         }
 
@@ -50,7 +57,10 @@ namespace NRedisTimeSeries.Example
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            await db.TimeSeriesRangeAsync("my_ts", "-", "+", aggregation: TsAggregation.Min, timeBucket: 50);
+            IReadOnlyList<TimeSeriesTuple> results = await db.TimeSeriesRangeAsync("my_ts", "-", "+", aggregation: TsAggregation.Min, timeBucket: 50);
+            foreach(TimeSeriesTuple res in results) {
+                Console.WriteLine(res);
+            }            
             redis.Close();
         }
 

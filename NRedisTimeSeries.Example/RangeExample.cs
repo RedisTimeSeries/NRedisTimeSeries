@@ -23,6 +23,9 @@ namespace NRedisTimeSeries.Example
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
             IReadOnlyList<TimeSeriesTuple> results = db.TimeSeriesRange("my_ts", "-", "+");
+            foreach(TimeSeriesTuple res in results) {
+                Console.WriteLine(res);
+            }
             redis.Close();
         }
 
@@ -37,6 +40,9 @@ namespace NRedisTimeSeries.Example
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
             IReadOnlyList<TimeSeriesTuple> results = db.TimeSeriesRange("my_ts", "-", "+", count:50);
+            foreach(TimeSeriesTuple res in results) {
+                Console.WriteLine(res);
+            }
             redis.Close();
         }
 
@@ -50,7 +56,10 @@ namespace NRedisTimeSeries.Example
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
-            db.TimeSeriesRange("my_ts", "-", "+", aggregation: TsAggregation.Min, timeBucket: 50);
+            IReadOnlyList<TimeSeriesTuple> results = db.TimeSeriesRange("my_ts", "-", "+", aggregation: TsAggregation.Min, timeBucket: 50);
+            foreach(TimeSeriesTuple res in results) {
+                Console.WriteLine(res);
+            }
             redis.Close();
         }
 
