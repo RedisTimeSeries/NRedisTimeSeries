@@ -131,6 +131,15 @@ namespace NRedisTimeSeries.Example
             IDatabase db = redis.GetDatabase();
             var filter = new List<string> { "MRANGEkey=MRANGEvalue" };
             var results = await db.TimeSeriesMRangeAsync("-", "+", filter, filterByTs: new List<TimeStamp> {0}, filterByValue: (0, 2));
+            // Values extraction example. No lables in this case.
+            foreach (var result in results)
+            {
+                Console.WriteLine(result.key);                 
+                IReadOnlyList<TimeSeriesTuple> values = result.values;
+                foreach(TimeSeriesTuple val in values){
+                    Console.WriteLine(val);
+                }   
+            }            
             redis.Close();
         }          
     }

@@ -65,7 +65,10 @@ namespace NRedisTimeSeries.Example
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
             var filterTs = new List<TimeStamp> {0, 50, 100};
-            db.TimeSeriesRange("my_ts", "-", "+", filterByTs: filterTs, filterByValue: (2, 5));
+            IReadOnlyList<TimeSeriesTuple> results = db.TimeSeriesRange("my_ts", "-", "+", filterByTs: filterTs, filterByValue: (2, 5));
+            foreach(TimeSeriesTuple res in results) {
+                Console.WriteLine(res);
+            }
             redis.Close();
         }        
     }
