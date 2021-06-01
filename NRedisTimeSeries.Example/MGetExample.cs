@@ -25,7 +25,7 @@ namespace NRedisTimeSeries.Example
             {
                 Console.WriteLine(result.key);
                 TimeSeriesTuple value = result.value;
-                Console.WriteLine(value.ToString());
+                Console.WriteLine(value);
             }
             redis.Close();
         }
@@ -46,10 +46,10 @@ namespace NRedisTimeSeries.Example
                 Console.WriteLine(result.key);
                 IReadOnlyList<TimeSeriesLabel> labels = result.labels;
                 foreach(TimeSeriesLabel label in labels){
-                    Console.WriteLine(label.ToString());
+                    Console.WriteLine(label);
                 }
                 TimeSeriesTuple value = result.value;
-                Console.WriteLine(value.ToString());
+                Console.WriteLine(value);
             }
             redis.Close();
         }

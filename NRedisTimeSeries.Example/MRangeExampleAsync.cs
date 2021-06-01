@@ -31,7 +31,7 @@ namespace NRedisTimeSeries.Example
                 Console.WriteLine(result.key);                 
                 IReadOnlyList<TimeSeriesTuple> values = result.values;
                 foreach(TimeSeriesTuple val in values){
-                    Console.WriteLine(val.ToString());
+                    Console.WriteLine(val);
                 }   
             }
             redis.Close();
@@ -55,7 +55,7 @@ namespace NRedisTimeSeries.Example
                 Console.WriteLine(result.key);               
                 IReadOnlyList<TimeSeriesTuple> values = result.values;
                 foreach(TimeSeriesTuple val in values){
-                    Console.WriteLine(val.ToString());
+                    Console.WriteLine(val);
                 }   
             }
             redis.Close();
@@ -79,7 +79,7 @@ namespace NRedisTimeSeries.Example
                 Console.WriteLine(result.key);                
                 IReadOnlyList<TimeSeriesTuple> values = result.values;
                 foreach(TimeSeriesTuple val in values){
-                    Console.WriteLine(val.ToString());
+                    Console.WriteLine(val);
                 }   
             }
             redis.Close();
@@ -103,11 +103,11 @@ namespace NRedisTimeSeries.Example
                 Console.WriteLine(result.key);
                 IReadOnlyList<TimeSeriesLabel> labels = result.labels;
                 foreach(TimeSeriesLabel label in labels){
-                    Console.WriteLine(label.ToString());
+                    Console.WriteLine(label);
                 }                 
                 IReadOnlyList<TimeSeriesTuple> values = result.values;
                 foreach(TimeSeriesTuple val in values){
-                    Console.WriteLine(val.ToString());
+                    Console.WriteLine(val);
                 }   
             }
             redis.Close();
@@ -131,11 +131,11 @@ namespace NRedisTimeSeries.Example
                 Console.WriteLine(result.key);
                 IReadOnlyList<TimeSeriesLabel> labels = result.labels;
                 foreach(TimeSeriesLabel label in labels){
-                    Console.WriteLine(label.ToString());
+                    Console.WriteLine(label);
                 }                 
                 IReadOnlyList<TimeSeriesTuple> values = result.values;
                 foreach(TimeSeriesTuple val in values){
-                    Console.WriteLine(val.ToString());
+                    Console.WriteLine(val);
                 }   
             }
             redis.Close();

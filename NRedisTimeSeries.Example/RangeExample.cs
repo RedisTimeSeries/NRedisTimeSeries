@@ -24,7 +24,7 @@ namespace NRedisTimeSeries.Example
             IDatabase db = redis.GetDatabase();
             IReadOnlyList<TimeSeriesTuple> results = db.TimeSeriesRange("my_ts", "-", "+");
             foreach(TimeSeriesTuple res in results) {
-                Console.WriteLine(res.ToString());
+                Console.WriteLine(res);
             }
             redis.Close();
         }
@@ -41,7 +41,7 @@ namespace NRedisTimeSeries.Example
             IDatabase db = redis.GetDatabase();
             IReadOnlyList<TimeSeriesTuple> results = db.TimeSeriesRange("my_ts", "-", "+", count:50);
             foreach(TimeSeriesTuple res in results) {
-                Console.WriteLine(res.ToString());
+                Console.WriteLine(res);
             }
             redis.Close();
         }
@@ -58,7 +58,7 @@ namespace NRedisTimeSeries.Example
             IDatabase db = redis.GetDatabase();
             IReadOnlyList<TimeSeriesTuple> results = db.TimeSeriesRange("my_ts", "-", "+", aggregation: TsAggregation.Min, timeBucket: 50);
             foreach(TimeSeriesTuple res in results) {
-                Console.WriteLine(res.ToString());
+                Console.WriteLine(res);
             }
             redis.Close();
         }
