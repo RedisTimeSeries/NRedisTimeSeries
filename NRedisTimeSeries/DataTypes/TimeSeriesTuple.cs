@@ -35,6 +35,13 @@ namespace NRedisTimeSeries.DataTypes
             Val == tuple.Val;
 
         /// <summary>
+        /// Implicit cast from TimeSeriesTuple to string.
+        /// </summary>
+        /// <param name="tst">TimeSeriesTuple</param>
+        public static implicit operator string(TimeSeriesTuple tst) => 
+            string.Format("Time: {0}, Val:{1}", (string)tst.Time, tst.Val);
+
+        /// <summary>
         /// TimeSeriesTuple object hash code.
         /// </summary>
         /// <returns>TimeSeriesTuple object hash code.</returns>

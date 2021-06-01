@@ -1,4 +1,6 @@
+using System.Text;
 using System;
+using System.Reflection;
 using System.Collections.Generic;
 using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.Commands.Enums;

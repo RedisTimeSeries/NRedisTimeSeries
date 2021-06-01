@@ -1,6 +1,7 @@
 ﻿using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
 using System.Threading.Tasks;
+using System;
 
 namespace NRedisTimeSeries.Example
 {
@@ -17,6 +18,7 @@ namespace NRedisTimeSeries.Example
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();
             TimeSeriesTuple value = await db.TimeSeriesGetAsync("my_ts");
+            Console.WriteLine(value);
             redis.Close();
         }
     }

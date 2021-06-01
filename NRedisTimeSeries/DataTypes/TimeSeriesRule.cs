@@ -1,5 +1,6 @@
 ﻿using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.Commands.Enums;
+using NRedisTimeSeries.Extensions;
 using System.Collections.Generic;
 
 namespace NRedisTimeSeries.DataTypes
@@ -45,6 +46,13 @@ namespace NRedisTimeSeries.DataTypes
             Aggregation == rule.Aggregation;
 
         /// <summary>
+        /// Implicit cast from TimeSeriesRule to string.
+        /// </summary>
+        /// <param name="tsr">TimeSeriesRule</param>
+        public static implicit operator string(TimeSeriesRule tsr) => 
+            string.Format("DestinationKey: {0}, TimeBucket: {1}, Aggregation: {2}", tsr.DestKey, tsr.TimeBucket, tsr.Aggregation.AsArg());
+
+        /// <summary>
         /// TimeSeriesRule object hash code.
         /// </summary>
         /// <returns>TimeSeriesRule object hash code.</returns>
@@ -55,6 +63,6 @@ namespace NRedisTimeSeries.DataTypes
             hashCode = (hashCode * -1521134295) + TimeBucket.GetHashCode();
             hashCode = (hashCode * -1521134295) + ((int)Aggregation).GetHashCode();
             return hashCode;
-        }
+        }      
     }
 }
