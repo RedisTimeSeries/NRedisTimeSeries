@@ -71,15 +71,15 @@ namespace NRedisTimeSeries.Test.TestAPI
             var tuples = CreateData(db, 50);
 
             var res = db.TimeSeriesRange(key, "-", "+", filterByValue: (0,2)); // The first 3 tuples
-            Assert.Equal(res.Count, 3);
-            Assert.Equal(res, tuples.GetRange(0,3));
+            Assert.Equal(3, res.Count);
+            Assert.Equal(tuples.GetRange(0,3), res);
 
             var filterTs = new List<TimeStamp> {0, 50, 100}; // Also the first 3 tuples
             res = db.TimeSeriesRange(key, "-", "+", filterByTs: filterTs); 
-            Assert.Equal(res, tuples.GetRange(0,3));
+            Assert.Equal(tuples.GetRange(0,3), res);
 
             res = db.TimeSeriesRange(key, "-", "+", filterByTs: filterTs, filterByValue: (2, 5)); // The third tuple
-            Assert.Equal(res, tuples.GetRange(2,1));
+            Assert.Equal(tuples.GetRange(2,1), res);
         }
     }
 }

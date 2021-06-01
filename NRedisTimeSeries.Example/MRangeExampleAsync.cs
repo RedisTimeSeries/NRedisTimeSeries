@@ -125,7 +125,7 @@ namespace NRedisTimeSeries.Example
         /// In this case, the strings are implicitly casted into TimeStamp objects.
         /// The TimeSeriesMRange command returns an IReadOnlyList (collection) of (string key, IReadOnlyList(TimeSeriesLabel) labels, IReadOnlyList(TimeSeriesTuple) values).
         /// </summary>
-        public static void MRangeWithFilterbyExample()
+        public static async Task MRangeWithFilterbyExample()
         {
             ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
             IDatabase db = redis.GetDatabase();

@@ -69,15 +69,15 @@ namespace NRedisTimeSeries.Test.TestAPI
             var tuples = await CreateData(db, key, 50);
 
             var res = await db.TimeSeriesRevRangeAsync(key, "-", "+", filterByValue: (0,2)); 
-            Assert.Equal(res.Count, 3);
-            Assert.Equal(res, ReverseData(tuples.GetRange(0,3)));
+            Assert.Equal(3, res.Count);
+            Assert.Equal(ReverseData(tuples.GetRange(0,3)), res);
 
             var filterTs = new List<TimeStamp> {0, 50, 100}; 
             res = await db.TimeSeriesRevRangeAsync(key, "-", "+", filterByTs: filterTs); 
-            Assert.Equal(res, ReverseData(tuples.GetRange(0,3)));
+            Assert.Equal(ReverseData(tuples.GetRange(0,3)), res);
 
             res = await db.TimeSeriesRevRangeAsync(key, "-", "+", filterByTs: filterTs, filterByValue: (2, 5));
-            Assert.Equal(res, tuples.GetRange(2,1));
+            Assert.Equal(tuples.GetRange(2,1), res);
         }        
     }
 }
