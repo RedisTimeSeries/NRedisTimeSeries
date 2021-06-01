@@ -45,7 +45,7 @@ namespace NRedisTimeSeries.Test.TestDataTypes
         public void TestLabelToString()
         {
             TimeSeriesLabel label = new TimeSeriesLabel("a", "b");
-            Assert.Equal(label.ToString(), "Key: a, Val:b");
+            Assert.Equal("Key: a, Val:b", (string)label);
         }
     }
 }
