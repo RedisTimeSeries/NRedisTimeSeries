@@ -25,7 +25,7 @@ namespace NRedisTimeSeries.Test.TestDataTypes
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
             db.TimeSeriesAdd(key, "*", 1.1);
-            db.TimeSeriesAdd(key, "*", 1.3);
+            db.TimeSeriesAdd(key, "*", 1.3, duplicatePolicy: TsDuplicatePolicy.LAST);
             TimeSeriesInformation info = db.TimeSeriesInfo(key);
             string[] infoProperties = ((string)info).Trim('{').Trim('}').Split(",");
             Assert.Equal("\"TotalSamples\":2", infoProperties[0]);
