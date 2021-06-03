@@ -1,6 +1,7 @@
-using System.Text;
 using System;
+using System.Text;
 using System.Reflection;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.Commands.Enums;
@@ -91,5 +92,11 @@ namespace NRedisTimeSeries.DataTypes
             // configure what to do on duplicate sample > v1.4
             DuplicatePolicy = policy;
         }
+
+        /// <summary>
+        /// Implicit cast from TimeSeriesInformation to string.
+        /// </summary>
+        /// <param name="info">TimeSeriesInformation</param>
+        public static implicit operator string(TimeSeriesInformation info) => JsonConvert.SerializeObject(info);
     }
 }
