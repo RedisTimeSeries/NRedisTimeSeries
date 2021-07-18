@@ -33,7 +33,7 @@ jobs:
       - run:
           name: codecov
           command: |
-            curl -s https://codecov.io/bash > codecov
+            curl -s https://raw.githubusercontent.com/codecov/codecov-action/master/codecov > codecov
             chmod +x codecov
             ./codecov -t ${CODECOV_TOKEN}
   publish:
