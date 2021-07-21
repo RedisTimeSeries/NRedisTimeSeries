@@ -17,7 +17,7 @@ jobs:
     docker:
       - image: mcr.microsoft.com/dotnet/core/sdk:3.1
       - image: redislabs/redistimeseries:edge
-      
+
     working_directory: ~/repo
 
     steps:
@@ -33,7 +33,7 @@ jobs:
       - run:
           name: codecov
           command: |
-            curl -s https://raw.githubusercontent.com/codecov/codecov-action/master/codecov > codecov
+            curl -s https://raw.githubusercontent.com/codecov/codecov-bash/master/codecov > codecov
             chmod +x codecov
             ./codecov -t ${CODECOV_TOKEN}
   publish:
