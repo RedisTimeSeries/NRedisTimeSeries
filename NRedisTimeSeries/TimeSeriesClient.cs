@@ -205,9 +205,16 @@ namespace NRedisTimeSeries
         /// <param name="aggregation">Optional: Aggregation type</param>
         /// <param name="timeBucket">Optional: Time bucket for aggregation in milliseconds</param>
         /// <returns>A list of TimeSeriesTuple</returns>
-        public static IReadOnlyList<TimeSeriesTuple> TimeSeriesRange(this IDatabase db, string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, long? count = null, TsAggregation? aggregation = null, long? timeBucket = null)
+        public static IReadOnlyList<TimeSeriesTuple> TimeSeriesRange(this IDatabase db, 
+            string key, 
+            TimeStamp fromTimeStamp, 
+            TimeStamp toTimeStamp, 
+            long? count = null, 
+            TsAggregation? aggregation = null, 
+            long? timeBucket = null,
+            TimeStamp align = null)
         {
-            var args = BuildRangeArgs(key, fromTimeStamp, toTimeStamp, count, aggregation, timeBucket);
+            var args = BuildRangeArgs(key, fromTimeStamp, toTimeStamp, count, aggregation, timeBucket, align);
             return ParseTimeSeriesTupleArray(db.Execute(TS.RANGE, args));
         }
 
@@ -222,9 +229,16 @@ namespace NRedisTimeSeries
         /// <param name="aggregation">Optional: Aggregation type</param>
         /// <param name="timeBucket">Optional: Time bucket for aggregation in milliseconds</param>
         /// <returns>A list of TimeSeriesTuple</returns>
-        public static IReadOnlyList<TimeSeriesTuple> TimeSeriesRevRange(this IDatabase db, string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, long? count = null, TsAggregation? aggregation = null, long? timeBucket = null)
+        public static IReadOnlyList<TimeSeriesTuple> TimeSeriesRevRange(this IDatabase db, 
+            string key,
+            TimeStamp fromTimeStamp,
+            TimeStamp toTimeStamp,
+            long? count = null,
+            TsAggregation? aggregation = null,
+            long? timeBucket = null,
+            TimeStamp align = null)
         {
-            var args = BuildRangeArgs(key, fromTimeStamp, toTimeStamp, count, aggregation, timeBucket);
+            var args = BuildRangeArgs(key, fromTimeStamp, toTimeStamp, count, aggregation, timeBucket, align);
             return ParseTimeSeriesTupleArray(db.Execute(TS.REVRANGE, args));
         }
 

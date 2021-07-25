@@ -76,7 +76,7 @@ namespace NRedisTimeSeries
             }
         }
 
-        private static void AddAggregation(this IList<object> args, TsAggregation? aggregation, long? timeBucket)
+        private static void AddAggregation(this IList<object> args, TsAggregation? aggregation, long? timeBucket, TimeStamp align)
         {
             if(aggregation != null)
             {
@@ -87,6 +87,11 @@ namespace NRedisTimeSeries
                     throw new ArgumentException("RANGE Aggregation should have timeBucket value");
                 }
                 args.Add(timeBucket.Value);
+                if (align != null) 
+                {
+                    args.Add(CommandArgs.ALIGN);
+                    args.Add(align.Value);
+                }
             }
         }
 
@@ -213,12 +218,12 @@ namespace NRedisTimeSeries
         }
         
         private static List<object> BuildRangeArgs(string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, long? count,
-            TsAggregation? aggregation, long? timeBucket)
+            TsAggregation? aggregation, long? timeBucket, TimeStamp align)
         {
             var args = new List<object>()
                 {key, fromTimeStamp.Value, toTimeStamp.Value};
             args.AddCount(count);
-            args.AddAggregation(aggregation, timeBucket);
+            args.AddAggregation(aggregation, timeBucket, align);
             return args;
         }
         
@@ -227,7 +232,7 @@ namespace NRedisTimeSeries
         {
             var args = new List<object>() {fromTimeStamp.Value, toTimeStamp.Value};
             args.AddCount(count);
-            args.AddAggregation(aggregation, timeBucket);
+            args.AddAggregation(aggregation, timeBucket, null);
             args.AddWithLabels(withLabels);
             args.AddFilters(filter);
             args.AddGroupby(groupbyTuple);

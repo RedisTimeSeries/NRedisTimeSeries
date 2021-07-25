@@ -7,6 +7,7 @@ namespace NRedisTimeSeries.Commands
         public static string UNCOMPRESSED => "UNCOMPRESSED";
         public static string COUNT => "COUNT";
         public static string AGGREGATION => "AGGREGATION";
+        public static string ALIGN => "ALIGN";
         public static string FILTER => "FILTER";
         public static string WITHLABELS => "WITHLABELS";
         public static string TIMESTAMP => "TIMESTAMP";
