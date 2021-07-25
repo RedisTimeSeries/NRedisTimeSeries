@@ -8,6 +8,7 @@
         public static string MADD => "TS.MADD";
         public static string INCRBY => "TS.INCRBY";
         public static string DECRBY => "TS.DECRBY";
+        public static string DEL => "TS.DEL";
         public static string CREATERULE => "TS.CREATERULE";
         public static string DELETERULE => "TS.DELETERULE";
         public static string RANGE => "TS.RANGE";
