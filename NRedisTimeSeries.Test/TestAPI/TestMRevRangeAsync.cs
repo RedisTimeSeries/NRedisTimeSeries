@@ -89,13 +89,13 @@ namespace NRedisTimeSeries.Test.TestAPI
             }
 
             var tuples = await CreateData(db, keys, 50);
-            var results = await db.TimeSeriesMRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, selectLabels: new List<string> {"team"});
+            var results = await db.TimeSeriesMRevRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, selectLabels: new List<string> {"team"});
             Assert.Equal(keys.Length, results.Count);
             for (int i = 0; i < results.Count; i++)
             {
                 Assert.Equal(keys[i], results[i].key);
                 Assert.Equal(labels[i], results[i].labels[0]);
-                Assert.Equal(tuples, results[i].values);
+                Assert.Equal(ReverseData(tuples), results[i].values);
             }
         }
 
