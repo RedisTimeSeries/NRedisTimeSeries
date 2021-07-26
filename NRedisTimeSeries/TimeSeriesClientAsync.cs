@@ -235,9 +235,10 @@ namespace NRedisTimeSeries
             TsAggregation? aggregation = null, 
             long? timeBucket = null, 
             bool? withLabels = null, 
-            (string, TsReduce)? groupbyTuple = null)
+            (string, TsReduce)? groupbyTuple = null,
+            IReadOnlyCollection<string> selectLabels = null)
         {
-            var args = BuildMultiRangeArgs(fromTimeStamp, toTimeStamp, filter, count, aggregation, timeBucket, withLabels, groupbyTuple);
+            var args = BuildMultiRangeArgs(fromTimeStamp, toTimeStamp, filter, count, aggregation, timeBucket, withLabels, groupbyTuple, selectLabels);
             return ParseMRangeResponse(await db.ExecuteAsync(TS.MRANGE, args));
         }
 
@@ -262,9 +263,10 @@ namespace NRedisTimeSeries
             aggregation = null, 
             long? timeBucket = null, 
             bool? withLabels = null, 
-            (string, TsReduce)? groupbyTuple = null)
+            (string, TsReduce)? groupbyTuple = null,
+            IReadOnlyCollection<string> selectLabels = null)
         {
-            var args = BuildMultiRangeArgs(fromTimeStamp, toTimeStamp, filter, count, aggregation, timeBucket, withLabels, groupbyTuple);
+            var args = BuildMultiRangeArgs(fromTimeStamp, toTimeStamp, filter, count, aggregation, timeBucket, withLabels, groupbyTuple, selectLabels);
             return ParseMRangeResponse(await db.ExecuteAsync(TS.MREVRANGE, args));
         }
 

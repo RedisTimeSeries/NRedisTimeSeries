@@ -77,6 +77,38 @@ namespace NRedisTimeSeries.Test.TestAPI
         }
 
         [Fact]
+        public async Task TestMRangeSelectLabels()
+        {
+            var keys = CreateKeyNames(2);
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            TimeSeriesLabel label1 = new TimeSeriesLabel(keys[0], "value");
+            TimeSeriesLabel[] labels = new TimeSeriesLabel[]{ new TimeSeriesLabel("team", "CTO"), new TimeSeriesLabel("team", "AUT")};
+            for (int i = 0; i < keys.Length; i++)
+            {
+                await db.TimeSeriesCreateAsync(keys[i], labels: new List<TimeSeriesLabel> { label1, labels[i] });
+            }
+
+            var tuples = await CreateData(db, keys, 50);
+            // selectLabels and withlabels are mutualy exclusive. 
+            var ex = await Assert.ThrowsAsync<ArgumentException>(async () => 
+            {
+                await db.TimeSeriesMRangeAsync("-", "+",  
+                    new List<string> { "key=MRangeSelectLabels" },
+                    withLabels: true, selectLabels: new List<string> {"team"});
+            });
+            Assert.Equal("withLabels and selectLabels cannot be specified together.", ex.Message);
+
+            var results = await db.TimeSeriesMRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, selectLabels: new List<string> {"team"});
+            Assert.Equal(keys.Length, results.Count);
+            for (int i = 0; i < results.Count; i++)
+            {
+                Assert.Equal(keys[i], results[i].key);
+                Assert.Equal(labels[i], results[i].labels[0]);
+                Assert.Equal(tuples, results[i].values);
+            }
+        }
+
+        [Fact]
         public async Task TestMRangeFilter()
         {
             var keys = CreateKeyNames(2);
