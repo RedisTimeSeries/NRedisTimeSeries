@@ -103,9 +103,9 @@ namespace NRedisTimeSeries
             }
         }
 
-        private static void AddWithSelectLabels(this IList<object> args, bool? withLabels, IReadOnlyCollection<string> selectLabels = null)
+        private static void AddWithLabels(this IList<object> args, bool? withLabels, IReadOnlyCollection<string> selectLabels = null)
         {   
-            if (withLabels.HasValue && selectLabels != null) {
+            if(withLabels.HasValue && selectLabels != null) {
                 throw new ArgumentException("withLabels and selectLabels cannot be specified together.");
             }
 
@@ -114,7 +114,7 @@ namespace NRedisTimeSeries
                 args.Add(CommandArgs.WITHLABELS);
             }
 
-            if (selectLabels != null){
+            if(selectLabels != null){
                 args.Add(CommandArgs.SELECTEDLABELS);
                 foreach(string label in selectLabels){
                     args.Add(label);
@@ -210,7 +210,7 @@ namespace NRedisTimeSeries
         private static List<object> BuildTsMgetArgs(IReadOnlyCollection<string> filter, bool? withLabels)
         {
             var args = new List<object>();
-            args.AddWithSelectLabels(withLabels);
+            args.AddWithLabels(withLabels);
             AddFilters(args, filter);
             return args;
         }
@@ -232,7 +232,7 @@ namespace NRedisTimeSeries
             var args = new List<object>() {fromTimeStamp.Value, toTimeStamp.Value};
             args.AddCount(count);
             args.AddAggregation(aggregation, timeBucket);
-            args.AddWithSelectLabels(withLabels, selectLabels);
+            args.AddWithLabels(withLabels, selectLabels);
             args.AddFilters(filter);
             args.AddGroupby(groupbyTuple);
             return args;
