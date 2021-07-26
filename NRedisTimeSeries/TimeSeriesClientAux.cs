@@ -185,9 +185,8 @@ namespace NRedisTimeSeries
 
         private static List<object> BuildTsDelArgs(string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp)
         {
-            var args = new List<object> {key};
-            args.Add(fromTimeStamp.Value);
-            args.Add(toTimeStamp.Value);
+            var args = new List<object> 
+                {key, fromTimeStamp.Value, toTimeStamp.Value};
             return args;
         }
 
