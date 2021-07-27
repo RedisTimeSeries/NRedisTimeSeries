@@ -1,5 +1,11 @@
 using System;
+<<<<<<< HEAD
 using System.Text.Json;
+=======
+using System.Text;
+using System.Reflection;
+using Newtonsoft.Json;
+>>>>>>> 3c6ce0c745e90ee809fb3a1f485f5d9d7ba0ea50
 using System.Collections.Generic;
 using NRedisTimeSeries.Commands.Enums;
 

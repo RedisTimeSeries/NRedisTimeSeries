@@ -226,6 +226,7 @@ namespace NRedisTimeSeries
         /// <param name="timeBucket">Optional: Time bucket for aggregation in milliseconds</param>
         /// <param name="withLabels">Optional: Include in the reply the label-value pairs that represent metadata labels of the time-series</param>
         /// <param name="groupbyTuple">Optional: Grouping by fields the results, and applying reducer functions on each group.</param>
+        /// <param name="selectLabels">Optional: Include in the reply only a subset of the key-value pair labels of a series.</param>
         /// <returns>A list of (key, labels, values) tuples. Each tuple contains the key name, its labels and the values which satisfies the given range and filters.</returns>
         public static async Task<IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)>> TimeSeriesMRangeAsync(this IDatabase db, 
             TimeStamp fromTimeStamp, 
@@ -235,9 +236,10 @@ namespace NRedisTimeSeries
             TsAggregation? aggregation = null, 
             long? timeBucket = null, 
             bool? withLabels = null, 
-            (string, TsReduce)? groupbyTuple = null)
+            (string, TsReduce)? groupbyTuple = null,
+            IReadOnlyCollection<string> selectLabels = null)
         {
-            var args = BuildMultiRangeArgs(fromTimeStamp, toTimeStamp, filter, count, aggregation, timeBucket, withLabels, groupbyTuple);
+            var args = BuildMultiRangeArgs(fromTimeStamp, toTimeStamp, filter, count, aggregation, timeBucket, withLabels, groupbyTuple, selectLabels);
             return ParseMRangeResponse(await db.ExecuteAsync(TS.MRANGE, args));
         }
 
@@ -253,6 +255,7 @@ namespace NRedisTimeSeries
         /// <param name="timeBucket">Optional: Time bucket for aggregation in milliseconds</param>
         /// <param name="withLabels">Optional: Include in the reply the label-value pairs that represent metadata labels of the time-series</param>
         /// <param name="groupbyTuple">Optional: Grouping by fields the results, and applying reducer functions on each group.</param>
+        /// <param name="selectLabels">Optional: Include in the reply only a subset of the key-value pair labels of a series.</param>
         /// <returns>A list of (key, labels, values) tuples. Each tuple contains the key name, its labels and the values which satisfies the given range and filters.</returns>
         public static async Task<IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)>> TimeSeriesMRevRangeAsync(this IDatabase db, 
             TimeStamp fromTimeStamp, 
@@ -262,9 +265,10 @@ namespace NRedisTimeSeries
             aggregation = null, 
             long? timeBucket = null, 
             bool? withLabels = null, 
-            (string, TsReduce)? groupbyTuple = null)
+            (string, TsReduce)? groupbyTuple = null,
+            IReadOnlyCollection<string> selectLabels = null)
         {
-            var args = BuildMultiRangeArgs(fromTimeStamp, toTimeStamp, filter, count, aggregation, timeBucket, withLabels, groupbyTuple);
+            var args = BuildMultiRangeArgs(fromTimeStamp, toTimeStamp, filter, count, aggregation, timeBucket, withLabels, groupbyTuple, selectLabels);
             return ParseMRangeResponse(await db.ExecuteAsync(TS.MREVRANGE, args));
         }
 

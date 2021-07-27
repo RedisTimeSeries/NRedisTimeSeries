@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using StackExchange.Redis;
-using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.Commands.Enums;
 using NRedisTimeSeries.DataTypes;
 
