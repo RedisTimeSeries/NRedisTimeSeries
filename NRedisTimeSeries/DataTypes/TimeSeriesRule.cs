@@ -1,5 +1,4 @@
-﻿using NRedisTimeSeries.Commands;
-using NRedisTimeSeries.Commands.Enums;
+﻿using NRedisTimeSeries.Commands.Enums;
 using NRedisTimeSeries.Extensions;
 using System.Collections.Generic;
 
