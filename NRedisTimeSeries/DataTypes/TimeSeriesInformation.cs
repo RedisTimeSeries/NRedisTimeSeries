@@ -3,7 +3,6 @@ using System.Text;
 using System.Reflection;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.Commands.Enums;
 
 namespace NRedisTimeSeries.DataTypes
