@@ -38,7 +38,7 @@ namespace NRedisTimeSeries.Test.TestAPI
         }
 
         [Fact]
-        public void TestDel()
+        public void TestDelRange()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
             var tuples = CreateData(db, 50);
