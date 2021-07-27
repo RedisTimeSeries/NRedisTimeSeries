@@ -243,6 +243,32 @@ namespace NRedisTimeSeries.Test.TestAPI
             {
                 Assert.Equal(tuples[i].Val * 2, results[0].values[i].Val);
             }
+        }
+
+        [Fact]
+        public void TestMRevRangeFilterBy()
+        {
+            var keys = CreateKeyNames(2);
+            var db = redisFixture.Redis.GetDatabase();
+            var label = new TimeSeriesLabel(keys[0], "value");
+            var labels = new List<TimeSeriesLabel> { label };
+            foreach (string key in keys)
+            {
+                db.TimeSeriesCreate(key, labels: labels);
+            }
+
+            var tuples = CreateData(db, keys, 50);
+            var results = db.TimeSeriesMRevRange("-", "+", new List<string> { "key=MRangeFilterBy" }, filterByValue: (0, 2));
+            for (int i = 0; i < results.Count; i++)
+            {
+                Assert.Equal(ReverseData(tuples.GetRange(0,3)), results[i].values);
+            }
+
+            results = db.TimeSeriesMRevRange("-", "+", new List<string> { "key=MRangeFilterBy" }, filterByTs: new List<TimeStamp> {0}, filterByValue: (0, 2));
+            for (int i = 0; i < results.Count; i++)
+            {
+                Assert.Equal(ReverseData(tuples.GetRange(0,1)), results[i].values);
+            }
         }        
     }
 }
