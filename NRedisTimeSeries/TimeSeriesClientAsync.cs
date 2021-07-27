@@ -260,7 +260,7 @@ namespace NRedisTimeSeries
             bool? withLabels = null, 
             (string, TsReduce)? groupbyTuple = null, 
             IReadOnlyList<TimeStamp> filterByTs = null, 
-            (long, long)? filterByValue = null)
+            (long, long)? filterByValue = null,
             IReadOnlyCollection<string> selectLabels = null)
         {
             var args = BuildMultiRangeArgs(fromTimeStamp, toTimeStamp, filter, count, aggregation, timeBucket, withLabels, groupbyTuple, filterByTs, filterByValue, selectLabels);
