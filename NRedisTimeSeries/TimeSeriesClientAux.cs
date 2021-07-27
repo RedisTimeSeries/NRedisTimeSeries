@@ -125,11 +125,22 @@ namespace NRedisTimeSeries
             }
         }
 
-        private static void AddWithLabels(this IList<object> args, bool? withLabels)
-        {
+        private static void AddWithLabels(this IList<object> args, bool? withLabels, IReadOnlyCollection<string> selectLabels = null)
+        {   
+            if(withLabels.HasValue && selectLabels != null) {
+                throw new ArgumentException("withLabels and selectLabels cannot be specified together.");
+            }
+
             if(withLabels.HasValue && withLabels.Value)
             {
                 args.Add(CommandArgs.WITHLABELS);
+            }
+
+            if(selectLabels != null){
+                args.Add(CommandArgs.SELECTEDLABELS);
+                foreach(string label in selectLabels){
+                    args.Add(label);
+                }
             }
         }
 
@@ -238,16 +249,18 @@ namespace NRedisTimeSeries
             return args;
         }
         
-        private static List<object> BuildMultiRangeArgs(TimeStamp fromTimeStamp, TimeStamp toTimeStamp, IReadOnlyCollection<string> filter,
-            long? count, TsAggregation? aggregation, long? timeBucket, bool? withLabels, (string, TsReduce)? groupbyTuple, 
-            IReadOnlyCollection<TimeStamp> filterByTs, (long, long)? filterByValue)
+
+        private static List<object> BuildMultiRangeArgs(TimeStamp fromTimeStamp, TimeStamp toTimeStamp, 
+            IReadOnlyCollection<string> filter, long? count, TsAggregation? aggregation, long? timeBucket,
+            bool? withLabels, (string, TsReduce)? groupbyTuple, IReadOnlyCollection<TimeStamp> filterByTs,
+            (long, long)? filterByValue, IReadOnlyCollection<string> selectLabels)
         {
             var args = new List<object>() {fromTimeStamp.Value, toTimeStamp.Value};
             args.AddFilterByTs(filterByTs);
             args.AddFilterByValue(filterByValue);
             args.AddCount(count);
             args.AddAggregation(aggregation, timeBucket);
-            args.AddWithLabels(withLabels);
+            args.AddWithLabels(withLabels, selectLabels);
             args.AddFilters(filter);
             args.AddGroupby(groupbyTuple);
             return args;

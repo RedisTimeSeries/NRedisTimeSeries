@@ -250,6 +250,7 @@ namespace NRedisTimeSeries
         /// <param name="groupbyTuple">Optional: Grouping by fields the results, and applying reducer functions on each group.</param>
         /// <param name="filterByTs">Optional: List of timestamps to filter the result by specific timestamps</param>
         /// <param name="filterByValue">Optional: Filter result by value using minimum and maximum</param>
+        /// <param name="selectLabels">Optional: Include in the reply only a subset of the key-value pair labels of a series.</param>
         /// <returns>A list of (key, labels, values) tuples. Each tuple contains the key name, its labels and the values which satisfies the given range and filters.</returns>
         public static IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)> TimeSeriesMRange(this IDatabase db, 
             TimeStamp fromTimeStamp, 
@@ -261,9 +262,10 @@ namespace NRedisTimeSeries
             bool? withLabels = null,
             (string, TsReduce)? groupbyTuple = null,
             IReadOnlyCollection<TimeStamp> filterByTs = null,
-            (long, long)? filterByValue = null)
+            (long, long)? filterByValue = null,
+            IReadOnlyCollection<string> selectLabels = null)
         {
-            var args = BuildMultiRangeArgs(fromTimeStamp, toTimeStamp, filter, count, aggregation, timeBucket, withLabels, groupbyTuple, filterByTs, filterByValue);
+            var args = BuildMultiRangeArgs(fromTimeStamp, toTimeStamp, filter, count, aggregation, timeBucket, withLabels, groupbyTuple, filterByTs, filterByValue, selectLabels);
             return ParseMRangeResponse(db.Execute(TS.MRANGE, args));
         }
 
@@ -281,6 +283,7 @@ namespace NRedisTimeSeries
         /// <param name="groupbyTuple">Optional: Grouping by fields the results, and applying reducer functions on each group.</param>
         /// <param name="filterByTs">Optional: List of timestamps to filter the result by specific timestamps</param>
         /// <param name="filterByValue">Optional: Filter result by value using minimum and maximum</param>
+        /// <param name="selectLabels">Optional: Include in the reply only a subset of the key-value pair labels of a series.</param>
         /// <returns>A list of (key, labels, values) tuples. Each tuple contains the key name, its labels and the values which satisfies the given range and filters.</returns>
         public static IReadOnlyList<(string key, IReadOnlyList<TimeSeriesLabel> labels, IReadOnlyList<TimeSeriesTuple> values)> TimeSeriesMRevRange(this IDatabase db, 
             TimeStamp fromTimeStamp, 
@@ -292,9 +295,10 @@ namespace NRedisTimeSeries
             bool? withLabels = null, 
             (string, TsReduce)? groupbyTuple = null,
             IReadOnlyCollection<TimeStamp> filterByTs = null,
-            (long, long)? filterByValue = null)
+            (long, long)? filterByValue = null,
+            IReadOnlyCollection<string> selectLabels = null)
         {
-            var args = BuildMultiRangeArgs(fromTimeStamp, toTimeStamp, filter, count, aggregation, timeBucket, withLabels, groupbyTuple, filterByTs, filterByValue);
+            var args = BuildMultiRangeArgs(fromTimeStamp, toTimeStamp, filter, count, aggregation, timeBucket, withLabels, groupbyTuple, filterByTs, filterByValue, selectLabels);
             return ParseMRangeResponse(db.Execute(TS.MREVRANGE, args));
         }
 
