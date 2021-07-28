@@ -76,6 +76,15 @@ namespace NRedisTimeSeries
             }
         }
 
+        private static void AddAlign(this IList<object> args, TimeStamp align)
+        {
+            if(align != null) 
+            {
+                args.Add(CommandArgs.ALIGN);
+                args.Add(align.Value);
+            }
+        }
+
         private static void AddAggregation(this IList<object> args, TsAggregation? aggregation, long? timeBucket)
         {
             if(aggregation != null)
@@ -232,7 +241,6 @@ namespace NRedisTimeSeries
                 args.Add(tuple.timestamp.Value);
                 args.Add(tuple.value);
             }
-
             return args;
         }
         
@@ -245,13 +253,15 @@ namespace NRedisTimeSeries
         }
         
         private static List<object> BuildRangeArgs(string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp, long? count,
-            TsAggregation? aggregation, long? timeBucket, IReadOnlyCollection<TimeStamp> filterByTs, (long, long)? filterByValue)
+            TsAggregation? aggregation, long? timeBucket, IReadOnlyCollection<TimeStamp> filterByTs, (long, long)? filterByValue,
+            TimeStamp align)
         {
             var args = new List<object>()
                 {key, fromTimeStamp.Value, toTimeStamp.Value};
             args.AddFilterByTs(filterByTs);
             args.AddFilterByValue(filterByValue);
             args.AddCount(count);
+            args.AddAlign(align);
             args.AddAggregation(aggregation, timeBucket);
             return args;
         }
@@ -260,12 +270,13 @@ namespace NRedisTimeSeries
         private static List<object> BuildMultiRangeArgs(TimeStamp fromTimeStamp, TimeStamp toTimeStamp, 
             IReadOnlyCollection<string> filter, long? count, TsAggregation? aggregation, long? timeBucket,
             bool? withLabels, (string, TsReduce)? groupbyTuple, IReadOnlyCollection<TimeStamp> filterByTs,
-            (long, long)? filterByValue, IReadOnlyCollection<string> selectLabels)
+            (long, long)? filterByValue, IReadOnlyCollection<string> selectLabels, TimeStamp align)
         {
             var args = new List<object>() {fromTimeStamp.Value, toTimeStamp.Value};
             args.AddFilterByTs(filterByTs);
             args.AddFilterByValue(filterByValue);
             args.AddCount(count);
+            args.AddAlign(align);
             args.AddAggregation(aggregation, timeBucket);
             args.AddWithLabels(withLabels, selectLabels);
             args.AddFilters(filter);
