@@ -76,7 +76,16 @@ namespace NRedisTimeSeries
             }
         }
 
-        private static void AddAggregation(this IList<object> args, TsAggregation? aggregation, long? timeBucket, TimeStamp align)
+        private static void AddAlign(this IList<object> args, TimeStamp align)
+        {
+            if(align != null) 
+            {
+                args.Add(CommandArgs.ALIGN);
+                args.Add(align.Value);
+            }
+        }
+
+        private static void AddAggregation(this IList<object> args, TsAggregation? aggregation, long? timeBucket)
         {
             if(aggregation != null)
             {
@@ -87,11 +96,6 @@ namespace NRedisTimeSeries
                     throw new ArgumentException("RANGE Aggregation should have timeBucket value");
                 }
                 args.Add(timeBucket.Value);
-                if (align != null) 
-                {
-                    args.Add(CommandArgs.ALIGN);
-                    args.Add(align.Value);
-                }
             }
         }
 
@@ -237,7 +241,6 @@ namespace NRedisTimeSeries
                 args.Add(tuple.timestamp.Value);
                 args.Add(tuple.value);
             }
-
             return args;
         }
         
@@ -258,7 +261,8 @@ namespace NRedisTimeSeries
             args.AddFilterByTs(filterByTs);
             args.AddFilterByValue(filterByValue);
             args.AddCount(count);
-            args.AddAggregation(aggregation, timeBucket, align);
+            args.AddAlign(align);
+            args.AddAggregation(aggregation, timeBucket);
             return args;
         }
         
@@ -272,7 +276,7 @@ namespace NRedisTimeSeries
             args.AddFilterByTs(filterByTs);
             args.AddFilterByValue(filterByValue);
             args.AddCount(count);
-            args.AddAggregation(aggregation, timeBucket, null);
+            args.AddAggregation(aggregation, timeBucket);
             args.AddWithLabels(withLabels, selectLabels);
             args.AddFilters(filter);
             args.AddGroupby(groupbyTuple);
