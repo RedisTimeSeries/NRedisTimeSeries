@@ -206,6 +206,7 @@ namespace NRedisTimeSeries
         /// <param name="timeBucket">Optional: Time bucket for aggregation in milliseconds</param>
         /// <param name="filterByTs">Optional: List of timestamps to filter the result by specific timestamps</param>
         /// <param name="filterByValue">Optional: Filter result by value using minimum and maximum</param>
+        /// <param name="align">Optional: Timestamp for alignment control for aggregation.</param>
         /// <returns>A list of TimeSeriesTuple</returns>
         public static IReadOnlyList<TimeSeriesTuple> TimeSeriesRange(this IDatabase db, 
             string key, 
@@ -234,6 +235,7 @@ namespace NRedisTimeSeries
         /// <param name="timeBucket">Optional: Time bucket for aggregation in milliseconds</param>
         /// <param name="filterByTs">Optional: List of timestamps to filter the result by specific timestamps</param>
         /// <param name="filterByValue">Optional: Filter result by value using minimum and maximum</param>
+        /// <param name="align">Optional: Timestamp for alignment control for aggregation.</param>
         /// <returns>A list of TimeSeriesTuple</returns>
         public static IReadOnlyList<TimeSeriesTuple> TimeSeriesRevRange(this IDatabase db, 
             string key, 
