@@ -216,6 +216,13 @@ namespace NRedisTimeSeries
             return args;
         }
 
+        private static List<object> BuildTsDelArgs(string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp)
+        {
+            var args = new List<object> 
+                {key, fromTimeStamp.Value, toTimeStamp.Value};
+            return args;
+        }
+
         private static List<object> BuildTsMaddArgs(IReadOnlyCollection<(string key, TimeStamp timestamp, double value)> sequence)
         {
             var args = new List<object>();

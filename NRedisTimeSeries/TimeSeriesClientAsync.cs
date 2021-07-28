@@ -120,6 +120,20 @@ namespace NRedisTimeSeries
             return ParseTimeStamp(await db.ExecuteAsync(TS.DECRBY, args));
         }
 
+        /// <summary>
+        /// Delete data points for a given timeseries and interval range in the form of start and end delete timestamps.
+        /// The given timestamp interval is closed (inclusive), meaning start and end data points will also be deleted.
+        /// </summary>
+        /// <param name="key">Key name for timeseries</param>
+        /// <param name="fromTimeStamp">Start timestamp for the range deletion.</param>
+        /// <param name="toTimeStamp">End timestamp for the range deletion.</param>
+        /// <returns>If the operation executed successfully</returns>
+        public static async Task<bool> TimeSeriesDelAsync(this IDatabase db, string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp) 
+        {
+            var args = BuildTsDelArgs(key, fromTimeStamp, toTimeStamp);
+            return ParseBoolean(await db.ExecuteAsync(TS.DEL, args));
+        }
+
         #endregion
 
         #region Aggregation, Compaction, Downsampling
