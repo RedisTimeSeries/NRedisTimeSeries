@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.Commands.Enums;
 using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
@@ -62,6 +61,24 @@ namespace NRedisTimeSeries.Test.TestAPI
             var ex = Assert.Throws<ArgumentException>(() => db.TimeSeriesRange(key, "-", "+", aggregation: TsAggregation.Avg));
             Assert.Equal("RANGE Aggregation should have timeBucket value", ex.Message);
 
+        }
+
+        [Fact]
+        public void TestFilterBy()
+        {
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            var tuples = CreateData(db, 50);
+
+            var res = db.TimeSeriesRange(key, "-", "+", filterByValue: (0,2)); // The first 3 tuples
+            Assert.Equal(3, res.Count);
+            Assert.Equal(tuples.GetRange(0,3), res);
+
+            var filterTs = new List<TimeStamp> {0, 50, 100}; // Also the first 3 tuples
+            res = db.TimeSeriesRange(key, "-", "+", filterByTs: filterTs); 
+            Assert.Equal(tuples.GetRange(0,3), res);
+
+            res = db.TimeSeriesRange(key, "-", "+", filterByTs: filterTs, filterByValue: (2, 5)); // The third tuple
+            Assert.Equal(tuples.GetRange(2,1), res);
         }
     }
 }

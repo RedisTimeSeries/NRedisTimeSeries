@@ -31,16 +31,16 @@ namespace NRedisTimeSeries.Test.TestAPI
         }
 
         [Fact]
-        public async Task TestAddAndDel()
+        public async Task TestDelRange()
         {
             IDatabase db = redisFixture.Redis.GetDatabase();
             var key = CreateKeyName();
-            var tuples = CreateData(db, key, 50).Result;
+            var tuples = await CreateData(db, key, 50);
             TimeStamp from = tuples[0].Time;
             TimeStamp to = tuples[5].Time;
             Assert.True(await db.TimeSeriesDelAsync(key, from, to));
             
-            //check that the operation deleted the timestamps
+            // check that the operation deleted the timestamps
             IReadOnlyList<TimeSeriesTuple> res = await db.TimeSeriesRangeAsync(key, from, to);
             Assert.Equal(0, res.Count);
             Assert.NotNull(await db.TimeSeriesGetAsync(key));

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
-using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.Commands.Enums;
 using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
@@ -33,7 +31,6 @@ namespace NRedisTimeSeries.Test.TestAPI
                 foreach (var key in keys)
                 {
                     db.TimeSeriesAdd(key, ts, i);
-
                 }
                 tuples.Add(new TimeSeriesTuple(ts, i));
             }
@@ -80,6 +77,33 @@ namespace NRedisTimeSeries.Test.TestAPI
             {
                 Assert.Equal(keys[i], results[i].key);
                 Assert.Equal(labels, results[i].labels);
+                Assert.Equal(tuples, results[i].values);
+            }
+        }
+
+        [Fact]
+        public void TestMRangeSelectLabels()
+        {
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            TimeSeriesLabel label1 = new TimeSeriesLabel("key", "MRangeSelectLabels");
+            TimeSeriesLabel[] labels = new TimeSeriesLabel[]{ new TimeSeriesLabel("team", "CTO"), new TimeSeriesLabel("team", "AUT")};
+            for (int i = 0; i < keys.Length; i++)
+            {
+                db.TimeSeriesCreate(keys[i], labels: new List<TimeSeriesLabel> { label1, labels[i] });
+            }
+
+            var tuples = CreateData(db, 50);
+            // selectLabels and withlabels are mutualy exclusive. 
+            var ex = Assert.Throws<ArgumentException>(() => db.TimeSeriesMRange("-", "+",  new List<string> { "key=MRangeSelectLabels" },
+                                                                                withLabels: true, selectLabels: new List<string> {"team"}));
+            Assert.Equal("withLabels and selectLabels cannot be specified together.", ex.Message);
+
+            var results = db.TimeSeriesMRange("-", "+", new List<string> { "key=MRangeSelectLabels" }, selectLabels: new List<string> {"team"});
+            Assert.Equal(keys.Length, results.Count);
+            for (int i = 0; i < results.Count; i++)
+            {
+                Assert.Equal(keys[i], results[i].key);
+                Assert.Equal(labels[i], results[i].labels[0]);
                 Assert.Equal(tuples, results[i].values);
             }
         }
@@ -220,6 +244,31 @@ namespace NRedisTimeSeries.Test.TestAPI
             for(int i = 0; i < results[0].values.Count; i++)
             {
                 Assert.Equal(tuples[i].Val * 2, results[0].values[i].Val);
+            }
+        }
+
+        [Fact]
+        public void TestMRangeFilterBy()
+        {
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            TimeSeriesLabel label = new TimeSeriesLabel("key", "MRangeFilterBy");
+            var labels = new List<TimeSeriesLabel> { label };
+            foreach (string key in keys)
+            {
+                db.TimeSeriesCreate(key, labels: labels);
+            }
+
+            var tuples = CreateData(db, 50);
+            var results = db.TimeSeriesMRange("-", "+", new List<string> { "key=MRangeFilterBy" }, filterByValue: (0, 2));
+            for (int i = 0; i < results.Count; i++)
+            {
+                Assert.Equal(tuples.GetRange(0,3), results[i].values);
+            }
+
+            results = db.TimeSeriesMRange("-", "+", new List<string> { "key=MRangeFilterBy" }, filterByTs: new List<TimeStamp> {0}, filterByValue: (0, 2));
+            for (int i = 0; i < results.Count; i++)
+            {
+                Assert.Equal(tuples.GetRange(0,1), results[i].values);
             }
         }
     }

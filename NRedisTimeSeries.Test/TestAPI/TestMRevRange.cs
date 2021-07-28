@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.Commands.Enums;
 using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
@@ -77,13 +76,36 @@ namespace NRedisTimeSeries.Test.TestAPI
         }
 
         [Fact]
+        public void TestMRevRangeSelectLabels()
+        {
+            var keys = CreateKeyNames(2);
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            TimeSeriesLabel label1 = new TimeSeriesLabel("key", "MRangeSelectLabels");
+            TimeSeriesLabel[] labels = new TimeSeriesLabel[]{ new TimeSeriesLabel("team", "CTO"), new TimeSeriesLabel("team", "AUT")};
+            for (int i = 0; i < keys.Length; i++)
+            {
+                db.TimeSeriesCreate(keys[i], labels: new List<TimeSeriesLabel> { label1, labels[i] });
+            }
+
+            var tuples = CreateData(db, keys, 50);
+            var results = db.TimeSeriesMRevRange("-", "+", new List<string> { "key=MRangeSelectLabels" }, selectLabels: new List<string> {"team"});
+            Assert.Equal(keys.Length, results.Count);
+            for (int i = 0; i < results.Count; i++)
+            {
+                Assert.Equal(keys[i], results[i].key);
+                Assert.Equal(labels[i], results[i].labels[0]);
+                Assert.Equal(ReverseData(tuples), results[i].values);
+            }
+        }
+
+        [Fact]
         public void TestMRevRangeFilter()
         {
             var keys = CreateKeyNames(2);
             var db = redisFixture.Redis.GetDatabase();
             var label = new TimeSeriesLabel(keys[0], "value");
             var labels = new List<TimeSeriesLabel> { label };
-            db.TimeSeriesCreateAsync(keys[0], labels: labels);
+            db.TimeSeriesCreate(keys[0], labels: labels);
             var tuples = CreateData(db, keys, 50);
             var results = db.TimeSeriesMRevRange("-", "+", new List<string> { $"{keys[0]}=value" });
             Assert.Equal(1, results.Count);
@@ -125,7 +147,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var labels = new List<TimeSeriesLabel> { label };
             foreach (var key in keys)
             {
-                db.TimeSeriesCreateAsync(key, labels: labels);
+                db.TimeSeriesCreate(key, labels: labels);
             }
 
             var tuples = CreateData(db, keys, 50);
@@ -148,7 +170,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var labels = new List<TimeSeriesLabel> { label };
             foreach (var key in keys)
             {
-                db.TimeSeriesCreateAsync(key, labels: labels);
+                db.TimeSeriesCreate(key, labels: labels);
             }
 
             var tuples = CreateData(db, keys, 50);
@@ -165,7 +187,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var labels = new List<TimeSeriesLabel> { label };
             foreach (var key in keys)
             {
-                db.TimeSeriesCreateAsync(key, labels: labels);
+                db.TimeSeriesCreate(key, labels: labels);
             }
 
             var tuples = CreateData(db, keys, 50);
@@ -220,6 +242,32 @@ namespace NRedisTimeSeries.Test.TestAPI
             for(int i = 0; i < results[0].values.Count; i++)
             {
                 Assert.Equal(tuples[i].Val * 2, results[0].values[i].Val);
+            }
+        }
+
+        [Fact]
+        public void TestMRevRangeFilterBy()
+        {
+            var keys = CreateKeyNames(2);
+            var db = redisFixture.Redis.GetDatabase();
+            var label = new TimeSeriesLabel(keys[0], "value");
+            var labels = new List<TimeSeriesLabel> { label };
+            foreach (string key in keys)
+            {
+                db.TimeSeriesCreate(key, labels: labels);
+            }
+
+            var tuples = CreateData(db, keys, 50);
+            var results = db.TimeSeriesMRevRange("-", "+", new List<string> { "key=MRangeFilterBy" }, filterByValue: (0, 2));
+            for (int i = 0; i < results.Count; i++)
+            {
+                Assert.Equal(ReverseData(tuples.GetRange(0,3)), results[i].values);
+            }
+
+            results = db.TimeSeriesMRevRange("-", "+", new List<string> { "key=MRangeFilterBy" }, filterByTs: new List<TimeStamp> {0}, filterByValue: (0, 2));
+            for (int i = 0; i < results.Count; i++)
+            {
+                Assert.Equal(ReverseData(tuples.GetRange(0,1)), results[i].values);
             }
         }        
     }

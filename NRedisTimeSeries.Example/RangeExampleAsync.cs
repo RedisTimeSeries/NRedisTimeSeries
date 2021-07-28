@@ -1,5 +1,4 @@
-﻿using NRedisTimeSeries.Commands;
-using NRedisTimeSeries.Commands.Enums;
+﻿using NRedisTimeSeries.Commands.Enums;
 using NRedisTimeSeries.DataTypes;
 using StackExchange.Redis;
 using System;
@@ -63,5 +62,23 @@ namespace NRedisTimeSeries.Example
             }            
             redis.Close();
         }
+
+        /// <summary>
+        /// Example for basic usage of RedisTimeSeries RANGE command with "-" and "+" as range boundreis, FILTER_BY_TS, and FILTER_BY_VALUE.
+        /// NRedisTimeSeris Range is expecting two TimeStamps objects as the range boundries.
+        /// In this case, the strings are implicitly casted into TimeStamp objects.
+        /// The TimeSeriesRange command returns an IReadOnlyList<TimeSeriesTuple> collection.
+        /// </summary>
+        public static async Task RangeFilterByExample()
+        {
+            ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
+            IDatabase db = redis.GetDatabase();
+            var filterTs = new List<TimeStamp> {0, 50, 100};
+            IReadOnlyList<TimeSeriesTuple> results = await db.TimeSeriesRangeAsync("my_ts", "-", "+", filterByTs: filterTs, filterByValue: (2, 5));
+            foreach(TimeSeriesTuple res in results) {
+                Console.WriteLine(res);
+            }            
+            redis.Close();
+        }         
     }
 }

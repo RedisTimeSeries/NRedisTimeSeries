@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using StackExchange.Redis;
-using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.Commands.Enums;
 using NRedisTimeSeries.DataTypes;
 using Xunit;
@@ -72,6 +71,29 @@ namespace NRedisTimeSeries.Test.TestAPI
             {
                 Assert.Equal(keys[i], results[i].key);
                 Assert.Equal(labels, results[i].labels);
+                Assert.Equal(ReverseData(tuples), results[i].values);
+            }
+        }
+
+        [Fact]
+        public async Task TestMRevRangeSelectLabels()
+        {
+            var keys = CreateKeyNames(2);
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            TimeSeriesLabel label1 = new TimeSeriesLabel(keys[0], "value");
+            TimeSeriesLabel[] labels = new TimeSeriesLabel[]{ new TimeSeriesLabel("team", "CTO"), new TimeSeriesLabel("team", "AUT")};
+            for (int i = 0; i < keys.Length; i++)
+            {
+                await db.TimeSeriesCreateAsync(keys[i], labels: new List<TimeSeriesLabel> { label1, labels[i] });
+            }
+
+            var tuples = await CreateData(db, keys, 50);
+            var results = await db.TimeSeriesMRevRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, selectLabels: new List<string> {"team"});
+            Assert.Equal(keys.Length, results.Count);
+            for (int i = 0; i < results.Count; i++)
+            {
+                Assert.Equal(keys[i], results[i].key);
+                Assert.Equal(labels[i], results[i].labels[0]);
                 Assert.Equal(ReverseData(tuples), results[i].values);
             }
         }
@@ -226,6 +248,32 @@ namespace NRedisTimeSeries.Test.TestAPI
             {
                 Assert.Equal(tuples[i].Val * 2, results[0].values[i].Val);
             }
-        }           
+        }
+
+        [Fact]
+        public async Task TestMRevRangeFilterBy()
+        {
+            var keys = CreateKeyNames(2);
+            var db = redisFixture.Redis.GetDatabase();
+            TimeSeriesLabel label = new TimeSeriesLabel(keys[0], "value");
+            var labels = new List<TimeSeriesLabel> { label };
+            foreach (string key in keys)
+            {
+                await db.TimeSeriesCreateAsync(key, labels: labels);
+            }
+
+            var tuples = await CreateData(db, keys, 50);
+            var results = await db.TimeSeriesMRevRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, filterByValue: (0, 2));
+            for (int i = 0; i < results.Count; i++)
+            {
+                Assert.Equal(ReverseData(tuples.GetRange(0,3)), results[i].values);
+            }
+
+            results = await db.TimeSeriesMRevRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, filterByTs: new List<TimeStamp> {0}, filterByValue: (0, 2));
+            for (int i = 0; i < results.Count; i++)
+            {
+                Assert.Equal(ReverseData(tuples.GetRange(0,1)), results[i].values);
+            }
+        }               
     }
 }
