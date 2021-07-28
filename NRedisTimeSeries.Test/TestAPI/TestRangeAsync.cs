@@ -49,6 +49,46 @@ namespace NRedisTimeSeries.Test.TestAPI
             var tuples = await CreateData(db, key, 50);
             Assert.Equal(tuples, await db.TimeSeriesRangeAsync(key, "-", "+", aggregation: TsAggregation.Min, timeBucket: 50));
         }
+        
+        [Fact]
+        public async Task TestRangeAlign()
+        {
+            var key = CreateKeyName();
+            IDatabase db = redisFixture.Redis.GetDatabase();
+            var tuples = new List<TimeSeriesTuple>()
+            {
+                new TimeSeriesTuple(1, 10),
+                new TimeSeriesTuple(3, 5),
+                new TimeSeriesTuple(11, 10),
+                new TimeSeriesTuple(21, 11)
+            };
+
+            foreach (var tuple in tuples)
+            {
+                await db.TimeSeriesAddAsync(key, tuple.Time, tuple.Val);
+            }
+
+            // Aligh start
+            var resStart = new List<TimeSeriesTuple>()
+            {
+                new TimeSeriesTuple(1, 2),
+                new TimeSeriesTuple(11, 1),
+                new TimeSeriesTuple(21, 1)
+            };
+            Assert.Equal(resStart, await db.TimeSeriesRangeAsync(key, 1, 30, align: "-", aggregation: TsAggregation.Count, timeBucket: 10));
+                        
+            // Aligh end
+            var resEnd = new List<TimeSeriesTuple>()
+            {
+                new TimeSeriesTuple(0, 2),
+                new TimeSeriesTuple(10, 1),
+                new TimeSeriesTuple(20, 1)
+            };
+            Assert.Equal(resEnd, await db.TimeSeriesRangeAsync(key, 1, 30, align: "+", aggregation: TsAggregation.Count, timeBucket: 10));
+
+            // Align 1
+            Assert.Equal(resStart, await db.TimeSeriesRangeAsync(key, 1, 30, align: 1, aggregation: TsAggregation.Count, timeBucket: 10));
+        }
 
         [Fact]
         public async Task TestMissingTimeBucket()

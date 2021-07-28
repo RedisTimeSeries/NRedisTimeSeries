@@ -77,7 +77,7 @@ namespace NRedisTimeSeries.Test.TestAPI
                 new TimeSeriesTuple(11, 1),
                 new TimeSeriesTuple(21, 1)
             };
-            Assert.Equal(resStart, db.TimeSeriesRange(key, "-", "+", align: "-", aggregation: TsAggregation.Count, timeBucket: 10));
+            Assert.Equal(resStart, db.TimeSeriesRange(key, 1, 30, align: "-", aggregation: TsAggregation.Count, timeBucket: 10));
                         
             // Aligh end
             var resEnd = new List<TimeSeriesTuple>()
@@ -86,10 +86,10 @@ namespace NRedisTimeSeries.Test.TestAPI
                 new TimeSeriesTuple(10, 1),
                 new TimeSeriesTuple(20, 1)
             };
-            Assert.Equal(resEnd, db.TimeSeriesRange(key, "-", "+", align: "+", aggregation: TsAggregation.Count, timeBucket: 10));
+            Assert.Equal(resEnd, db.TimeSeriesRange(key, 1, 30, align: "+", aggregation: TsAggregation.Count, timeBucket: 10));
 
             // Align 1
-            Assert.Equal(resStart, db.TimeSeriesRange(key, "-", "+", align: 1, aggregation: TsAggregation.Count, timeBucket: 10));
+            Assert.Equal(resStart, db.TimeSeriesRange(key, 1, 30, align: 1, aggregation: TsAggregation.Count, timeBucket: 10));
         }
 
         [Fact]

@@ -48,6 +48,46 @@ namespace NRedisTimeSeries.Test.TestAPI
             var tuples = CreateData(db, key, 50);
             Assert.Equal(ReverseData(tuples), db.TimeSeriesRevRange(key, "-", "+", aggregation: TsAggregation.Min, timeBucket: 50));
         }
+        
+        [Fact]
+        public void TestRevRangeAlign()
+        {
+            var key = CreateKeyName();
+            var db = redisFixture.Redis.GetDatabase();
+            var tuples = new List<TimeSeriesTuple>()
+            {
+                new TimeSeriesTuple(1, 10),
+                new TimeSeriesTuple(3, 5),
+                new TimeSeriesTuple(11, 10),
+                new TimeSeriesTuple(21, 11)
+            };
+
+            foreach (var tuple in tuples)
+            {
+                db.TimeSeriesAdd(key, tuple.Time, tuple.Val);
+            }
+
+            // Aligh start
+            var resStart = new List<TimeSeriesTuple>()
+            {
+                new TimeSeriesTuple(21, 1),
+                new TimeSeriesTuple(11, 1),
+                new TimeSeriesTuple(1, 2)
+            };
+            Assert.Equal(resStart, db.TimeSeriesRevRange(key, 1, 30, align: "-", aggregation: TsAggregation.Count, timeBucket: 10));
+                        
+            // Aligh end
+            var resEnd = new List<TimeSeriesTuple>()
+            {
+                new TimeSeriesTuple(20, 1),
+                new TimeSeriesTuple(10, 1),
+                new TimeSeriesTuple(0, 2)
+            };
+            Assert.Equal(resEnd, db.TimeSeriesRevRange(key, 1, 30, align: "+", aggregation: TsAggregation.Count, timeBucket: 10));
+
+            // Align 1
+            Assert.Equal(resStart, db.TimeSeriesRevRange(key, 1, 30, align: 1, aggregation: TsAggregation.Count, timeBucket: 10));
+        }
 
         [Fact]
         public void TestMissingTimeBucket()
