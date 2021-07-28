@@ -270,12 +270,13 @@ namespace NRedisTimeSeries
         private static List<object> BuildMultiRangeArgs(TimeStamp fromTimeStamp, TimeStamp toTimeStamp, 
             IReadOnlyCollection<string> filter, long? count, TsAggregation? aggregation, long? timeBucket,
             bool? withLabels, (string, TsReduce)? groupbyTuple, IReadOnlyCollection<TimeStamp> filterByTs,
-            (long, long)? filterByValue, IReadOnlyCollection<string> selectLabels)
+            (long, long)? filterByValue, IReadOnlyCollection<string> selectLabels, TimeStamp align)
         {
             var args = new List<object>() {fromTimeStamp.Value, toTimeStamp.Value};
             args.AddFilterByTs(filterByTs);
             args.AddFilterByValue(filterByValue);
             args.AddCount(count);
+            args.AddAlign(align);
             args.AddAggregation(aggregation, timeBucket);
             args.AddWithLabels(withLabels, selectLabels);
             args.AddFilters(filter);
