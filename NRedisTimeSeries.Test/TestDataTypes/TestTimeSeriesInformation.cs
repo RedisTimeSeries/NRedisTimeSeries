@@ -1,32 +1,24 @@
-using System;
-using System.Collections.Generic;
 using StackExchange.Redis;
 using NRedisTimeSeries.DataTypes;
-using NRedisTimeSeries.Commands;
 using NRedisTimeSeries.Commands.Enums;
 using NRedisTimeSeries.Test.TestAPI;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace NRedisTimeSeries.Test.TestDataTypes
 {
-    public class TestInformation : AbstractTimeSeriesTest, IDisposable
+    public class TestInformation : AbstractTimeSeriesTest
     {
-        private readonly string key = "INFORMATION_TESTS";
-
         public TestInformation(RedisFixture redisFixture) : base(redisFixture) { }
 
-        public void Dispose()
-        {
-            redisFixture.Redis.GetDatabase().KeyDelete(key);
-        }
-
         [Fact]
-        public void TestInformationToString()
+        public async Task TestInformationToStringAsync()
         {
+            string key = CreateKeyName();
             IDatabase db = redisFixture.Redis.GetDatabase();
-            db.TimeSeriesAdd(key, "*", 1.1);
-            db.TimeSeriesAdd(key, "*", 1.3, duplicatePolicy: TsDuplicatePolicy.LAST);
-            TimeSeriesInformation info = db.TimeSeriesInfo(key);
+            await db.TimeSeriesAddAsync(key, "*", 1.1);
+            await db.TimeSeriesAddAsync(key, "*", 1.3, duplicatePolicy: TsDuplicatePolicy.LAST);
+            TimeSeriesInformation info = await db.TimeSeriesInfoAsync(key);
             string[] infoProperties = ((string)info).Trim('{').Trim('}').Split(",");
             Assert.Equal("\"TotalSamples\":2", infoProperties[0]);
             Assert.Equal("\"MemoryUsage\":4184", infoProperties[1]);
