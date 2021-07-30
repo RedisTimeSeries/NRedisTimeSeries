@@ -44,7 +44,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var tuples = CreateData(db, 50);
             TimeStamp from = tuples[0].Time;
             TimeStamp to = tuples[5].Time;
-            Assert.True(db.TimeSeriesDel(key, from, to));
+            Assert.Equal(6, db.TimeSeriesDel(key, from, to));
             
             // check that the operation deleted the timestamps
             IReadOnlyList<TimeSeriesTuple> res = db.TimeSeriesRange(key, from, to);
