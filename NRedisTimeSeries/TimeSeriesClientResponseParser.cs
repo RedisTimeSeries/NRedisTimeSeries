@@ -14,10 +14,10 @@ namespace NRedisTimeSeries
             return (string)result == "OK";
         }
 
-        private static int ParseInteger(RedisResult result)
+        private static long ParseLong(RedisResult result)
         {
             if (result.Type == ResultType.None) return 0;
-            return (int)result;
+            return (long)result;
         }
 
         private static TimeStamp ParseTimeStamp(RedisResult result)
