@@ -128,10 +128,10 @@ namespace NRedisTimeSeries
         /// <param name="fromTimeStamp">Start timestamp for the range deletion.</param>
         /// <param name="toTimeStamp">End timestamp for the range deletion.</param>
         /// <returns>If the operation executed successfully</returns>
-        public static bool TimeSeriesDel(this IDatabase db, string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp)
+        public static int TimeSeriesDel(this IDatabase db, string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp)
         {
             var args = BuildTsDelArgs(key, fromTimeStamp, toTimeStamp);
-            return ParseBoolean(db.Execute(TS.DEL, args));
+            return ParseInteger(db.Execute(TS.DEL, args));
         }
 
         #endregion
