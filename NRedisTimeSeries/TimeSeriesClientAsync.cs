@@ -127,11 +127,11 @@ namespace NRedisTimeSeries
         /// <param name="key">Key name for timeseries</param>
         /// <param name="fromTimeStamp">Start timestamp for the range deletion.</param>
         /// <param name="toTimeStamp">End timestamp for the range deletion.</param>
-        /// <returns>If the operation executed successfully</returns>
-        public static async Task<bool> TimeSeriesDelAsync(this IDatabase db, string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp) 
+        /// <returns>The count of deleted items</returns>
+        public static async Task<long> TimeSeriesDelAsync(this IDatabase db, string key, TimeStamp fromTimeStamp, TimeStamp toTimeStamp) 
         {
             var args = BuildTsDelArgs(key, fromTimeStamp, toTimeStamp);
-            return ParseBoolean(await db.ExecuteAsync(TS.DEL, args));
+            return ParseLong(await db.ExecuteAsync(TS.DEL, args));
         }
 
         #endregion
