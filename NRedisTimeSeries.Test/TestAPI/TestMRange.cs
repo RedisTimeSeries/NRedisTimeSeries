@@ -177,16 +177,16 @@ namespace NRedisTimeSeries.Test.TestAPI
             db.TimeSeriesCreate(keys[0], labels: labels);
             CreateData(db, 50);
             var expected = new List<TimeSeriesTuple> {
-                new TimeSeriesTuple(41,1),
-                new TimeSeriesTuple(91,1),
-                new TimeSeriesTuple(141,1)
+                new TimeSeriesTuple(0,1),
+                new TimeSeriesTuple(50,1),
+                new TimeSeriesTuple(100,1)
             };
-            var results = db.TimeSeriesMRange(1, 500, new List<string> { "key=MRangeAlign" }, align: "-", aggregation: TsAggregation.Count, timeBucket: 10, count:3);
+            var results = db.TimeSeriesMRange(0, "+", new List<string> { "key=MRangeAlign" }, align: "-", aggregation: TsAggregation.Count, timeBucket: 10, count:3);
             Assert.Equal(1, results.Count);
             Assert.Equal(keys[0], results[0].key);
             Assert.Equal(expected, results[0].values);
             results = db.TimeSeriesMRange(1, 500, new List<string> { "key=MRangeAlign" }, align: "+", aggregation: TsAggregation.Count, timeBucket: 10, count:1);
-            Assert.Equal(new TimeSeriesTuple(50,1), results[0].values[0]);
+            Assert.Equal(expected[1], results[0].values[0]);
         }
 
         [Fact]

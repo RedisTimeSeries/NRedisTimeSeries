@@ -171,16 +171,16 @@ namespace NRedisTimeSeries.Test.TestAPI
             db.TimeSeriesCreate(keys[0], labels: labels);
             await CreateData(db, keys, 50);
             var expected = new List<TimeSeriesTuple> {
-                new TimeSeriesTuple(441,1),
-                new TimeSeriesTuple(391,1),
-                new TimeSeriesTuple(341,1)
+                new TimeSeriesTuple(450,1),               
+                new TimeSeriesTuple(400,1),
+                new TimeSeriesTuple(350,1)
             };
-            var results = await db.TimeSeriesMRevRangeAsync(1, 500, new List<string> { $"{keys[0]}=value" }, align: "-", aggregation: TsAggregation.Count, timeBucket: 10, count:3);
+            var results = await db.TimeSeriesMRevRangeAsync(0, "+", new List<string> { $"{keys[0]}=value" }, align: "-", aggregation: TsAggregation.Count, timeBucket: 10, count:3);
             Assert.Equal(1, results.Count);
             Assert.Equal(keys[0], results[0].key);
             Assert.Equal(expected, results[0].values);
-            results = await db.TimeSeriesMRevRangeAsync(1, 500, new List<string> { $"{keys[0]}=value" }, align: "+", aggregation: TsAggregation.Count, timeBucket: 10, count:1);
-            Assert.Equal(new TimeSeriesTuple(450,1), results[0].values[0]);
+            results = await db.TimeSeriesMRevRangeAsync(0, 500, new List<string> { $"{keys[0]}=value" }, align: "+", aggregation: TsAggregation.Count, timeBucket: 10, count:1);
+            Assert.Equal(expected[0], results[0].values[0]);
         }
 
         [Fact]
