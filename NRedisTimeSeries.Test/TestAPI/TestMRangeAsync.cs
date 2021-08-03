@@ -184,12 +184,12 @@ namespace NRedisTimeSeries.Test.TestAPI
                 new TimeSeriesTuple(50,1),
                 new TimeSeriesTuple(100,1)
             };
-            var results = await db.TimeSeriesMRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, align: "-", aggregation: TsAggregation.Count, timeBucket: 10, count:3);
+            var results = await db.TimeSeriesMRangeAsync(0, "+", new List<string> { $"{keys[0]}=value" }, align: "-", aggregation: TsAggregation.Count, timeBucket: 10, count:3);
             Assert.Equal(1, results.Count);
             Assert.Equal(keys[0], results[0].key);
             Assert.Equal(expected, results[0].values);
-            results = await db.TimeSeriesMRangeAsync("-", "+", new List<string> { $"{keys[0]}=value" }, align: "+", aggregation: TsAggregation.Count, timeBucket: 10, count:1);
-            Assert.Equal(new TimeSeriesTuple(-3,1), results[0].values[0]);
+            results = await db.TimeSeriesMRangeAsync(0, 500, new List<string> { $"{keys[0]}=value" }, align: "+", aggregation: TsAggregation.Count, timeBucket: 10, count:1);
+            Assert.Equal(expected[0], results[0].values[0]);
         }
 
         [Fact]
