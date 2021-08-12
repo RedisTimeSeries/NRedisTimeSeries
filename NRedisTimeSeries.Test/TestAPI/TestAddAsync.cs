@@ -116,9 +116,7 @@ namespace NRedisTimeSeries.Test.TestAPI
             var db = redisFixture.Redis.GetDatabase();
             TimeStamp timeStamp = DateTime.UtcNow;
             Assert.Equal(timeStamp, await db.TimeSeriesAddAsync(key, timeStamp, 1.1));
-
-            var ex = await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesAddAsync(key, timeStamp, 1.2));
-            Assert.Equal("ERR TSDB: Error at upsert, update is not supported in BLOCK mode", ex.Message);
+            await Assert.ThrowsAsync<RedisServerException>(async () => await db.TimeSeriesAddAsync(key, timeStamp, 1.2));
         }
 
         [Fact]
