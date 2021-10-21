@@ -1,0 +1,27 @@
+name: Nuget Release
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.x'
+
+    - name: Install dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet pack --configuration Release --output .
+
+    - name: Publish to NuGet
+      uses: rohith/publish-nuget@v2
+      with:
+        PROJECT_FILE_PATH: NRedisTimeSeries/NRedisTimeSeries.csproj
+        NUGET_KEY: ${{secrets.NUGET_API_KEY}}

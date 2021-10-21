@@ -36,34 +36,12 @@ jobs:
             curl -s https://raw.githubusercontent.com/codecov/codecov-bash/master/codecov > codecov
             chmod +x codecov
             ./codecov -t ${CODECOV_TOKEN}
-  publish:
-    docker:
-      - image: mcr.microsoft.com/dotnet/core/sdk:3.1
-
-    working_directory: ~/repo
-
-    steps:
-      - checkout
-      - run: dotnet restore
-      - run: dotnet pack --configuration release
-      - run:
-          name: Publish nuget package
-          command: |
-            cd NRedisTimeSeries
-            dotnet pack --configuration release --output .
-            dotnet nuget push *.nupkg -k $NugetKey -s https://api.nuget.org/v3/index.json --skip-duplicate
 
 workflows:
   version: 2
   commit:
     jobs:
       - build
-      - publish:
-          requires:
-            - build
-          filters:
-            branches:
-              only: master
 
   nightly:
     triggers:
