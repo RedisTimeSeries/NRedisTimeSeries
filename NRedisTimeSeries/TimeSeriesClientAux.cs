@@ -186,10 +186,10 @@ namespace NRedisTimeSeries
         {
             var args = new List<object> {key};
             args.AddRetentionTime(retentionTime);
-            args.AddChunkSize(chunkSizeBytes);
-            args.AddLabels(labels);
             args.AddUncompressed(uncompressed);
+            args.AddChunkSize(chunkSizeBytes);
             args.AddDuplicatePolicy(policy);
+            args.AddLabels(labels);
             return args;
         }
         
@@ -206,10 +206,10 @@ namespace NRedisTimeSeries
         {
             var args = new List<object> {key, timestamp.Value, value};
             args.AddRetentionTime(retentionTime);
-            args.AddChunkSize(chunkSizeBytes);
-            args.AddLabels(labels);
             args.AddUncompressed(uncompressed);
+            args.AddChunkSize(chunkSizeBytes);
             args.AddOnDuplicate(policy);
+            args.AddLabels(labels);
             return args;
         }
         
@@ -219,9 +219,9 @@ namespace NRedisTimeSeries
             var args = new List<object> {key, value};
             args.AddTimeStamp(timestamp);
             args.AddRetentionTime(retentionTime);
+            args.AddUncompressed(uncompressed);
             args.AddChunkSize(chunkSizeBytes);
             args.AddLabels(labels);
-            args.AddUncompressed(uncompressed);
             return args;
         }
 
