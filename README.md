@@ -1,15 +1,17 @@
 [![license](https://img.shields.io/github/license/RedisTimeSeries/NRedisTimeSeries.svg)](https://github.com/RedisTimeSeries/NRedisTimeSeries)
-[![CircleCI](https://circleci.com/gh/RedisTimeSeries/NRedisTimeSeries/tree/master.svg?style=svg)](https://circleci.com/gh/RedisTimeSeries/NRedisTimeSeries/tree/master)
 [![GitHub issues](https://img.shields.io/github/release/RedisTimeSeries/NRedisTimeSeries.svg)](https://github.com/RedisTimeSeries/NRedisTimeSeries/releases/latest)
 [![Codecov](https://codecov.io/gh/RedisTimeSeries/NRedisTimeSeries/branch/master/graph/badge.svg)](https://codecov.io/gh/RedisTimeSeries/NRedisTimeSeries)
 [![Known Vulnerabilities](https://snyk.io/test/github/RedisTimeSeries/NRedisTimeSeries/badge.svg?targetFile=NRedisTimeSeries/NRedisTimeSeries.csproj)](https://snyk.io/test/github/RedisTimeSeries/NRedisTimeSeries?targetFile=NRedisTimeSeries/NRedisTimeSeries.csproj)
-[![StackExchange.Redis](https://img.shields.io/nuget/v/NRedisTimeSeries.svg)](https://www.nuget.org/packages/NRedisTimeSeries/)
 
 # NRedisTimeSeries
 [![Forum](https://img.shields.io/badge/Forum-RedisTimeSeries-blue)](https://forum.redislabs.com/c/modules/redistimeseries)
 [![Discord](https://img.shields.io/discord/697882427875393627?style=flat-square)](https://discord.gg/KExRgMb)
 
 .Net Client for RedisTimeSeries
+
+## Deprecation notice
+
+This library is deprecated. It's features have been merged into [nredisstack](https://github.com/redis/nredisstack) and extend it. Please install it via [nuget](https://www.nuget.org/packages/NRedisStack/).
 
 
 ## API
@@ -21,7 +23,7 @@ The complete documentation of RedisTimeSeries's commands can be found at [RedisT
 ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
 IDatabase db = redis.GetDatabase();
 
-// Create 
+// Create
 var label = new TimeSeriesLabel("Time", "Series");
 db.TimeSeriesCreate("test", retentionTime: 5000, labels: new List<TimeSeriesLabel> { label }, duplicatePolicy: TsDuplicatePolicy.MAX);
 
@@ -57,7 +59,7 @@ db.TimeSeriesRange("test", "-", "+", aggregation: TsAggregation.Avg, timeBucket:
 db.TimeSeriesGet("test");
 
 // Info
-TimeSeriesInformation info = db.TimeSeriesInfo("test");               
+TimeSeriesInformation info = db.TimeSeriesInfo("test");
 
 // DEL
 db.KeyDelete("test");
@@ -65,7 +67,7 @@ db.KeyDelete("test");
 
 ## Further notes on back-filling time series
 
-Since [RedisTimeSeries 1.4](https://github.com/RedisTimeSeries/RedisTimeSeries/releases/tag/v1.4.5) we've added the ability to back-fill time series, with different duplicate policies. 
+Since [RedisTimeSeries 1.4](https://github.com/RedisTimeSeries/RedisTimeSeries/releases/tag/v1.4.5) we've added the ability to back-fill time series, with different duplicate policies.
 
 The default behavior is to block updates to the same timestamp, and you can control it via the `duplicatePolicy` argument. You can check in detail the [duplicate policy documentation](https://oss.redislabs.com/redistimeseries/configuration/#duplicate_policy).
 
