@@ -11,6 +11,10 @@
 
 .Net Client for RedisTimeSeries
 
+## Deprecation notice
+
+As of [nredisstack 0.4.1](https://github.com/redis/nredisstack) this library is deprecated. It's features have been merged into [nredisstack](https://github.com/redis/nredisstack. Please either install it [from nuget](https://www.nuget.org/packages/NRedisStack) or [the repo](https://github.com/redis/nredisstack).
+
 
 ## API
 The complete documentation of RedisTimeSeries's commands can be found at [RedisTimeSeries's website](http://redistimeseries.io/).
